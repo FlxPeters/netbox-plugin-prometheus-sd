@@ -4,8 +4,8 @@ services:
   netbox:
     build:
       context: ../
-      dockerfile: development/Dockerfile
-    image: "netbox-plugin-prometheus/netbox:${NETBOX_VER}-py${PYTHON_VER}"
+      dockerfile: .devcontainer/Dockerfile
+    image: "netbox-plugin-prometheus/netbox:${NETBOX_VER:-v2.10.10}-py${PYTHON_VER:-3.8}"
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
@@ -23,8 +23,8 @@ services:
   worker:
     build:
       context: ../
-      dockerfile: development/Dockerfile
-    image: "netbox-plugin-prometheus/netbox:${NETBOX_VER}-py${PYTHON_VER}"
+      dockerfile: .devcontainer/Dockerfile
+    image: "netbox-plugin-prometheus/netbox:${NETBOX_VER:-v2.10.10}-py${PYTHON_VER:-3.8}"
     command: sh -c "python manage.py rqworker"
     depends_on:
       - netbox
@@ -46,5 +46,16 @@ services:
       - -c # this is to evaluate the $REDIS_PASSWORD from the env
       - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: ./dev.env
+  prometheus:
+    image: prom/prometheus:v2.28.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      - netbox
+
 volumes:
   pgdata_netbox_prometheus_sd:

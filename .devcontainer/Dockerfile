@@ -14,7 +14,7 @@ RUN pip install --upgrade pip\
 # -------------------------------------------------------------------------------------
 # Remove redis==3.4.1 from the requirements.txt file as a workaround to #4910
 # https://github.com/netbox-community/netbox/issues/4910, required for version 2.8.8 and earlier
-ARG netbox_ver=master
+ARG netbox_ver=v2.10.10
 RUN git clone --single-branch --branch ${netbox_ver} https://github.com/netbox-community/netbox.git /opt/netbox/ && \
     cd /opt/netbox/ && \
     sed -i '/^redis\=\=/d' /opt/netbox/requirements.txt && \
