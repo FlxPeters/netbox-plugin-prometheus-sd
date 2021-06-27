@@ -9,7 +9,7 @@ from netaddr import IPNetwork
 
 
 def vm_to_target(vm: VirtualMachine):
-    """ Map a Netbox VirtualMachine to a Prometheus target """
+    """Map a Netbox VirtualMachine to a Prometheus target"""
     target = Target(vm.name)
     target.add_label("type", TargetType.VIRTUAL_MACHINE.value)
     target.add_label("status", vm.status)
@@ -45,7 +45,7 @@ def vm_to_target(vm: VirtualMachine):
 
 
 def device_to_target(device: Device):
-    """ Map a Netbox VirtualMachine to a Prometheus target """
+    """Map a Netbox VirtualMachine to a Prometheus target"""
     target = Target(device.name)
     target.add_label("type", TargetType.DEVICE.value)
     target.add_label("status", device.status)
@@ -78,7 +78,7 @@ def device_to_target(device: Device):
 
 
 def ip_to_target(ip: IPAddress):
-    """ Map a Netbox IPAddress to a Prometheus target """
+    """Map a Netbox IPAddress to a Prometheus target"""
 
     # Use dns name if set, otherwise IP without netmask
     addr = str(IPNetwork(ip.address).ip)
