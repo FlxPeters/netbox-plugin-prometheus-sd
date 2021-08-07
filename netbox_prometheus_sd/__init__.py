@@ -15,4 +15,4 @@ class PrometheusSD(PluginConfig):
     default_settings = {}
 
 
-config = PrometheusSD
+config = PrometheusSD  # pylint:disable=invalid-name

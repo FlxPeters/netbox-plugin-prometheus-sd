@@ -2,11 +2,9 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from ipam.models import IPAddress
 from tenancy.models import Tenant
-from virtualization.models import Cluster, ClusterType, VirtualMachine, VMInterface
+from virtualization.models import Cluster, ClusterType
 from dcim.models import Site
-from django.contrib.contenttypes.models import ContentType
 
 from . import utils
 
@@ -35,14 +33,3 @@ class AppMetricEndpointTests(TestCase):
         """Ensure the endpoint is working properly and is not protected by authentication."""
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-
-
-# def test_debug(self):
-#     """ Debug, remove later"""
-#     obj = VirtualMachine.objects.all()
-
-#     ip = obj.first().primary_ip4.address
-#     print(inspect.getmodule(ip))
-
-#     self.assertEqual("foo", ip.ip)
-#     self.assertIsInstance(obj.first().primary_ip4, str)

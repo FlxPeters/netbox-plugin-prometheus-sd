@@ -30,3 +30,5 @@ We use Poetry for dependency management and invoke as task runner.
 As Netbox plugins cannot be tested standalone, we need invoke to start all code embedded in Netbox Docker containers.
 
 All code to run in docker is located under `.devcontainer` which is also the starting point for VScode remote containers (not finished yet).
+
+To start a virtual env managed by poetry run `poetry shell`. 

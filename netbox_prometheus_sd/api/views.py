@@ -1,18 +1,17 @@
-from dcim.models.devices import Device
-from netbox_prometheus_sd.api import mapper
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import permissions
 
-from .serializers import TargetSerializer
-from .models import Target, TargetType
-
-
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
+from dcim.models.devices import Device
+from netbox_prometheus_sd.api import mapper
+
+from .serializers import TargetSerializer
 
 
 class TargetViewSet(viewsets.ViewSet):
+    """Provide Prometheus targets as read only endpoint"""
 
     # Dirty workaround to ignore permissions for the moment
     _ignore_model_permissions = True
