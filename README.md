@@ -1,5 +1,8 @@
 # netbox-plugin-prometheus-sd
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/workflows/CI/badge.svg?event=push)](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/actions?query=workflow%3ACI)
+
 Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 
 HTTP SD is a new feature in Prometheus 2.28.0 which allows to discover hosts from a URL instead of files only. 
