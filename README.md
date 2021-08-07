@@ -8,6 +8,8 @@ Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 HTTP SD is a new feature in Prometheus 2.28.0 which allows to discover hosts from a URL instead of files only. 
 This project is an attempt to provide a compatible API endpoint in Netbox to make devices, IP and virtual machines available to Prometheus.
 
+**Project status:** This projet is under development at the moment. It's a first attempt, things may change until a first release. Feel free to contribute.
+
 ## Instalation
 
 tbd.
