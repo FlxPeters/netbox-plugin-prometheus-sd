@@ -270,11 +270,10 @@ def tests(context, netbox_ver=NETBOX_VER, python_ver=PYTHON_VER):
     black(context, netbox_ver=netbox_ver, python_ver=python_ver)
     print("Running bandit...")
     bandit(context, netbox_ver=netbox_ver, python_ver=python_ver)
-    print("Running pylint...")
-    pylint(context, netbox_ver=netbox_ver, python_ver=python_ver)
+    # Todo: Add we we have a stable realse
+    # print("Running pylint...")
+    # pylint(context, netbox_ver=netbox_ver, python_ver=python_ver)
     print("Running unit tests...")
     unittest(context, netbox_ver=netbox_ver, python_ver=python_ver)
-    # print("Running yamllint...")
-    # yamllint(context, NAME, python_ver)
 
     print("All tests have passed!")
