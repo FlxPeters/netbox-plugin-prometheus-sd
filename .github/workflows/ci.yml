@@ -15,20 +15,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Run image
+      - name: Install poetry
         uses: abatilo/actions-poetry@v2.0.0
-
-      - name: Cache Poetry virtualenv
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: ~/.virtualenvs
-          key: poetry-$
-          restore-keys: |
-            poetry-$
-      - name: Install Dependencies using Poetry
-        run: poetry install
-        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Run tests
         run: poetry run invoke tests
