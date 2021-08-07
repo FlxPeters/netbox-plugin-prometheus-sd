@@ -19,7 +19,7 @@ invoke = "^1.6.0"
 pylint = "^2.9.5"
 pylint-django = "^2.4.4"
 pydocstyle = "^6.1.1"
-yamllint = "^1.26.1"
+yamllint = "^1.26.2"
 typed-ast = "^1.4.3"
 
 [build-system]
