@@ -1,6 +1,9 @@
 from netbox_prometheus_sd.api.models import Target, TargetType
 
-from ipam.models import IPAddress
+from ipam.models import (
+    IPAddress,
+    Service,
+)
 from virtualization.models import (
     VirtualMachine,
     Device,
@@ -36,9 +39,14 @@ def vm_to_target(vm: VirtualMachine):
         target.add_label("platform", vm.platform.name)
         target.add_label("platform_slug", vm.platform.slug)
 
+    services = []
+    for service in Service.objects.filter(virtual_machine__id=vm.id).all():
+        services.append(service.name)
+    if len(services) > 0:
+        target.add_label("services", ',{},'.format(','.join(services)))
+
     # todo: Add more fields
     # device_type
-    # services
     # tags?
 
     return target
@@ -70,8 +78,13 @@ def device_to_target(device: Device):
         target.add_label("site", device.site.name)
         target.add_label("site_slug", device.site.slug)
 
+    services = []
+    for service in Service.objects.filter(device__id=device.id).all():
+        services.append(service.name)
+    if len(services) > 0:
+        target.add_label("services", ',{},'.format(','.join(services)))
+
     # todo: Add more fields
-    # services
     # tags
 
     return target
