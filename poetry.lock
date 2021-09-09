@@ -330,7 +330,7 @@ python-versions = "*"
 
 [[package]]
 name = "yamllint"
-version = "1.26.2"
+version = "1.26.3"
 description = "A linter for YAML files."
 category = "dev"
 optional = false
@@ -355,7 +355,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0f91b07eb4669d475ccfee4709f87c24356cac58d66129dd5fef82a420cabd3c"
+content-hash = "7aeb467828688ee471872fe4c6d081614263e015d36fa03a8c070f56cd3ff0e8"
 
 [metadata.files]
 appdirs = [
@@ -598,7 +598,7 @@ wrapt = [
     {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
 ]
 yamllint = [
-    {file = "yamllint-1.26.2.tar.gz", hash = "sha256:0b08a96750248fdf21f1e8193cb7787554ef75ed57b27f621cd6b3bf09af11a1"},
+    {file = "yamllint-1.26.3.tar.gz", hash = "sha256:3934dcde484374596d6b52d8db412929a169f6d9e52e20f9ade5bf3523d9b96e"},
 ]
 zipp = [
     {file = "zipp-3.4.1-py3-none-any.whl", hash = "sha256:51cb66cc54621609dd593d1787f286ee42a5c0adbb4b29abea5a63edc3e03098"},
