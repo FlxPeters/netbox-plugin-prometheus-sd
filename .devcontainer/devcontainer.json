@@ -1,9 +1,0 @@
-{
-	"name": "Netbox plugin development environment",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "netbox",
-	"workspaceFolder": "/opt/netbox/",
-	"extensions": [
-		"ms-python.python"
-	],
-}

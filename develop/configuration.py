@@ -6,11 +6,6 @@ from django.core.exceptions import ImproperlyConfigured
 from .settings import VERSION  # pylint: disable=relative-beyond-top-level
 
 
-NETBOX_RELEASE_CURRENT = version.parse(VERSION)
-NETBOX_RELEASE_28 = version.parse("2.8")
-NETBOX_RELEASE_29 = version.parse("2.9")
-NETBOX_RELEASE_211 = version.parse("2.11")
-
 # Enforce required configuration parameters
 for key in [
     "ALLOWED_HOSTS",
@@ -103,17 +98,6 @@ REDIS = {
         "SSL": is_truthy(os.environ.get("REDIS_SSL", False)),
     },
 }
-
-if NETBOX_RELEASE_28 < NETBOX_RELEASE_CURRENT < NETBOX_RELEASE_29:
-    # NetBox 2.8.x Specific Settings
-    REDIS["caching"]["DEFAULT_TIMEOUT"] = 300
-    REDIS["tasks"]["DEFAULT_TIMEOUT"] = 300
-elif NETBOX_RELEASE_CURRENT < NETBOX_RELEASE_211:
-    RQ_DEFAULT_TIMEOUT = 300
-else:
-    raise ImproperlyConfigured(
-        f"Version {NETBOX_RELEASE_CURRENT} of NetBox is unsupported at this time."
-    )
 
 #########################
 #                       #
@@ -255,18 +239,6 @@ REMOTE_AUTH_ENABLED = False
 REMOTE_AUTH_HEADER = "HTTP_REMOTE_USER"
 REMOTE_AUTH_AUTO_CREATE_USER = True
 REMOTE_AUTH_DEFAULT_GROUPS = []
-
-if NETBOX_RELEASE_28 < NETBOX_RELEASE_CURRENT < NETBOX_RELEASE_29:
-    # NetBox 2.8.x Specific Settings
-    REMOTE_AUTH_BACKEND = "utilities.auth_backends.RemoteUserBackend"
-    REMOTE_AUTH_DEFAULT_PERMISSIONS = []
-elif NETBOX_RELEASE_CURRENT < NETBOX_RELEASE_211:
-    REMOTE_AUTH_BACKEND = "netbox.authentication.RemoteUserBackend"
-    REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
-else:
-    raise ImproperlyConfigured(
-        f"Version {NETBOX_RELEASE_CURRENT} of NetBox is unsupported at this time."
-    )
 
 # This determines how often the GitHub API is called to check the latest release of NetBox. Must be at least 1 hour.
 RELEASE_CHECK_TIMEOUT = 24 * 3600
