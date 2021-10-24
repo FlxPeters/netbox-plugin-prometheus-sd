@@ -39,15 +39,18 @@ def vm_to_target(vm: VirtualMachine):
         target.add_label("platform", vm.platform.name)
         target.add_label("platform_slug", vm.platform.slug)
 
+    if hasattr(vm, "tags") and vm.tags is not None:
+        target.add_label("tags", ",".join([t.name for t in vm.tags.all()]))
+        target.add_label("tag_slugs", ",".join([t.slug for t in vm.tags.all()]))
+
     services = []
     for service in Service.objects.filter(virtual_machine__id=vm.id).all():
         services.append(service.name)
     if len(services) > 0:
-        target.add_label("services", ',{},'.format(','.join(services)))
+        target.add_label("services", ",{},".format(",".join(services)))
 
     # todo: Add more fields
     # device_type
-    # tags?
 
     return target
 
@@ -78,14 +81,17 @@ def device_to_target(device: Device):
         target.add_label("site", device.site.name)
         target.add_label("site_slug", device.site.slug)
 
+    if hasattr(device, "tags") and device.tags is not None:
+        target.add_label("tags", ",".join([t.name for t in device.tags.all()]))
+        target.add_label("tag_slugs", ",".join([t.slug for t in device.tags.all()]))
+
     services = []
     for service in Service.objects.filter(device__id=device.id).all():
         services.append(service.name)
     if len(services) > 0:
-        target.add_label("services", ',{},'.format(','.join(services)))
+        target.add_label("services", ",{},".format(",".join(services)))
 
     # todo: Add more fields
-    # tags
 
     return target
 
@@ -104,6 +110,10 @@ def ip_to_target(ip: IPAddress):
     target.add_label("type", TargetType.IP_ADDRESS.value)
     target.add_label("ip", addr)
     extract_tenant(ip, target)
+
+    if hasattr(ip, "tags") and ip.tags is not None:
+        target.add_label("tags", ",".join([t.name for t in ip.tags.all()]))
+        target.add_label("tag_slugs", ",".join([t.slug for t in ip.tags.all()]))
 
     return target
 

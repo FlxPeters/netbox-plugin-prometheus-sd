@@ -40,7 +40,7 @@ def build_minimal_vm():
 
 
 def build_vm_full():
-    return VirtualMachine.objects.create(
+    vm = VirtualMachine.objects.create(
         name="vm-full-01.example.com",
         cluster=build_cluster(),
         tenant=build_tenant(),
@@ -48,6 +48,9 @@ def build_vm_full():
         platform=Platform.objects.create(name="Ubuntu 20.04", slug="ubuntu-20.04"),
         primary_ip4=IPAddress.objects.create(address="192.168.0.1/24"),
     )
+    vm.tags.add("Tag1")
+    vm.tags.add("Tag 2")
+    return vm
 
 
 def build_minimal_device():
@@ -64,7 +67,7 @@ def build_minimal_device():
 
 
 def build_device_full():
-    return Device.objects.create(
+    device = Device.objects.create(
         name="core-switch-full-01",
         tenant=build_tenant(),
         device_role=build_device_role(),
@@ -77,6 +80,9 @@ def build_device_full():
         ),
         primary_ip6=IPAddress.objects.create(address="2001:db8:1701::2/64"),
     )
+    device.tags.add("Tag1")
+    device.tags.add("Tag 2")
+    return device
 
 
 def build_minimal_ip():
@@ -84,7 +90,7 @@ def build_minimal_ip():
 
 
 def build_full_ip():
-    return IPAddress.objects.create(
+    ip = IPAddress.objects.create(
         address="10.10.10.10/24",
         tenant=Tenant.objects.create(
             name="Starfleet",
@@ -93,6 +99,9 @@ def build_full_ip():
         ),
         dns_name="foo.example.com",
     )
+    ip.tags.add("Tag1")
+    ip.tags.add("Tag 2")
+    return ip
 
 
 class MapperTests(TestCase):
@@ -135,6 +144,12 @@ class MapperTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_ip": "192.168.0.1"}, target.labels
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tags": "Tag1,Tag 2"}, target.labels
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tag_slugs": "tag1,tag-2"}, target.labels
+        )
 
     def test_device_minimal_to_target(self):
         target = mapper.device_to_target(build_minimal_device())
@@ -169,6 +184,12 @@ class MapperTests(TestCase):
         )
         self.assertDictContainsSubset(
             {"__meta_netbox_ip": "2001:db8:1701::2"}, target.labels
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tags": "Tag1,Tag 2"}, target.labels
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tag_slugs": "tag1,tag-2"}, target.labels
         )
 
     def test_ip_minimal_to_target(self):
@@ -206,4 +227,10 @@ class MapperTests(TestCase):
         )
         self.assertDictContainsSubset(
             {"__meta_netbox_tenant_group_slug": "federation"}, target.labels
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tags": "Tag1,Tag 2"}, target.labels
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_tag_slugs": "tag1,tag-2"}, target.labels
         )
