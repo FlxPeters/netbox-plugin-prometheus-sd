@@ -89,6 +89,24 @@ def destroy(context, netbox_ver=NETBOX_VER):
     )
 
 
+# ------------------------------------------------------------------------------
+# ACTIONS
+# ------------------------------------------------------------------------------
+@task
+def nbshell(context, netbox_ver=NETBOX_VER):
+    """Launch a nbshell session.
+    Args:
+        context (obj): Used to run specific commands
+        netbox_ver (str): NetBox version to use to build the container
+        python_ver (str): Will use the Python version docker image to build from
+    """
+    context.run(
+        f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} run netbox python manage.py nbshell",
+        env={"NETBOX_VER": netbox_ver},
+        pty=True,
+    )
+
+
 @task
 def cli(context, netbox_ver=NETBOX_VER):
     """Launch a bash shell inside the running NetBox container.
