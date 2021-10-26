@@ -1,4 +1,3 @@
-from ipam.models.ip import IPAddress
 from rest_framework import serializers
 from virtualization.models import VirtualMachine
 from dcim.models import Device
