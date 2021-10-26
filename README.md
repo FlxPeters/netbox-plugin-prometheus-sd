@@ -21,19 +21,23 @@ The plugin only provides a new API endpoint on the Netbox API. There is no furth
 
 ## API
 
-The plugin includes 4 API endpoints to manage the onbarding tasks
+The plugin reuses Netbox API view sets with new serializers for Prometheus. 
+This means that all filters that can be used on the Netbox api can also be used to filter Prometheus targets.
 
 ```shell
-GET        /api/plugins/prometheus-sd/targets/       Get a list of prometheus compatible targets with lables
+GET        /api/plugins/prometheus-sd/devices/              Get a list of devices in a prometheus compatible format
+GET        /api/plugins/prometheus-sd/virtual-machines/     Get a list of vms in a prometheus compatible format
+GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
 ```
 
-There is currently not authentication. It's planed to use the native Netbox API token method with filters for devices and VMs the user has access to. 
+The plugin also reuses the Netbox authentication and permission model. 
+Depending on the configuration, a token must be passed to Netbox for authentication.
 
 ## Development
 
 We use Poetry for dependency management and invoke as task runner. 
 As Netbox plugins cannot be tested standalone, we need invoke to start all code embedded in Netbox Docker containers.
 
-All code to run in docker is located under `.devcontainer` which is also the starting point for VScode remote containers (not finished yet).
+All code to run in docker is located under `development` which is also the starting point for VScode remote containers (not finished yet).
 
 To start a virtual env managed by poetry run `poetry shell`. 

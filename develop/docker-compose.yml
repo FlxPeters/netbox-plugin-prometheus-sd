@@ -38,16 +38,16 @@ services:
     env_file: ./dev.env
 
   # test prom instance
-  prometheus:
-    image: prom/prometheus:v2.28.0
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    ports:
-      - 9090:9090
-    depends_on:
-      - netbox
+  # prometheus:
+  #   image: prom/prometheus:v2.28.0
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yml"
+  #   ports:
+  #     - 9090:9090
+  #   depends_on:
+  #     - netbox
 
 volumes:
   pgdata_netbox_prometheus_sd:
