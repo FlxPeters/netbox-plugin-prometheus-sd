@@ -1,7 +1,12 @@
 from rest_framework.response import Response
 from ipam.models import IPAddress
+from ipam.filtersets import IPAddressFilterSet
 from virtualization.models import VirtualMachine
+from virtualization.filtersets import VirtualMachineFilterSet
 from dcim.models.devices import Device
+from dcim.filtersets import DeviceFilterSet
+
+from extras.api.views import CustomFieldModelViewSet
 
 from .serializers import (
     PrometheusIPAddressSerializer,
@@ -9,13 +14,10 @@ from .serializers import (
     PrometheusVirtualMachineSerializer,
 )
 
-from extras.api.views import CustomFieldModelViewSet
-from virtualization import filtersets as vm_filtersets
-from dcim import filtersets as dcim_filtersets
-from ipam import filtersets as ipam_filtersets
 
-
-class VirtualMachineViewSet(CustomFieldModelViewSet):
+class VirtualMachineViewSet(
+    CustomFieldModelViewSet
+):  # pylint: disable=too-many-ancestors
     queryset = VirtualMachine.objects.prefetch_related(
         "cluster__site",
         "role",
@@ -26,15 +28,15 @@ class VirtualMachineViewSet(CustomFieldModelViewSet):
         "tags",
         "services",
     )
-    filterset_class = vm_filtersets.VirtualMachineFilterSet
+    filterset_class = VirtualMachineFilterSet
     serializer_class = PrometheusVirtualMachineSerializer
 
     def get_paginated_response(self, data):
-        """ Return as plain result without paging """
+        """Return as plain result without paging"""
         return Response(data)
 
 
-class DeviceViewSet(CustomFieldModelViewSet):
+class DeviceViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = Device.objects.prefetch_related(
         "device_type__manufacturer",
         "device_role",
@@ -49,19 +51,19 @@ class DeviceViewSet(CustomFieldModelViewSet):
         "primary_ip6__nat_outside",
         "tags",
     )
-    filterset_class = dcim_filtersets.DeviceFilterSet
+    filterset_class = DeviceFilterSet
     serializer_class = PrometheusDeviceSerializer
 
     def get_paginated_response(self, data):
-        """ Return as plain result without paging """
+        """Return as plain result without paging"""
         return Response(data)
 
 
-class IPAddressViewSet(CustomFieldModelViewSet):
+class IPAddressViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = IPAddress.objects.prefetch_related("tenant", "tags")
     serializer_class = PrometheusIPAddressSerializer
-    filterset_class = ipam_filtersets.IPAddressFilterSet
+    filterset_class = IPAddressFilterSet
 
     def get_paginated_response(self, data):
-        """ Return as plain result without paging """
+        """Return as plain result without paging"""
         return Response(data)

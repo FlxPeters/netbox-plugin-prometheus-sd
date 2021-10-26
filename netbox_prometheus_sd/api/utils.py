@@ -2,10 +2,10 @@ from netaddr import IPNetwork
 
 
 class LabelDict(dict):
-    """ Wrapper around dict to render labels """
+    """Wrapper around dict to render labels"""
 
     def get_labels(self):
-        """ Prefix and replace invalid key chars for prometheus labels"""
+        """Prefix and replace invalid key chars for prometheus labels"""
         return {
             "__meta_netbox_" + str(key.replace("-", "_").replace(" ", "_")): val
             for key, val in self.items()
@@ -19,7 +19,7 @@ def extract_tags(obj, labels):
 
 
 def extract_tenant(obj, labels: LabelDict):
-    """ Extract tenant and group"""
+    """Extract tenant and group"""
     if hasattr(obj, "tenant") and obj.tenant:
         labels["tenant"] = obj.tenant.name
         labels["tenant_slug"] = obj.tenant.slug
@@ -59,4 +59,3 @@ def extract_services(obj, labels: LabelDict):
         and len(obj.services.all())
     ):
         labels["services"] = ",".join([srv.name for srv in obj.services.all()])
-

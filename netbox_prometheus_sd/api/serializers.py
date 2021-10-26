@@ -3,14 +3,14 @@ from virtualization.models import VirtualMachine
 from dcim.models import Device
 from ipam.models import IPAddress
 
+from netaddr import IPNetwork
+
 from .utils import LabelDict
 from . import utils
 
-from netaddr import IPNetwork
-
 
 class PrometheusDeviceSerializer(serializers.ModelSerializer):
-    """ Serialize a device to Prometheus target representation """
+    """Serialize a device to Prometheus target representation"""
 
     class Meta:
         model = Device
@@ -50,7 +50,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
 
 
 class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
-    """ Serialize a virtual machine to Prometheus target representation """
+    """Serialize a virtual machine to Prometheus target representation"""
 
     class Meta:
         model = VirtualMachine
@@ -82,7 +82,7 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
 
 
 class PrometheusIPAddressSerializer(serializers.ModelSerializer):
-    """ Serialize an IP address to Prometheus target representation """
+    """Serialize an IP address to Prometheus target representation"""
 
     class Meta:
         model = IPAddress
@@ -101,7 +101,7 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
         return [self.extract_ip(obj)]
 
     def get_labels(self, obj):
-        """ Get IP address labels """
+        """Get IP address labels"""
         labels = LabelDict(
             {
                 "status": obj.status,

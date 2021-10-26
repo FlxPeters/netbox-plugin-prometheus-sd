@@ -1,10 +1,7 @@
 """NetBox configuration."""
 import os
 from distutils.util import strtobool
-from packaging import version
 from django.core.exceptions import ImproperlyConfigured
-from .settings import VERSION  # pylint: disable=relative-beyond-top-level
-
 
 # Enforce required configuration parameters
 for key in [
@@ -37,9 +34,9 @@ def is_truthy(arg):
     try:
         bool_val = strtobool(arg)
     except ValueError:
-        raise ImproperlyConfigured(
+        raise ImproperlyConfigured(  # pylint: disable=raise-missing-from
             f"Unexpected variable value: {arg}"
-        )  # pylint: disable=raise-missing-from
+        )
 
     return bool(bool_val)
 

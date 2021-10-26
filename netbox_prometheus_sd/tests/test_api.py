@@ -1,12 +1,13 @@
+import json
+
 from django.test import TestCase
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from users.models import ObjectPermission
-
-import json
 
 from . import utils
 
@@ -22,14 +23,14 @@ class ApiEndpointTests(TestCase):
         user = User.objects.create_user("username", "Pas$w0rd")
         obj_perm = ObjectPermission(name="test", actions=["view"])
         obj_perm.save()
-        obj_perm.users.add(user)
-        obj_perm.object_types.add(
+        obj_perm.users.add(user)  # pylint: disable=no-member
+        obj_perm.object_types.add(  # pylint: disable=no-member
             ContentType.objects.get(app_label="dcim", model="device")
         )
-        obj_perm.object_types.add(
+        obj_perm.object_types.add(  # pylint: disable=no-member
             ContentType.objects.get(app_label="ipam", model="ipaddress")
         )
-        obj_perm.object_types.add(
+        obj_perm.object_types.add(  # pylint: disable=no-member
             ContentType.objects.get(app_label="virtualization", model="virtualmachine")
         )
         self.client.force_authenticate(user)

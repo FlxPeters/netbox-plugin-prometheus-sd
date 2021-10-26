@@ -1,8 +1,8 @@
 from dcim.models.devices import DeviceType, Manufacturer
 from dcim.models.sites import Site
+from dcim.models import Device, DeviceRole, Platform
 
 from ipam.models import IPAddress
-from dcim.models import Device, DeviceRole, Platform
 from tenancy.models import Tenant, TenantGroup
 
 from virtualization.models import (
@@ -10,7 +10,6 @@ from virtualization.models import (
     ClusterGroup,
     ClusterType,
     VirtualMachine,
-    VMInterface,
 )
 
 
@@ -101,19 +100,3 @@ def build_full_ip():
     ip.tags.add("Tag1")
     ip.tags.add("Tag 2")
     return ip
-
-
-def create_vm(name, address, cluster, tenant):
-    vm = VirtualMachine.objects.create(name=name, cluster=cluster, tenant=tenant)
-
-    ip = IPAddress.objects.create(address=address)
-    interface = VMInterface.objects.create(virtual_machine=vm, name="default")
-
-    vm_interface_ct = ContentType.objects.get_for_model(VMInterface)
-
-    ip.assigned_object_id = interface.id
-    ip.assigned_object_type = vm_interface_ct
-    ip.save()
-
-    vm.primary_ip4 = ip
-    vm.save()
