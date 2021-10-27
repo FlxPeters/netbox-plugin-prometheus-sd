@@ -11,8 +11,6 @@ RUN pip install --upgrade pip\
 # -------------------------------------------------------------------------------------
 # Install NetBox
 # -------------------------------------------------------------------------------------
-# Remove redis==3.4.1 from the requirements.txt file as a workaround to #4910
-# https://github.com/netbox-community/netbox/issues/4910, required for version 2.8.8 and earlier
 ARG netbox_ver=master
 
 RUN git clone --single-branch --branch ${netbox_ver} https://github.com/netbox-community/netbox.git /opt/netbox/ && \
@@ -24,9 +22,6 @@ RUN git clone --single-branch --branch ${netbox_ver} https://github.com/netbox-c
 RUN echo "import sys" >> /opt/netbox/netbox/netbox/settings.py && \
     echo "TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'" >> /opt/netbox/netbox/netbox/settings.py && \
     echo "DEBUG_TOOLBAR_CONFIG = {'SHOW_TOOLBAR_CALLBACK': lambda _: DEBUG and not TESTING }" >> /opt/netbox/netbox/netbox/settings.py
-
-# Work around https://github.com/rq/django-rq/issues/421
-RUN pip install django-rq==2.3.2
 
 # -------------------------------------------------------------------------------------
 # Install Netbox Plugin

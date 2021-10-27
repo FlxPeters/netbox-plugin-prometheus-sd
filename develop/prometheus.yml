@@ -1,9 +1,0 @@
-global:
-  scrape_interval: 15s # By default, scrape targets every 15 seconds.
-  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
-
-scrape_configs:
-  - job_name: "virtual-machines"
-    http_sd_configs:
-      - url: http://netbox:8000/api/plugins/prometheus-sd/virtual-machines
-        refresh_interval: 10s
