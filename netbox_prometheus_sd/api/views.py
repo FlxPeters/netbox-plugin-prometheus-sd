@@ -1,12 +1,22 @@
 from rest_framework.response import Response
 from ipam.models import IPAddress
-from ipam.filtersets import IPAddressFilterSet
 from virtualization.models import VirtualMachine
-from virtualization.filtersets import VirtualMachineFilterSet
 from dcim.models.devices import Device
-from dcim.filtersets import DeviceFilterSet
-
 from extras.api.views import CustomFieldModelViewSet
+
+# Filtersets have been renamed, we support both
+# https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
+# pylint: disable=ungrouped-imports
+try:
+    from ipam.filtersets import IPAddressFilterSet
+    from dcim.filtersets import DeviceFilterSet
+    from virtualization.filtersets import VirtualMachineFilterSet
+except ImportError:
+    from ipam.filters import IPAddressFilterSet
+    from dcim.filters import DeviceFilterSet
+    from virtualization.filters import VirtualMachineFilterSet
+# pylint: enable=ungrouped-imports
+
 
 from .serializers import (
     PrometheusIPAddressSerializer,

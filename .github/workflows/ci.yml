@@ -1,20 +1,27 @@
 name: CI
 on: [push]
 
+env:
+  DOCKER_BUILDKIT: 1
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        # Netbox git tags
+        netbox-version:
+          - v2.11.11
+          - v3.0.8
+          - master
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.8
 
       - name: Install poetry
         uses: abatilo/actions-poetry@v2.0.0
@@ -31,6 +38,9 @@ jobs:
       - name: Install Dependencies using Poetry
         run: poetry install
         if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Build test image
+        run: poetry run invoke build
 
       - name: Run tests
         run: poetry run invoke tests

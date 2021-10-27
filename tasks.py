@@ -21,6 +21,7 @@ def build(context, netbox_ver=NETBOX_VER):
         context (obj): Used to run specific commands
         netbox_ver (str): NetBox version to use to build the container
     """
+    print(f"Build Netbox image for version {netbox_ver} ...")
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} build --build-arg netbox_ver={netbox_ver}",
         env={"NETBOX_VER": netbox_ver},
