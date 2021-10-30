@@ -25,12 +25,12 @@ The plugin has not further plugin configuration at the moment.
 
 The plugin only provides a new API endpoint on the Netbox API. There is no further action required after installation. 
 
-## API
+### API
 
 The plugin reuses Netbox API view sets with new serializers for Prometheus. 
 This means that all filters that can be used on the Netbox api can also be used to filter Prometheus targets.
 
-```shell
+```
 GET        /api/plugins/prometheus-sd/devices/              Get a list of devices in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/virtual-machines/     Get a list of vms in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
@@ -38,6 +38,14 @@ GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in 
 
 The plugin also reuses the Netbox authentication and permission model. 
 Depending on the configuration, a token must be passed to Netbox for authentication.
+
+### Example
+
+A working example on how to use this plugin with Prometheus is located at the `example` folder. Netbox content is created by using Netbox docker initializers.
+
+The demo data doesn't make sense, but they are good enough for demonstrating how to configure Prometheus and get demo data to Prometheus service discovery.
+
+Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`. Netbox content should then be available in the service discovery tab. 
 
 ## Development
 
