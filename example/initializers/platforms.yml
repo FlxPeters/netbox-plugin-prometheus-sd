@@ -1,0 +1,9 @@
+- name: Platform 1
+  slug: platform-1
+  manufacturer: Manufacturer 1
+- name: Platform 2
+  slug: platform-2
+  manufacturer: Manufacturer 2
+- name: Platform 3
+  slug: platform-3
+  manufacturer: No Name
