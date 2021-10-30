@@ -43,6 +43,18 @@ services:
       - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: envs/redis-cache.env
 
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    volumes:
+      - ./configuration/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      - netbox
+    links:
+      - netbox
 volumes:
   netbox-media-files:
     driver: local

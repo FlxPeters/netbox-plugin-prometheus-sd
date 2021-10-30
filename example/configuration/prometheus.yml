@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: "netbox-demo"
+
+scrape_configs:
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "http_sd_ips"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses?status=active
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
+
+  - job_name: "http_sd_combined"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/virtual-machines/
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
+      - url: http://netbox:8080/api/plugins/prometheus-sd/devices/
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
