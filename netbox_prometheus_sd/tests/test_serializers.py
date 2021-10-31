@@ -71,10 +71,10 @@ class PrometheusDeviceSerializerTests(TestCase):
     def test_device_minimal_to_target(self):
 
         data = PrometheusDeviceSerializer(
-            instance=utils.build_minimal_device("core-switch-01")
+            instance=utils.build_minimal_device("firewall-01")
         ).data
 
-        self.assertEqual(data["targets"], ["core-switch-01"])
+        self.assertEqual(data["targets"], ["firewall-01"])
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_role": "Firewall"}, data["labels"]
@@ -94,9 +94,11 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
 
     def test_device_full_to_target(self):
-        data = PrometheusDeviceSerializer(instance=utils.build_device_full()).data
+        data = PrometheusDeviceSerializer(
+            instance=utils.build_device_full("firewall-full-01")
+        ).data
 
-        self.assertEqual(data["targets"], ["core-switch-full-01"])
+        self.assertEqual(data["targets"], ["firewall-full-01"])
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_platform": "Junos"}, data["labels"]

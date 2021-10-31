@@ -16,9 +16,9 @@ from virtualization.models import (
 def build_cluster():
     return Cluster.objects.get_or_create(
         name="DC1",
-        group=ClusterGroup.objects.create(name="VMware"),
-        type=ClusterType.objects.create(name="On Prem"),
-        site=Site.objects.create(name="Campus A", slug="campus-a"),
+        group=ClusterGroup.objects.get_or_create(name="VMware")[0],
+        type=ClusterType.objects.get_or_create(name="On Prem")[0],
+        site=Site.objects.get_or_create(name="Campus A", slug="campus-a")[0],
     )[0]
 
 
@@ -57,12 +57,12 @@ def build_minimal_device(name):
                 name="Juniper", slug="juniper"
             )[0],
         )[0],
-        site=Site.objects.create(name="Site", slug="site"),
+        site=Site.objects.get_or_create(name="Site", slug="site")[0],
     )[0]
 
 
-def build_device_full():
-    device = build_minimal_device("core-switch-full-01")
+def build_device_full(name):
+    device = build_minimal_device(name)
     device.tenant = build_tenant()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
     device.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[
