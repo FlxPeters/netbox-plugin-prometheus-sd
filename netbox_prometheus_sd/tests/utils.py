@@ -14,89 +14,79 @@ from virtualization.models import (
 
 
 def build_cluster():
-
-    return Cluster.objects.create(
+    return Cluster.objects.get_or_create(
         name="DC1",
         group=ClusterGroup.objects.create(name="VMware"),
         type=ClusterType.objects.create(name="On Prem"),
         site=Site.objects.create(name="Campus A", slug="campus-a"),
-    )
+    )[0]
 
 
 def build_tenant():
-    return Tenant.objects.create(name="Acme Corp.", slug="acme")
+    return Tenant.objects.get_or_create(name="Acme Corp.", slug="acme")[0]
 
 
-def build_device_role():
-    return DeviceRole.objects.create(name="Core Switch", slug="core-switch")
+def build_minimal_vm(name):
+    return VirtualMachine.objects.get_or_create(name=name, cluster=build_cluster())[0]
 
 
-def build_minimal_vm():
-    return VirtualMachine.objects.create(
-        name="vm-01.example.com", cluster=build_cluster()
-    )
+def build_vm_full(name):
+    vm = build_minimal_vm(name=name)
+    vm.tenant = build_tenant()
+    vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
+    vm.platform = Platform.objects.get_or_create(
+        name="Ubuntu 20.04", slug="ubuntu-20.04"
+    )[0]
+    vm.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]
 
-
-def build_vm_full():
-    vm = VirtualMachine.objects.create(
-        name="vm-full-01.example.com",
-        cluster=build_cluster(),
-        tenant=build_tenant(),
-        role=DeviceRole.objects.create(name="VM", slug="vm", vm_role=True),
-        platform=Platform.objects.create(name="Ubuntu 20.04", slug="ubuntu-20.04"),
-        primary_ip4=IPAddress.objects.create(address="192.168.0.1/24"),
-    )
     vm.tags.add("Tag1")
     vm.tags.add("Tag 2")
     return vm
 
 
-def build_minimal_device():
-    return Device.objects.create(
-        name="core-switch-01",
-        device_role=build_device_role(),
-        device_type=DeviceType.objects.create(
-            model="Firewall Device",
-            slug="firewall",
-            manufacturer=Manufacturer.objects.create(name="Cisco", slug="cisco"),
-        ),
-        site=Site.objects.create(name="Site Device", slug="site-device"),
-    )
+def build_minimal_device(name):
+    return Device.objects.get_or_create(
+        name=name,
+        device_role=DeviceRole.objects.get_or_create(name="Firewall", slug="firewall")[
+            0
+        ],
+        device_type=DeviceType.objects.get_or_create(
+            model="SRX",
+            slug="srx",
+            manufacturer=Manufacturer.objects.get_or_create(
+                name="Juniper", slug="juniper"
+            )[0],
+        )[0],
+        site=Site.objects.create(name="Site", slug="site"),
+    )[0]
 
 
 def build_device_full():
-    device = Device.objects.create(
-        name="core-switch-full-01",
-        tenant=build_tenant(),
-        device_role=build_device_role(),
-        platform=Platform.objects.create(name="Junos", slug="junos"),
-        site=Site.objects.create(name="Campus B", slug="campus-b"),
-        device_type=DeviceType.objects.create(
-            model="SRX",
-            slug="srx",
-            manufacturer=Manufacturer.objects.create(name="Juniper", slug="juniper"),
-        ),
-        primary_ip6=IPAddress.objects.create(address="2001:db8:1701::2/64"),
-    )
+    device = build_minimal_device("core-switch-full-01")
+    device.tenant = build_tenant()
+    device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
+    device.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[
+        0
+    ]
     device.tags.add("Tag1")
     device.tags.add("Tag 2")
     return device
 
 
-def build_minimal_ip():
-    return IPAddress.objects.create(address="10.10.10.10/24")
+def build_minimal_ip(address):
+    return IPAddress.objects.get_or_create(address=address)[0]
 
 
-def build_full_ip():
-    ip = IPAddress.objects.create(
-        address="10.10.10.10/24",
-        tenant=Tenant.objects.create(
-            name="Starfleet",
-            slug="starfleet",
-            group=TenantGroup.objects.create(name="Federation", slug="federation"),
-        ),
-        dns_name="foo.example.com",
-    )
+def build_full_ip(address, dns_name=""):
+    ip = build_minimal_ip(address=address)
+    ip.tenant = Tenant.objects.get_or_create(
+        name="Starfleet",
+        slug="starfleet",
+        group=TenantGroup.objects.get_or_create(name="Federation", slug="federation")[
+            0
+        ],
+    )[0]
+    ip.dns_name = dns_name
     ip.tags.add("Tag1")
     ip.tags.add("Tag 2")
     return ip
