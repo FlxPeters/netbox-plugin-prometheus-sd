@@ -1,5 +1,4 @@
 import json
-from os import name
 
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
@@ -39,7 +38,8 @@ class ApiEndpointTests(TestCase):
     def test_endpoint_device(self):
         """Ensure device endpoint returns a valid response"""
 
-        [utils.build_device_full(f"api-test-{i}.example.com") for i in range(60)]
+        for i in range(60):
+            utils.build_device_full(f"api-test-{i}.example.com")
 
         resp = self.client.get("/api/plugins/prometheus-sd/devices/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -52,7 +52,8 @@ class ApiEndpointTests(TestCase):
     def test_endpoint_virtual_machine(self):
         """Ensure virtual machine endpoint returns a valid response"""
 
-        [utils.build_vm_full(f"api-test-vm-{i}.example.com") for i in range(60)]
+        for i in range(60):
+            utils.build_vm_full(f"api-test-vm-{i}.example.com")
 
         resp = self.client.get("/api/plugins/prometheus-sd/virtual-machines/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -65,7 +66,8 @@ class ApiEndpointTests(TestCase):
     def test_endpoint_ip_address(self):
         """Ensure ip address endpoint returns a valid response"""
 
-        [utils.build_full_ip(address=f"10.10.10.{i}/24") for i in range(60)]
+        for i in range(60):
+            utils.build_full_ip(address=f"10.10.10.{i}/24")
 
         resp = self.client.get("/api/plugins/prometheus-sd/ip-addresses/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)

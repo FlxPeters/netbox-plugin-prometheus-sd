@@ -1,6 +1,6 @@
 [FORMAT]
 # Good variable names which should always be accepted, separated by a comma
-good-names=vm,ip
+good-names=vm,ip,i
 max-line-length=120
 
 

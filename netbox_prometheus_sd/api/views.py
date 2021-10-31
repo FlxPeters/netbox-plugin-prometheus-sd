@@ -1,4 +1,3 @@
-from rest_framework.response import Response
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device
