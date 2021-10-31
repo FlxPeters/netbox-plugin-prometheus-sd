@@ -40,10 +40,7 @@ class VirtualMachineViewSet(
     )
     filterset_class = VirtualMachineFilterSet
     serializer_class = PrometheusVirtualMachineSerializer
-
-    def get_paginated_response(self, data):
-        """Return as plain result without paging"""
-        return Response(data)
+    pagination_class = None
 
 
 class DeviceViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
@@ -63,17 +60,11 @@ class DeviceViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancest
     )
     filterset_class = DeviceFilterSet
     serializer_class = PrometheusDeviceSerializer
-
-    def get_paginated_response(self, data):
-        """Return as plain result without paging"""
-        return Response(data)
+    pagination_class = None
 
 
 class IPAddressViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = IPAddress.objects.prefetch_related("tenant", "tags")
     serializer_class = PrometheusIPAddressSerializer
     filterset_class = IPAddressFilterSet
-
-    def get_paginated_response(self, data):
-        """Return as plain result without paging"""
-        return Response(data)
+    pagination_class = None
