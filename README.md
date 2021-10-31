@@ -29,15 +29,16 @@ The plugin only provides a new API endpoint on the Netbox API. There is no furth
 
 The plugin reuses Netbox API view sets with new serializers for Prometheus. 
 This means that all filters that can be used on the Netbox api can also be used to filter Prometheus targets.
+Paging is disabled because Prometheus does not support paged results. 
+
+The plugin also reuses the Netbox authentication and permission model. 
+Depending on the Netbox configuration, a token with valid object permissions must be passed to Netbox.
 
 ```
 GET        /api/plugins/prometheus-sd/devices/              Get a list of devices in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/virtual-machines/     Get a list of vms in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
 ```
-
-The plugin also reuses the Netbox authentication and permission model. 
-Depending on the configuration, a token must be passed to Netbox for authentication.
 
 ### Example
 
