@@ -19,7 +19,7 @@ invoke = "^1.6.0"
 pylint = "^2.9.6"
 pylint-django = "^2.4.4"
 yamllint = "^1.26.2"
-typed-ast = "^1.4.3"
+typed-ast = "^1.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
