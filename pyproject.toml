@@ -17,7 +17,7 @@ python = "^3.8"
 black = "^22.1"
 invoke = "^1.6.0"
 pylint = "^2.12.2"
-pylint-django = "^2.5.0"
+pylint-django = "^2.5.1"
 yamllint = "^1.26.2"
 typed-ast = "^1.5.2"
 
