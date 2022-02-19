@@ -33,6 +33,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
         utils.extract_tenant(obj, labels)
         utils.extract_cluster(obj, labels)
         utils.extract_services(obj, labels)
+        utils.extract_contacts(obj, labels)
 
         if hasattr(obj, "device_role") and obj.device_role is not None:
             labels["role"] = obj.device_role.name
@@ -73,6 +74,7 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
         utils.extract_tenant(obj, labels)
         utils.extract_cluster(obj, labels)
         utils.extract_services(obj, labels)
+        utils.extract_contacts(obj, labels)
 
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
