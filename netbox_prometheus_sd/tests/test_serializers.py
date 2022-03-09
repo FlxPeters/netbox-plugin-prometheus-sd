@@ -63,8 +63,16 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
             {"__meta_netbox_platform_slug": "ubuntu-20.04"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_primary_ip": "192.168.0.1"}, data["labels"]
+            {"__meta_netbox_primary_ip": "2001:db8:1701::2"}, data["labels"]
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_primary_ip4": "192.168.0.1"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
+        )
+
+
 
 
 class PrometheusDeviceSerializerTests(TestCase):
@@ -108,6 +116,12 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
         self.assertDictContainsSubset(
             {"__meta_netbox_primary_ip": "2001:db8:1701::2"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_primary_ip4": "192.168.0.1"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
         )
         self.assertDictContainsSubset(
             {"__meta_netbox_tenant": "Acme Corp."}, data["labels"]
