@@ -8,11 +8,11 @@ class PrometheusSD(PluginConfig):
         "Provide Prometheus url_sd compatible API Endpoint with data from netbox"
     )
     version = "0.1"
-    author = "Felix Peters"
-    author_email = "mail@felixpeters.de"
+    author = "Andrei Protsenko"
+    author_email = "prondy@gmail.com"
     base_url = "prometheus-sd"
-    required_settings = []
-    default_settings = {}
+    required_settings = ["custom_field_name"]
+    default_settings = {"target_port": 9100}
 
 
-config = PrometheusSD  # pylint:disable=invalid-name
+config = PrometheusSD

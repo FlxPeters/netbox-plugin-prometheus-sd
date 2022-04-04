@@ -1,8 +1,0 @@
-[FORMAT]
-# Good variable names which should always be accepted, separated by a comma
-good-names=vm,ip,i
-max-line-length=120
-
-
-[MESSAGES CONTROL]
-disable=C0116,C0115,C0114,R0903,R0201
