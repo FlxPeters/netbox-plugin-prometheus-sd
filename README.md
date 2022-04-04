@@ -1,4 +1,4 @@
-# netbox-plugin-prometheus-sd
+# netbox-prometheus-sd
 
 Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 
@@ -10,7 +10,7 @@ This plugin implements API endpoints in Netbox to make devices, IPs and virtual 
 1) The plugin is available as a Python package in pypi and can be installed with pip
 
 ```
-pip install netbox-plugin-prometheus-sd
+pip install netbox-prometheus-sd
 ```
 
 2) Create a boolean custom field in the netbox, which will be used to determine
