@@ -9,6 +9,11 @@ Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 HTTP SD is a new feature in Prometheus 2.28.0 that allows hosts to be found via a URL instead of just files. 
 This plugin implements API endpoints in Netbox to make devices, IPs and virtual machines available to Prometheus.
 
+## Compatibility
+
+We aim to support the latest major versions of Netbox. For now we Support Netbox `2.11`, `3.0` and `3.1` including bugfix versions.
+Netbox `3.2` has changed the datetime fields which is not compatible with the plugin code yet. As soon as [we fixed this](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/issues/46) the plugin should work with `3.2`.
+
 ## Installation
 
 The plugin is available as a Python package in pypi and can be installed with pip
