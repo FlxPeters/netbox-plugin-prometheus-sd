@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
     branches:
-      - master
+      - main
 
 env:
   DOCKER_BUILDKIT: 1
@@ -16,8 +16,10 @@ jobs:
         # Netbox git tags
         netbox-version:
           - v2.11.11
-          - v3.0.8
-          - master
+          - v3.0
+          - v3.1
+          # Remove master for now (see https://github.com/FlxPeters/netbox-plugin-prometheus-sd/issues/46)
+          # - master
 
     steps:
       - uses: actions/checkout@v2
