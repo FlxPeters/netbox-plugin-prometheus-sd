@@ -4,10 +4,18 @@ from netaddr import IPNetwork
 class LabelDict(dict):
     """Wrapper around dict to render labels"""
 
+    @staticmethod
+    def promsafestr(labelval: str):
+        # add any special chars here that may appear in custom label names
+        specialChars = " -/\\!"
+        for specialChar in specialChars:
+            labelval = labelval.replace(specialChar, '_')
+        return labelval
+
     def get_labels(self):
         """Prefix and replace invalid key chars for prometheus labels"""
         return {
-            "__meta_netbox_" + str(key.replace("-", "_").replace(" ", "_")): val
+            "__meta_netbox_" + str(self.promsafestr(key)): val
             for key, val in self.items()
         }
 
@@ -59,3 +67,20 @@ def extract_services(obj, labels: LabelDict):
         and len(obj.services.all())
     ):
         labels["services"] = ",".join([srv.name for srv in obj.services.all()])
+
+
+def extract_contacts(obj, labels: LabelDict):
+    if (
+        hasattr(obj, "contacts")
+        and obj.contacts is not None
+    ):
+        for ca in obj.contacts.all():
+            if hasattr(ca, "contact") and ca.contact is not None:
+                labels[f"contact_{ca.priority}_name"] = ca.contact.name
+            if ca.contact.email:
+                labels[f"contact_{ca.priority}_email"] = ca.contact.email
+            if ca.contact.comments:
+                labels[f"contact_{ca.priority}_comments"] = ca.contact.comments
+            if hasattr(ca, "role") and ca.role is not None:
+                labels[f"contact_{ca.priority}_role"] = ca.role.name
+
