@@ -50,9 +50,14 @@ def extract_cluster(obj, labels: LabelDict):
 
 
 def extract_primary_ip(obj, labels: LabelDict):
-    if hasattr(obj, "primary_ip") and obj.primary_ip is not None:
+    if getattr(obj, "primary_ip", None) is not None:
         labels["primary_ip"] = str(IPNetwork(obj.primary_ip.address).ip)
 
+    if getattr(obj, "primary_ip4", None) is not None:
+        labels["primary_ip4"] = str(IPNetwork(obj.primary_ip4.address).ip)
+
+    if getattr(obj, "primary_ip6", None) is not None:
+        labels["primary_ip6"] = str(IPNetwork(obj.primary_ip6.address).ip)
 
 def extracts_platform(obj, label: LabelDict):
     if hasattr(obj, "platform") and obj.platform is not None:

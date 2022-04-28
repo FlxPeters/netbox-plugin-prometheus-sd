@@ -38,6 +38,7 @@ def build_vm_full(name):
         name="Ubuntu 20.04", slug="ubuntu-20.04"
     )[0]
     vm.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]
+    vm.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[0]
 
     vm.tags.add("Tag1")
     vm.tags.add("Tag 2")
@@ -65,6 +66,7 @@ def build_device_full(name):
     device = build_minimal_device(name)
     device.tenant = build_tenant()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
+    device.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]
     device.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[
         0
     ]
