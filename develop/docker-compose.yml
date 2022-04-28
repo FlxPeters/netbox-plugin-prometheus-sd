@@ -17,8 +17,8 @@ services:
     env_file:
       - ./dev.env
     volumes:
-      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
-      - ../:/source
+      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py:ro,Z
+      - ../:/source:ro,Z
     tty: true
 
   # Postgres Database

@@ -1,5 +1,5 @@
 name: CI
-on:  
+on:
   push:
   pull_request:
     branches:
@@ -16,8 +16,8 @@ jobs:
         # Netbox git tags
         netbox-version:
           - v2.11.11
-          - v3.0
-          - v3.1
+          - v3.0.12
+          - v3.1.8
           # Remove master for now (see https://github.com/FlxPeters/netbox-plugin-prometheus-sd/issues/46)
           # - master
 

@@ -6,7 +6,7 @@
 
 Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 
-HTTP SD is a new feature in Prometheus 2.28.0 that allows hosts to be found via a URL instead of just files. 
+HTTP SD is a new feature in Prometheus 2.28.0 that allows hosts to be found via a URL instead of just files.
 This plugin implements API endpoints in Netbox to make devices, IPs and virtual machines available to Prometheus.
 
 ## Compatibility
@@ -28,15 +28,15 @@ The plugin has not further plugin configuration at the moment.
 
 ## Usage
 
-The plugin only provides a new API endpoint on the Netbox API. There is no further action required after installation. 
+The plugin only provides a new API endpoint on the Netbox API. There is no further action required after installation.
 
 ### API
 
-The plugin reuses Netbox API view sets with new serializers for Prometheus. 
+The plugin reuses Netbox API view sets with new serializers for Prometheus.
 This means that all filters that can be used on the Netbox api can also be used to filter Prometheus targets.
-Paging is disabled because Prometheus does not support paged results. 
+Paging is disabled because Prometheus does not support paged results.
 
-The plugin also reuses the Netbox authentication and permission model. 
+The plugin also reuses the Netbox authentication and permission model.
 Depending on the Netbox configuration, a token with valid object permissions must be passed to Netbox.
 
 ```
@@ -51,13 +51,13 @@ A working example on how to use this plugin with Prometheus is located at the `e
 
 The demo data doesn't make sense, but they are good enough for demonstrating how to configure Prometheus and get demo data to Prometheus service discovery.
 
-Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`. Netbox content should then be available in the service discovery tab. 
+Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`. Netbox content should then be available in the service discovery tab.
 
 ## Development
 
-We use Poetry for dependency management and invoke as task runner. 
+We use Poetry for dependency management and invoke as task runner.
 As Netbox plugins cannot be tested standalone, we need invoke to start all code embedded in Netbox Docker containers.
 
 All code to run in docker is located under `development` which is also the starting point for VScode remote containers (not finished yet).
 
-To start a virtual env managed by poetry run `poetry shell`. 
+To start a virtual env managed by poetry run `poetry shell`.
