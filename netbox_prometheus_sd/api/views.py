@@ -1,7 +1,7 @@
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device
-from extras.api.views import CustomFieldModelViewSet
+from netbox.api.viewsets import NetBoxModelViewSet
 
 # Filtersets have been renamed, we support both
 # https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
@@ -25,7 +25,7 @@ from .serializers import (
 
 
 class VirtualMachineViewSet(
-    CustomFieldModelViewSet
+    NetBoxModelViewSet
 ):  # pylint: disable=too-many-ancestors
     queryset = VirtualMachine.objects.prefetch_related(
         "cluster__site",
@@ -44,7 +44,7 @@ class VirtualMachineViewSet(
     pagination_class = None
 
 
-class DeviceViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
+class DeviceViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = Device.objects.prefetch_related(
         "device_type__manufacturer",
         "device_role",
@@ -64,7 +64,7 @@ class DeviceViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancest
     pagination_class = None
 
 
-class IPAddressViewSet(CustomFieldModelViewSet):  # pylint: disable=too-many-ancestors
+class IPAddressViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = IPAddress.objects.prefetch_related("tenant", "tags")
     serializer_class = PrometheusIPAddressSerializer
     filterset_class = IPAddressFilterSet
