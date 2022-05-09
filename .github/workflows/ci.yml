@@ -18,8 +18,8 @@ jobs:
           - v2.11.11
           - v3.0.12
           - v3.1.8
-          # Remove master for now (see https://github.com/FlxPeters/netbox-plugin-prometheus-sd/issues/46)
-          # - master
+          - v3.2.2
+          - master
 
     steps:
       - uses: actions/checkout@v2
