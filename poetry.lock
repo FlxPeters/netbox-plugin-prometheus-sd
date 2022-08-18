@@ -228,11 +228,11 @@ python-versions = "*"
 
 [[package]]
 name = "yamllint"
-version = "1.26.3"
+version = "1.27.1"
 description = "A linter for YAML files."
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
 pathspec = ">=0.5.3"
@@ -241,7 +241,7 @@ pyyaml = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "31b1776d6469c42614123831d243af1ed5400c5917080e966a7dfc79503e3ad1"
+content-hash = "a74ffd39670609dc87831913f132155a5872bc46ef319c99895899074bf529ba"
 
 [metadata.files]
 astroid = [
@@ -419,5 +419,5 @@ wrapt = [
     {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
 ]
 yamllint = [
-    {file = "yamllint-1.26.3.tar.gz", hash = "sha256:3934dcde484374596d6b52d8db412929a169f6d9e52e20f9ade5bf3523d9b96e"},
+    {file = "yamllint-1.27.1.tar.gz", hash = "sha256:e688324b58560ab68a1a3cff2c0a474e3fed371dfe8da5d1b9817b7df55039ce"},
 ]
