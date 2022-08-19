@@ -7,7 +7,7 @@ class PrometheusSD(PluginConfig):
     description = (
         "Provide Prometheus url_sd compatible API Endpoint with data from netbox"
     )
-    version = "0.1"
+    version = "0.4"
     author = "Andrei Protsenko"
     author_email = "prondy@gmail.com"
     base_url = "prometheus-sd"
