@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from virtualization.models import VirtualMachine
-from dcim.models import Device
+from dcim.models import Device, DeviceType
 from ipam.models import IPAddress
 
 from netaddr import IPNetwork
@@ -46,6 +46,11 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
         if hasattr(obj, "site") and obj.site is not None:
             labels["site"] = obj.site.name
             labels["site_slug"] = obj.site.slug
+
+        if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
+            for key, value in obj.custom_field_data.items():
+                if value is not None:
+                    labels["custom_field_" + key.lower()] = value
 
         return labels.get_labels()
 
