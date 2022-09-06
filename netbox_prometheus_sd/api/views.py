@@ -1,8 +1,6 @@
-from django.db.models import Q
-
-from dcim.models.devices import Device
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
+from dcim.models.devices import Device
 
 # The base ViewSet has been renamed, this try-except helps to support
 # Both < 3.2 and the newer 3.2+ Versions:
@@ -68,18 +66,6 @@ class DeviceViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
         "primary_ip6__nat_outside",
         "tags",
     )
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        request = self.get_serializer_context()['request']
-        device_model = request.query_params.get("deviceModel", None)
-        if device_model is not None:
-            queryset = queryset.filter(
-                #Q(device_type__model__iregex=r'^{}.*$'.format(device_type__model))
-                Q(device_type__model__iregex=device_model)
-            )
-        return queryset
-
     filterset_class = DeviceFilterSet
     serializer_class = PrometheusDeviceSerializer
     pagination_class = None
