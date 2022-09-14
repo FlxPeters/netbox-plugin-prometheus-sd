@@ -19,6 +19,7 @@ jobs:
           - v3.0.12
           - v3.1.8
           - v3.2.2
+          - v3.3.2
           - master
 
     steps:

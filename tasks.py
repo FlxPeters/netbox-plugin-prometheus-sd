@@ -1,7 +1,7 @@
 import os
 from invoke import task
 
-NETBOX_VER = os.getenv("NETBOX_VER", "v3.1.8")
+NETBOX_VER = os.getenv("NETBOX_VER", "v3.3.2")
 
 # Name of the docker image/container
 NAME = os.getenv("IMAGE_NAME", "netbox-plugin-prometheus")
