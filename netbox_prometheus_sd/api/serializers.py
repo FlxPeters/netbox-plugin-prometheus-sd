@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from virtualization.models import VirtualMachine
-from dcim.models import Device, DeviceType
+from dcim.models import Device
 from ipam.models import IPAddress
 
 from netaddr import IPNetwork
