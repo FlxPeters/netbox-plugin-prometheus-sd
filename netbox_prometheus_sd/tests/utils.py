@@ -27,7 +27,21 @@ def build_tenant():
 
 
 def build_custom_fields():
-    return { "customer_id": "foobar-123"}
+    """Build custom field definition with different kinds of custom values"""
+    return {
+        "simple": "Foobar 123",
+        "int": 42,
+        "bool": True,
+        "multi-choice": ["foo", "bar", "baz"],
+        "complex": [
+            {
+                "id": 1,
+                "url": "https://demo.netbox.dev/api/tenancy/contacts/1/",
+                "display": "Bob",
+                "name": "Bob Bar"
+            }
+        ]
+    }
 
 def build_minimal_vm(name):
     return VirtualMachine.objects.get_or_create(name=name, cluster=build_cluster())[0]
