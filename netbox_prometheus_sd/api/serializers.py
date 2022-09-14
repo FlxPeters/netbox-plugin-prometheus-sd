@@ -34,6 +34,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
         utils.extract_cluster(obj, labels)
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
+        utils.extract_custom_fields(obj, labels)
 
         if hasattr(obj, "device_role") and obj.device_role is not None:
             labels["role"] = obj.device_role.name
@@ -46,11 +47,6 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
         if hasattr(obj, "site") and obj.site is not None:
             labels["site"] = obj.site.name
             labels["site_slug"] = obj.site.slug
-
-        if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
-            for key, value in obj.custom_field_data.items():
-                if value is not None:
-                    labels["custom_field_" + key.lower()] = value
 
         return labels.get_labels()
 
@@ -80,6 +76,7 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
         utils.extract_cluster(obj, labels)
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
+        utils.extract_custom_fields(obj, labels)
 
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
@@ -121,5 +118,6 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
 
         utils.extract_tags(obj, labels)
         utils.extract_tenant(obj, labels)
+        utils.extract_custom_fields(obj, labels)
 
         return labels.get_labels()
