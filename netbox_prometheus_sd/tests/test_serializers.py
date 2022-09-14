@@ -72,8 +72,26 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
             {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
+            {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"],
+            "Assert primitive custom field types are included in labels"
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_int": "42"}, data["labels"],
+            "Assert primitive custom field types are included in labels"
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_bool": "True"}, data["labels"],
+            "Assert primitive custom field types are included in labels"
+        )
+        self.assertFalse(
+            "__meta_netbox_custom_field_multiple_choice" in data["labels"].keys(),
+            "Assert labels do not include multi choice fields"
+        )
+        self.assertFalse(
+            "__meta_netbox_custom_field_complex" in data["labels"].keys(),
+            "Assert labels do not include complex fields"
+        )
+
 
 
 class PrometheusDeviceSerializerTests(TestCase):
@@ -131,7 +149,7 @@ class PrometheusDeviceSerializerTests(TestCase):
             {"__meta_netbox_tenant_slug": "acme"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
+            {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"]
         )
 
 
@@ -185,5 +203,5 @@ class PrometheusIPAddressSerializerTests(TestCase):
             {"__meta_netbox_tenant_group_slug": "federation"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
+            {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"]
         )

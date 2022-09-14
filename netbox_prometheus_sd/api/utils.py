@@ -92,5 +92,7 @@ def extract_contacts(obj, labels: LabelDict):
 def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
         for key, value in obj.custom_field_data.items():
-            if value is not None:
-                labels["custom_field_" + key.lower()] = value
+            if isinstance(value, (int, str, bool)):
+                labels["custom_field_" + key.lower()] = str(value)
+            else:
+                continue
