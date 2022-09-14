@@ -26,6 +26,9 @@ def build_tenant():
     return Tenant.objects.get_or_create(name="Acme Corp.", slug="acme")[0]
 
 
+def build_custom_fields():
+    return { "customer_id": "foobar-123"}
+
 def build_minimal_vm(name):
     return VirtualMachine.objects.get_or_create(name=name, cluster=build_cluster())[0]
 
@@ -33,6 +36,7 @@ def build_minimal_vm(name):
 def build_vm_full(name):
     vm = build_minimal_vm(name=name)
     vm.tenant = build_tenant()
+    vm.custom_field_data = build_custom_fields()
     vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
     vm.platform = Platform.objects.get_or_create(
         name="Ubuntu 20.04", slug="ubuntu-20.04"
@@ -65,6 +69,7 @@ def build_minimal_device(name):
 def build_device_full(name):
     device = build_minimal_device(name)
     device.tenant = build_tenant()
+    device.custom_field_data = build_custom_fields()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
     device.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]
     device.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[
@@ -81,6 +86,7 @@ def build_minimal_ip(address):
 
 def build_full_ip(address, dns_name=""):
     ip = build_minimal_ip(address=address)
+    ip.custom_field_data = build_custom_fields()
     ip.tenant = Tenant.objects.get_or_create(
         name="Starfleet",
         slug="starfleet",

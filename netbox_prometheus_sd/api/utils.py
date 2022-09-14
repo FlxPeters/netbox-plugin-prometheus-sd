@@ -88,3 +88,9 @@ def extract_contacts(obj, labels: LabelDict):
                 labels[f"contact_{contact.priority}_comments"] = contact.contact.comments
             if hasattr(contact, "role") and contact.role is not None:
                 labels[f"contact_{contact.priority}_role"] = contact.role.name
+
+def extract_custom_fields(obj, labels: LabelDict):
+    if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
+        for key, value in obj.custom_field_data.items():
+            if value is not None:
+                labels["custom_field_" + key.lower()] = value

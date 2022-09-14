@@ -71,8 +71,9 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
         )
-
-
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
+        )
 
 
 class PrometheusDeviceSerializerTests(TestCase):
@@ -129,6 +130,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_tenant_slug": "acme"}, data["labels"]
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
+        )
 
 
 class PrometheusIPAddressSerializerTests(TestCase):
@@ -179,4 +183,7 @@ class PrometheusIPAddressSerializerTests(TestCase):
         )
         self.assertDictContainsSubset(
             {"__meta_netbox_tenant_group_slug": "federation"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_customer_id": "foobar-123"}, data["labels"]
         )
