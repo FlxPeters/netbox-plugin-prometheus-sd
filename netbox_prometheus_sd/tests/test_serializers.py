@@ -72,26 +72,29 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
             {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"],
-            "Assert primitive custom field types are included in labels"
+            {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_int": "42"}, data["labels"],
-            "Assert primitive custom field types are included in labels"
+            {"__meta_netbox_custom_field_int": "42"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_bool": "True"}, data["labels"],
-            "Assert primitive custom field types are included in labels"
+            {"__meta_netbox_custom_field_bool": "True"}, data["labels"]
         )
-        self.assertFalse(
-            "__meta_netbox_custom_field_multiple_choice" in data["labels"].keys(),
-            "Assert labels do not include multi choice fields"
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_json": "{'foo': ['bar', 'baz']}"}, data["labels"]
         )
-        self.assertFalse(
-            "__meta_netbox_custom_field_complex" in data["labels"].keys(),
-            "Assert labels do not include complex fields"
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_multi_selection": "['foo', 'baz']"}, data["labels"]
         )
-
+        self.assertDictContainsSubset(
+            {
+                "__meta_netbox_custom_field_contact":
+                "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/', 'display': 'Foo', 'name': 'Foo'}]"
+            }, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_custom_field_text_long": "This is\r\na  pretty\r\nlog\r\nText"}, data["labels"]
+        )
 
 
 class PrometheusDeviceSerializerTests(TestCase):

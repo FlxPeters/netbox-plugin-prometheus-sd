@@ -29,18 +29,28 @@ def build_tenant():
 def build_custom_fields():
     """Build custom field definition with different kinds of custom values"""
     return {
-        "simple": "Foobar 123",
-        "int": 42,
-        "bool": True,
-        "multi-choice": ["foo", "bar", "baz"],
-        "complex": [
+        "contact": [
             {
                 "id": 1,
-                "url": "https://demo.netbox.dev/api/tenancy/contacts/1/",
-                "display": "Bob",
-                "name": "Bob Bar"
+                "url": "http://localhost:8000/api/tenancy/contacts/1/",
+                "display": "Foo",
+                "name": "Foo"
             }
-        ]
+        ],
+        "json": {
+            "foo": [
+                "bar",
+                "baz"
+            ]
+        },
+        "multi_selection": [
+            "foo",
+            "baz"
+        ],
+        "simple": "Foobar 123",
+        "int": "42",
+        "text_long": "This is\r\na  pretty\r\nlog\r\nText",
+        "bool": "True"
     }
 
 def build_minimal_vm(name):
