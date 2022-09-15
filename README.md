@@ -11,8 +11,8 @@ This plugin implements API endpoints in Netbox to make devices, IPs and virtual 
 
 ## Compatibility
 
-We aim to support the latest major versions of Netbox. For now we Support Netbox `2.11`, `3.0` and `3.1` including bugfix versions.
-Netbox `3.2` has changed the datetime fields which is not compatible with the plugin code yet. As soon as [we fixed this](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/issues/46) the plugin should work with `3.2`.
+We aim to support the latest major versions of Netbox. For now we Support Netbox `2.11`, `3.0`, `3.1`, `3.2` and `3.3` including bugfix versions.
+All relevant target versions are tested in CI. Have a look at the Github Actions definition for the current build targets.
 
 ## Installation
 
