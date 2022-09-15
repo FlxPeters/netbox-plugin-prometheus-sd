@@ -102,7 +102,7 @@ def nbshell(context, netbox_ver=NETBOX_VER):
         python_ver (str): Will use the Python version docker image to build from
     """
     context.run(
-        f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} run netbox python manage.py nbshell",
+        f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} exec netbox python manage.py nbshell",
         env={"NETBOX_VER": netbox_ver},
         pty=True,
     )
@@ -116,7 +116,7 @@ def cli(context, netbox_ver=NETBOX_VER):
         netbox_ver (str): NetBox version to use to build the container
     """
     context.run(
-        f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} run netbox bash",
+        f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} exec netbox bash",
         env={"NETBOX_VER": netbox_ver},
         pty=True,
     )
@@ -132,7 +132,7 @@ def create_user(context, user="admin", netbox_ver=NETBOX_VER):
     """
     context.run(
         f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} "
-        f"run netbox python manage.py createsuperuser --username {user}",
+        f"exec netbox python manage.py createsuperuser --username {user}",
         env={"NETBOX_VER": netbox_ver},
         pty=True,
     )

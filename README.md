@@ -58,6 +58,31 @@ Go to the `example` folder and run `docker-compose up`. Prometheus should get av
 We use Poetry for dependency management and invoke as task runner.
 As Netbox plugins cannot be tested standalone, we need invoke to start all code embedded in Netbox Docker containers.
 
-All code to run in docker is located under `development` which is also the starting point for VScode remote containers (not finished yet).
-
+All code to run in docker is located under `development`.
 To start a virtual env managed by poetry run `poetry shell`.
+All following commands are started inside this environment.
+
+In order to run tests invoke the test steps
+
+``` bash
+# Execute all tests
+invoke tests
+
+# Execute unit tests only
+invoke unittest
+```
+
+Features should be covered by a unit test, but some times it's easier to develop on an running system.
+
+``` bash
+# Start a local Netbox with docker
+invoke start
+
+# Create an user named `admin`
+invoke create-user
+```
+
+Visit http://localhost:8000 and log in with the new user.
+You can now define Netbox entities and test around.
+
+API endpoints for testing can be found at http://localhost:8000/api/plugins/prometheus-sd/
