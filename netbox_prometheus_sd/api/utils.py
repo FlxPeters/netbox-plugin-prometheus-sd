@@ -1,5 +1,5 @@
+import json
 from netaddr import IPNetwork
-
 
 class LabelDict(dict):
     """Wrapper around dict to render labels"""
@@ -92,7 +92,9 @@ def extract_contacts(obj, labels: LabelDict):
 def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
         for key, value in obj.custom_field_data.items():
-            if isinstance(value, (int, str, bool)):
+            # Render primitive value as string representation
+            if not hasattr(value, '__dict__'):
                 labels["custom_field_" + key.lower()] = str(value)
+            # Complex types are rendered as json
             else:
-                continue
+                labels["custom_field_" + key.lower()] = json.dumps(value)
