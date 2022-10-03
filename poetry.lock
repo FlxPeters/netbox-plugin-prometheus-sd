@@ -68,7 +68,7 @@ graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
 name = "invoke"
-version = "1.7.1"
+version = "1.7.3"
 description = "Pythonic task execution"
 category = "dev"
 optional = false
@@ -259,7 +259,7 @@ setuptools = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cbff1ffd09e63992542b47a28c8aa7c22f75c5002ef83737d489f245ae1f7e06"
+content-hash = "0fbec69946f90720d201f1ad06fd705b4e3d065448fe000945e6d6f470057e25"
 
 [metadata.files]
 astroid = [
@@ -304,8 +304,8 @@ dill = [
     {file = "dill-0.3.5.1.tar.gz", hash = "sha256:d75e41f3eff1eee599d738e76ba8f4ad98ea229db8b085318aa2b3333a208c86"},
 ]
 invoke = [
-    {file = "invoke-1.7.1-py3-none-any.whl", hash = "sha256:2dc975b4f92be0c0a174ad2d063010c8a1fdb5e9389d69871001118b4fcac4fb"},
-    {file = "invoke-1.7.1.tar.gz", hash = "sha256:7b6deaf585eee0a848205d0b8c0014b9bf6f287a8eb798818a642dff1df14b19"},
+    {file = "invoke-1.7.3-py3-none-any.whl", hash = "sha256:d9694a865764dd3fd91f25f7e9a97fb41666e822bbb00e670091e3f43933574d"},
+    {file = "invoke-1.7.3.tar.gz", hash = "sha256:41b428342d466a82135d5ab37119685a989713742be46e42a3a399d685579314"},
 ]
 isort = [
     {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
