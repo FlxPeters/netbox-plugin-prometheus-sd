@@ -24,7 +24,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
 
     def get_labels(self, obj):
         labels = LabelDict(
-            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name}
+            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name, "id": obj.id}
         )
 
         utils.extract_primary_ip(obj, labels)
@@ -66,7 +66,7 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
 
     def get_labels(self, obj):
         labels = LabelDict(
-            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name}
+            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name, "id": obj.id}
         )
 
         utils.extract_primary_ip(obj, labels)
@@ -111,6 +111,7 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
                 "status": obj.status,
                 "model": obj.__class__.__name__,
                 "ip": self.extract_ip(obj),
+                "id": obj.id
             }
         )
         if obj.role:
