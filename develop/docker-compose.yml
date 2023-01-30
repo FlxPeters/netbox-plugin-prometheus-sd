@@ -23,7 +23,7 @@ services:
 
   # Postgres Database
   postgres:
-    image: postgres:10
+    image: postgres:11
     env_file: dev.env
     volumes:
       - pgdata_netbox_prometheus_sd:/var/lib/postgresql/data
