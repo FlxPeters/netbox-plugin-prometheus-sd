@@ -11,11 +11,11 @@ from . import utils
 class PrometheusVirtualMachineSerializerTests(TestCase):
     def test_vm_minimal_to_target(self):
 
-        data = PrometheusVirtualMachineSerializer(
-            instance=utils.build_minimal_vm("vm-01.example.com")
-        ).data
+        instance = utils.build_minimal_vm("vm-01.example.com")
+        data = PrometheusVirtualMachineSerializer(instance=instance).data
 
         self.assertEqual(data["targets"], ["vm-01.example.com"])
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_model": "VirtualMachine"}, data["labels"]
         )
@@ -31,11 +31,11 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
         )
 
     def test_vm_full_to_target(self):
-        data = PrometheusVirtualMachineSerializer(
-            instance=utils.build_vm_full("vm-full-01.example.com")
-        ).data
+        instance = utils.build_vm_full("vm-full-01.example.com")
+        data = PrometheusVirtualMachineSerializer(instance=instance).data
 
         self.assertEqual(data["targets"], ["vm-full-01.example.com"])
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_model": "VirtualMachine"}, data["labels"]
         )
@@ -81,30 +81,36 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
             {"__meta_netbox_custom_field_bool": "True"}, data["labels"]
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_json": "{'foo': ['bar', 'baz']}"}, data["labels"]
+            {"__meta_netbox_custom_field_json": "{'foo': ['bar', 'baz']}"},
+            data["labels"],
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_multi_selection": "['foo', 'baz']"}, data["labels"]
+            {"__meta_netbox_custom_field_multi_selection": "['foo', 'baz']"},
+            data["labels"],
         )
         self.assertDictContainsSubset(
             {
                 "__meta_netbox_custom_field_contact":
                 "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/', 'display': 'Foo', 'name': 'Foo'}]"
-            }, data["labels"]
+            },
+            data["labels"],
         )
         self.assertDictContainsSubset(
-            {"__meta_netbox_custom_field_text_long": "This is\r\na  pretty\r\nlog\r\nText"}, data["labels"]
+            {
+                "__meta_netbox_custom_field_text_long": "This is\r\na  pretty\r\nlog\r\nText"
+            },
+            data["labels"],
         )
 
 
 class PrometheusDeviceSerializerTests(TestCase):
     def test_device_minimal_to_target(self):
 
-        data = PrometheusDeviceSerializer(
-            instance=utils.build_minimal_device("firewall-01")
-        ).data
+        instance = utils.build_minimal_device("firewall-01")
+        data = PrometheusDeviceSerializer(instance=instance).data
 
         self.assertEqual(data["targets"], ["firewall-01"])
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_role": "Firewall"}, data["labels"]
@@ -124,11 +130,11 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
 
     def test_device_full_to_target(self):
-        data = PrometheusDeviceSerializer(
-            instance=utils.build_device_full("firewall-full-01")
-        ).data
+        instance = utils.build_device_full("firewall-full-01")
+        data = PrometheusDeviceSerializer(instance=instance).data
 
         self.assertEqual(data["targets"], ["firewall-full-01"])
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_platform": "Junos"}, data["labels"]
@@ -158,11 +164,11 @@ class PrometheusDeviceSerializerTests(TestCase):
 
 class PrometheusIPAddressSerializerTests(TestCase):
     def test_ip_minimal_to_target(self):
-        data = PrometheusIPAddressSerializer(
-            instance=utils.build_minimal_ip("10.10.10.10/24")
-        ).data
+        instance = utils.build_minimal_ip("10.10.10.10/24")
+        data = PrometheusIPAddressSerializer(instance=instance).data
 
         self.assertEqual(data["targets"], ["10.10.10.10"])
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_status": "active"}, data["labels"]
         )
@@ -171,17 +177,17 @@ class PrometheusIPAddressSerializerTests(TestCase):
         )
 
     def test_ip_full_to_target(self):
-        data = PrometheusIPAddressSerializer(
-            instance=utils.build_full_ip(
-                address="10.10.10.10/24", dns_name="foo.example.com"
-            )
-        ).data
+        instance = utils.build_full_ip(
+            address="10.10.10.10/24", dns_name="foo.example.com"
+        )
+        data = PrometheusIPAddressSerializer(instance=instance).data
 
         self.assertEqual(
             data["targets"],
             ["foo.example.com"],
             "IP with DNS name should use DNS name as target",
         )
+        self.assertDictContainsSubset({"__meta_netbox_id": instance.id}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_status": "active"}, data["labels"]
         )
