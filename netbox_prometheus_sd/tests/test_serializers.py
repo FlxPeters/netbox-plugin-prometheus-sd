@@ -90,7 +90,8 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
         )
         self.assertDictContainsSubset(
             {
-                "__meta_netbox_custom_field_contact": "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/', 'display': 'Foo', 'name': 'Foo'}]"
+                "__meta_netbox_custom_field_contact":
+                "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/', 'display': 'Foo', 'name': 'Foo'}]"
             },
             data["labels"],
         )
