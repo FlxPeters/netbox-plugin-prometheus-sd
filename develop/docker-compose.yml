@@ -23,14 +23,14 @@ services:
 
   # Postgres Database
   postgres:
-    image: postgres:11
+    image: postgres:15-alpine
     env_file: dev.env
     volumes:
       - pgdata_netbox_prometheus_sd:/var/lib/postgresql/data
 
   # Redis cache
   redis:
-    image: redis:5-alpine
+    image: redis:7-alpine
     command:
       - sh
       - -c # this is to evaluate the $REDIS_PASSWORD from the env

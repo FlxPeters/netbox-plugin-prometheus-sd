@@ -15,12 +15,9 @@ jobs:
       matrix:
         # Netbox git tags
         netbox-version:
-          - v2.11.11
-          - v3.0.12
-          - v3.1.8
           - v3.2.2
           - v3.3.2
-          - v3.4.2
+          - v3.4.4
           - master
 
     steps:
@@ -49,8 +46,6 @@ jobs:
         run: poetry install
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Build test image
-        run: poetry run invoke build
-
-      - name: Run tests
-        run: poetry run invoke tests
+      - name: Build image and run tests
+        run: |
+          poetry run invoke build tests
