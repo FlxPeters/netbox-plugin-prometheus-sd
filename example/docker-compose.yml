@@ -46,14 +46,12 @@ services:
   prometheus:
     image: prom/prometheus:v2.30.3
     volumes:
-      - ./configuration/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./configuration/prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - 9090:9090
     depends_on:
-      - netbox
-    links:
       - netbox
 volumes:
   netbox-media-files:
