@@ -51,7 +51,15 @@ A working example on how to use this plugin with Prometheus is located at the `e
 
 The demo data doesn't make sense, but they are good enough for demonstrating how to configure Prometheus and get demo data to Prometheus service discovery.
 
-Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`. Netbox content should then be available in the service discovery tab.
+Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`.
+
+Push some example devices and objects to Netbox using the initializers:
+
+```
+docker-compose exec  netbox /opt/netbox/netbox/manage.py load_initializer_data --path /opt/netbox/initializers
+```
+
+Netbox content should then be available in the service discovery tab.
 
 ## Development
 
