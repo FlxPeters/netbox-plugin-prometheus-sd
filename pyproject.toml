@@ -16,7 +16,7 @@ python = "^3.8"
 [tool.poetry.dev-dependencies]
 black = "^23.1"
 invoke = "^2.0.0"
-pylint = "^2.16.3"
+pylint = "^2.16.4"
 pylint-django = "^2.5.3"
 yamllint = "^1.28.0"
 typed-ast = "^1.5.4"
