@@ -1,0 +1,28 @@
+global:
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@domain.com'
+  smtp_require_tls: false
+
+# use specific labels for customizing email.  Can be hardcoded instead.
+# in this case pull the email from netbox custom field.
+route:
+  group_by: ['netbox_name', 'severity', 'netbox_custom_field_alert_notification_email', 'job']
+  group_wait: 30s
+  group_interval: 2m
+  repeat_interval: 3h
+  receiver: core-team
+
+receivers:
+  - name: 'core-team'
+    email_configs:
+      - to: '{{ .GroupLabels.netbox_custom_field_alert_notification_email }}'
+        send_resolved: true
+        headers:
+          subject: "{{ .Status | toUpper }} {{ .CommonLabels.netbox_name }} {{ .CommonLabels.severity }} from {{ .CommonLabels.job }}"
+
+        # change format to customized view by creating a template and setting the output to that template.
+        # refers to named template evaluated by AlertManager at runtime
+        #html: '{{ template "emaildefaulthtml" . }}'
+
+#templates:
+#  - '/etc/prometheus/templates/*.tmpl'
