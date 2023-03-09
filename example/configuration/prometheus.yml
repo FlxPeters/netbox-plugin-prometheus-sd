@@ -12,21 +12,49 @@ scrape_configs:
 
   - job_name: "http_sd_ips"
     http_sd_configs:
-      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses?status=active
+      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses?status=active&has_primary_ip=true
         refresh_interval: 15s
         authorization:
           type: "Token"
           credentials: "0123456789abcdef0123456789abcdef01234567"
+    relabel_configs:
+      - regex: __meta_netbox_(.+)
+        replacement: netbox_$1
+        action: labelmap
+      - source_labels: [netbox_primary_ip]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: prometheus:9116
+# adjust labelling for alerting, custom fields can be used here
+# adjust url to be as specific as possible (&cf_monitorme=true or similar)
 
-  - job_name: "http_sd_combined"
+# use blackbox exporter specifically for a ping only probe.
+  - job_name: "nb_icmp"
+    metrics_path: "/probe"
+    params:
+      module: [ "icmp" ]
     http_sd_configs:
-      - url: http://netbox:8080/api/plugins/prometheus-sd/virtual-machines/
+      - url: http://netbox:8080/api/plugins/prometheus-sd/virtual-machines/?has_primary_ip=true&status=active
         refresh_interval: 15s
         authorization:
           type: "Token"
           credentials: "0123456789abcdef0123456789abcdef01234567"
-      - url: http://netbox:8080/api/plugins/prometheus-sd/devices/
+      - url: http://netbox:8080/api/plugins/prometheus-sd/devices/?has_primary_ip=true&status=active
         refresh_interval: 15s
         authorization:
           type: "Token"
           credentials: "0123456789abcdef0123456789abcdef01234567"
+    relabel_configs:
+      - regex: __meta_netbox_(.+)
+        replacement: netbox_$1
+        action: labelmap
+      - source_labels: [netbox_primary_ip]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: prometheus:9115
+# adjust labelling for alerting, custom fields can be used here
+# adjust url to be as specific as possible (&cf_monitorme=true or similar)
