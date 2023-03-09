@@ -23,7 +23,7 @@ scrape_configs:
 
   - job_name: "http_sd_ips"
     http_sd_configs:
-      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses?status=active&has_primary_ip=true
+      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses?status=active
         refresh_interval: 15s
         authorization:
           type: "Token"
@@ -38,7 +38,7 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: prometheus:9116
-# adjust labelling for alerting, custom fields can be used here
+# adjust labelling for target/alerting, custom fields can be used here
 # adjust url to be as specific as possible (&cf_monitorme=true or similar)
 
 # use blackbox exporter specifically for a ping only probe.
@@ -67,5 +67,5 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: prometheus:9115
-# adjust labelling for alerting, custom fields can be used here
+# adjust labelling for target/alerting, custom fields can be used here
 # adjust url to be as specific as possible (&cf_monitorme=true or similar)
