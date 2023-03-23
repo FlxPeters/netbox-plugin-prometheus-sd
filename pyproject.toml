@@ -18,7 +18,7 @@ black = "^23.1"
 invoke = "^2.0.0"
 pylint = "^2.17.0"
 pylint-django = "^2.5.3"
-yamllint = "^1.28.0"
+yamllint = "^1.30.0"
 typed-ast = "^1.5.4"
 
 [build-system]
