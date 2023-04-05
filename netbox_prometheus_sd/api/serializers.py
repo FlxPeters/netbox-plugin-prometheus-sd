@@ -34,6 +34,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
         utils.extract_cluster(obj, labels)
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
+        utils.extract_rack(obj, labels)
         utils.extract_custom_fields(obj, labels)
 
         if hasattr(obj, "device_role") and obj.device_role is not None:
