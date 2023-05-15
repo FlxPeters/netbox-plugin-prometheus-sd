@@ -1,4 +1,4 @@
-from ipam.models import IPAddress
+from ipam.models import IPAddress, Service
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device
 
@@ -22,11 +22,11 @@ except ImportError:
 # Filtersets have been renamed, we support both
 # https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
 try:
-    from ipam.filtersets import IPAddressFilterSet
+    from ipam.filtersets import IPAddressFilterSet, ServiceFilterSet
     from dcim.filtersets import DeviceFilterSet
     from virtualization.filtersets import VirtualMachineFilterSet
 except ImportError:
-    from ipam.filters import IPAddressFilterSet
+    from ipam.filters import IPAddressFilterSet, ServiceFilterSet
     from dcim.filters import DeviceFilterSet
     from virtualization.filters import VirtualMachineFilterSet
 # pylint: enable=ungrouped-imports
@@ -36,7 +36,20 @@ from .serializers import (
     PrometheusIPAddressSerializer,
     PrometheusDeviceSerializer,
     PrometheusVirtualMachineSerializer,
+    PrometheusServiceSerializer
 )
+
+
+class ServiceViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
+    queryset = Service.objects.prefetch_related(
+        "device",
+        "virtual_machine",
+        "ipaddresses",
+        "tags",
+    )
+    filterset_class = ServiceFilterSet
+    serializer_class = PrometheusServiceSerializer
+    pagination_class = None
 
 
 

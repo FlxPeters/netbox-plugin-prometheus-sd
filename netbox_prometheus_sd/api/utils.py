@@ -1,6 +1,7 @@
 import json
 from netaddr import IPNetwork
 
+
 class LabelDict(dict):
     """Wrapper around dict to render labels"""
 
@@ -59,6 +60,7 @@ def extract_primary_ip(obj, labels: LabelDict):
     if getattr(obj, "primary_ip6", None) is not None:
         labels["primary_ip6"] = str(IPNetwork(obj.primary_ip6.address).ip)
 
+
 def extracts_platform(obj, label: LabelDict):
     if hasattr(obj, "platform") and obj.platform is not None:
         label["platform"] = obj.platform.name
@@ -89,10 +91,12 @@ def extract_contacts(obj, labels: LabelDict):
             if hasattr(contact, "role") and contact.role is not None:
                 labels[f"contact_{contact.priority}_role"] = contact.role.name
 
+
 def extract_rack(obj, labels: LabelDict):
     """Extract rack"""
     if hasattr(obj, "rack") and obj.rack:
         labels["rack"] = obj.rack.name
+
 
 def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
@@ -104,6 +108,7 @@ def extract_custom_fields(obj, labels: LabelDict):
             else:
                 labels["custom_field_" + key.lower()] = json.dumps(value)
 
+
 def extract_prometheus_sd_config(obj, labels):
     prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", {})
 
@@ -114,3 +119,29 @@ def extract_prometheus_sd_config(obj, labels):
     scheme = prometheus_sd_config.get("scheme", None)
     if scheme and isinstance(scheme, str):
         labels["__scheme__"] = scheme
+
+
+def extract_parent(obj, labels: LabelDict):
+    labels['parent'] = obj.parent.name
+    extract_primary_ip(obj.parent, labels)
+    extract_tenant(obj.parent, labels)
+    extract_cluster(obj.parent, labels)
+    extract_contacts(obj.parent, labels)
+
+
+def extract_service_ips(obj, labels: LabelDict):
+    if (
+        hasattr(obj, "ipaddresses")
+        and obj.ipaddresses is not None
+        and len(obj.ipaddresses.all())
+    ):
+        labels["ipaddresses"] = ",".join([str(ipaddr.address.ip) for ipaddr in obj.ipaddresses.all()])
+
+
+def extract_service_ports(obj, labels: LabelDict):
+    if (
+        hasattr(obj, "ports")
+        and obj.ports is not None
+        and len(obj.ports)
+    ):
+        labels["ports"] = ",".join([str(port) for port in obj.ports])
