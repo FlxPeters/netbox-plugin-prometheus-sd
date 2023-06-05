@@ -15,9 +15,10 @@ jobs:
       matrix:
         # Netbox git tags
         netbox-version:
-          # - v3.2.2
-          # - v3.3.2
-          # - v3.4.4
+          - v3.2.2
+          - v3.3.2
+          - v3.4.4
+          - v3.5.3
           - master
 
     steps:
