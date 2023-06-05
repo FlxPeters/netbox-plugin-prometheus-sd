@@ -11,7 +11,8 @@ This plugin implements API endpoints in Netbox to make devices, IPs and virtual 
 
 ## Compatibility
 
-We aim to support the latest major versions of Netbox. For now we Support Netbox `2.11`, `3.0`, `3.1`, `3.2` and `3.3` including bugfix versions.
+We aim to support the latest major versions of Netbox. For now we Support Netbox `3.2`, `3.3`, `3.4` and `3.5` including bugfix versions.
+Check the `.github/workflows/ci.yml` pipeline for the current tested builds. Other versions may work, but we do not test them explicitly.
 All relevant target versions are tested in CI. Have a look at the Github Actions definition for the current build targets.
 
 ## Installation
