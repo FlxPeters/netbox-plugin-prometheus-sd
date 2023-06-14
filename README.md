@@ -46,6 +46,31 @@ GET        /api/plugins/prometheus-sd/virtual-machines/     Get a list of vms in
 GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
 ```
 
+### Config context
+
+The plugin can also discover extra config to inject in the HTTP SD JSON from the config context of the devices/virtual machines.
+If you have a `prometheus-plugin-prometheus-sd` entry in your config context with the following schema it will be automatically picked up:
+
+```
+prometheus-plugin-prometheus-sd:
+  - metrics_path: /not/metrics
+    port: 4242
+    scheme: https
+  - port: 4243
+```
+
+This allow you to configure those values directly into netbox instead of doing that inside the Prometheus
+config and filtering each scenario by a specific tag for instance.
+
+If there is only one entry you can also use this form:
+
+```
+prometheus-plugin-prometheus-sd:
+  metrics_path: /not/metrics
+  port: 4242
+  scheme: https
+```
+
 ### Example
 
 A working example on how to use this plugin with Prometheus is located at the `example` folder. Netbox content is created by using Netbox docker initializers.

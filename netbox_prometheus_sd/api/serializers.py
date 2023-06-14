@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db import models
 from virtualization.models import VirtualMachine
 from dcim.models import Device
 from ipam.models import IPAddress
@@ -8,19 +9,63 @@ from netaddr import IPNetwork
 from .utils import LabelDict
 from . import utils
 
+class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
 
-class PrometheusDeviceSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        raise NotImplementedError("ListSerializer does not support update")
+
+    def to_representation(self, data):
+        """
+        Override ListSerializer to duplicate config context list into a new field "_injected_prometheus_sd_config"
+        List of object instances -> List of dicts of primitive datatypes.
+        """
+        iterable = data.all() if isinstance(data, models.manager.BaseManager) else data
+
+        ret = []
+        for item in iterable:
+            appended = False
+            prometheus_sd_configs = item.get_config_context().get("prometheus-plugin-prometheus-sd", [])
+            if not isinstance(prometheus_sd_configs, list):
+                prometheus_sd_configs = [prometheus_sd_configs]
+
+            for prometheus_sd_config in prometheus_sd_configs:
+                if not isinstance(prometheus_sd_config, dict) or (
+                    "port" not in prometheus_sd_config and
+                    "metrics_path" not in prometheus_sd_configs and
+                    "scheme" not in prometheus_sd_configs
+                ):
+                    continue
+
+                item._injected_prometheus_sd_config = prometheus_sd_config # pylint: disable=protected-access
+                appended = True
+                ret.append(self.child.to_representation(item))
+
+            if not appended:
+                ret.append(self.child.to_representation(item))
+        return ret
+
+class PrometheusTargetsMixin:
+    def get_targets(self, obj):
+        target = obj.name
+        prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", {})
+
+        port = prometheus_sd_config.get("port", None)
+        if port and isinstance(port, int):
+            target += f":{port}"
+
+        return [target]
+
+class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsMixin):
     """Serialize a device to Prometheus target representation"""
 
     class Meta:
         model = Device
         fields = ["targets", "labels"]
+        list_serializer_class = SDConfigContextDuplicateSerializer
 
     targets = serializers.SerializerMethodField()
     labels = serializers.SerializerMethodField()
 
-    def get_targets(self, obj):
-        return [obj.name]
 
     def get_labels(self, obj):
         labels = LabelDict(
@@ -49,21 +94,24 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer):
             labels["site"] = obj.site.name
             labels["site_slug"] = obj.site.slug
 
-        return labels.get_labels()
+        labels = labels.get_labels()
+
+        # Those shouldn't have the netbox prefix
+        utils.extract_prometheus_sd_config(obj, labels)
+
+        return labels
 
 
-class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
+class PrometheusVirtualMachineSerializer(serializers.ModelSerializer, PrometheusTargetsMixin):
     """Serialize a virtual machine to Prometheus target representation"""
 
     class Meta:
         model = VirtualMachine
         fields = ["targets", "labels"]
+        list_serializer_class = SDConfigContextDuplicateSerializer
 
     targets = serializers.SerializerMethodField()
     labels = serializers.SerializerMethodField()
-
-    def get_targets(self, obj):
-        return [obj.name]
 
     def get_labels(self, obj):
         labels = LabelDict(
@@ -83,7 +131,12 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer):
             labels["role"] = obj.role.name
             labels["role_slug"] = obj.role.slug
 
-        return labels.get_labels()
+        labels = labels.get_labels()
+
+        # Those shouldn't have the netbox prefix
+        utils.extract_prometheus_sd_config(obj, labels)
+
+        return labels
 
 
 class PrometheusIPAddressSerializer(serializers.ModelSerializer):

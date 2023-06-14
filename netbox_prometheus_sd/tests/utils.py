@@ -1,6 +1,7 @@
 from dcim.models.devices import DeviceType, Manufacturer
 from dcim.models.sites import Site
 from dcim.models import Device, DeviceRole, Platform, Rack
+from extras.models import ConfigContext, Tag
 
 from ipam.models import IPAddress
 from tenancy.models import Tenant, TenantGroup
@@ -58,13 +59,28 @@ def build_minimal_vm(name):
 
 
 def build_vm_full(name):
+    # Create the confix context beforehand
+    config_context, created = ConfigContext.objects.get_or_create(name="context 1",
+        weight=100, data={"prometheus-plugin-prometheus-sd": [
+            {"metrics_path": "/not/metrics", "port": 4242, "scheme": "https"},
+            {"port": 4243},
+        ]
+    })
+    if created:
+        platform = Platform.objects.get_or_create(
+            name="Ubuntu 20.04", slug="ubuntu-20.04"
+        )[0]
+        config_context.platforms.add(platform)
+
     vm = build_minimal_vm(name=name)
-    vm.tenant = build_tenant()
-    vm.custom_field_data = build_custom_fields()
-    vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
     vm.platform = Platform.objects.get_or_create(
         name="Ubuntu 20.04", slug="ubuntu-20.04"
     )[0]
+    vm.save() # Save the platform so that we can find the config context in test API
+
+    vm.tenant = build_tenant()
+    vm.custom_field_data = build_custom_fields()
+    vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
     vm.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]
     vm.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[0]
 
@@ -89,6 +105,64 @@ def build_minimal_device(name):
         site=Site.objects.get_or_create(name="Site", slug="site")[0],
     )[0]
 
+def build_device_config_context_no_array(name):
+    device = build_minimal_device(name)
+    config_context, created = ConfigContext.objects.get_or_create(
+        name="context no array", weight=100,
+        data={"prometheus-plugin-prometheus-sd": {"port": 4242}},
+    )
+    if not created:
+        tag = Tag.objects.create(name='no array config context', slug='no-array-cc')
+        config_context.platforms.add(tag)
+        device.tags.add(tag)
+    device.save()
+
+    return device
+
+def build_device_config_context_invalid_1(name):
+    device = build_minimal_device(name)
+    config_context, created = ConfigContext.objects.get_or_create(
+        name="invalid 1", weight=100,
+        data={"prometheus-plugin-prometheus-sd": "foo"},
+    )
+    if not created:
+        tag = Tag.objects.create(name='invalid 1', slug='invalid-1')
+        config_context.platforms.add(tag)
+        device.tags.add(tag)
+    device.save()
+
+    return device
+
+def build_device_config_context_invalid_2(name):
+    device = build_minimal_device(name)
+    config_context, created = ConfigContext.objects.get_or_create(
+        name="invalid 2", weight=100,
+        data={"prometheus-plugin-prometheus-sd": [{"not": "", "standard": ""}]},
+    )
+    if not created:
+        tag = Tag.objects.create(name='invalid 2', slug='invalid-2')
+        config_context.platforms.add(tag)
+        device.tags.add(tag)
+    device.save()
+
+    return device
+
+def build_device_config_context_mix_invalid_valid(name):
+    device = build_minimal_device(name)
+    config_context, created = ConfigContext.objects.get_or_create(
+        name="mix valid invalid", weight=100,
+        data={"prometheus-plugin-prometheus-sd": [
+            {"not": "", "standard": ""},
+            {"port": 4242, "ignored": ""},
+        ]},
+    )
+    if not created:
+        tag = Tag.objects.create(name='mix valid invalid', slug='mix-valid-invalid')
+        config_context.platforms.add(tag)
+        device.tags.add(tag)
+    device.save()
+
+    return device
 
 def build_device_full(name):
     device = build_minimal_device(name)

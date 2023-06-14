@@ -103,3 +103,14 @@ def extract_custom_fields(obj, labels: LabelDict):
             # Complex types are rendered as json
             else:
                 labels["custom_field_" + key.lower()] = json.dumps(value)
+
+def extract_prometheus_sd_config(obj, labels):
+    prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", {})
+
+    metrics_path = prometheus_sd_config.get("metrics_path", None)
+    if metrics_path and isinstance(metrics_path, str):
+        labels["__metrics__path__"] = metrics_path
+
+    scheme = prometheus_sd_config.get("scheme", None)
+    if scheme and isinstance(scheme, str):
+        labels["__scheme__"] = scheme
