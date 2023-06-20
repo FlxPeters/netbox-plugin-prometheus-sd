@@ -31,8 +31,8 @@ class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
             for prometheus_sd_config in prometheus_sd_configs:
                 if not isinstance(prometheus_sd_config, dict) or (
                     "port" not in prometheus_sd_config and
-                    "metrics_path" not in prometheus_sd_configs and
-                    "scheme" not in prometheus_sd_configs
+                    "metrics_path" not in prometheus_sd_config and
+                    "scheme" not in prometheus_sd_config
                 ):
                     continue
 
