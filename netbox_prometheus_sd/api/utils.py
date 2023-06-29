@@ -109,7 +109,7 @@ def extract_prometheus_sd_config(obj, labels):
 
     metrics_path = prometheus_sd_config.get("metrics_path", None)
     if metrics_path and isinstance(metrics_path, str):
-        labels["__metrics__path__"] = metrics_path
+        labels["__metrics_path__"] = metrics_path
 
     scheme = prometheus_sd_config.get("scheme", None)
     if scheme and isinstance(scheme, str):
