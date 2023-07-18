@@ -40,7 +40,7 @@ from .serializers import (
 )
 
 
-class ServiceViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
+class ServiceViewSet(NetboxPrometheusSDModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = Service.objects.prefetch_related(
         "device",
         "virtual_machine",
@@ -50,7 +50,6 @@ class ServiceViewSet(NetBoxModelViewSet):  # pylint: disable=too-many-ancestors
     filterset_class = ServiceFilterSet
     serializer_class = PrometheusServiceSerializer
     pagination_class = None
-
 
 
 class VirtualMachineViewSet(

@@ -3,7 +3,7 @@ from dcim.models.sites import Site
 from dcim.models import Device, DeviceRole, Platform, Rack
 from extras.models import ConfigContext, Tag
 
-from ipam.models import IPAddress
+from ipam.models import IPAddress, Service
 from tenancy.models import Tenant, TenantGroup
 
 from virtualization.models import (
@@ -86,6 +86,8 @@ def build_vm_full(name):
 
     vm.tags.add("Tag1")
     vm.tags.add("Tag 2")
+
+    Service.objects.create(virtual_machine=vm, name="ssh", protocol='tcp', ports=[22])
     return vm
 
 

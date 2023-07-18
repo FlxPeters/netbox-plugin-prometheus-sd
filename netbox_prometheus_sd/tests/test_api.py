@@ -31,6 +31,9 @@ class ApiEndpointTests(TestCase):
             ContentType.objects.get(app_label="ipam", model="ipaddress")
         )
         obj_perm.object_types.add(  # pylint: disable=no-member
+            ContentType.objects.get(app_label="ipam", model="service")
+        )
+        obj_perm.object_types.add(  # pylint: disable=no-member
             ContentType.objects.get(app_label="virtualization", model="virtualmachine")
         )
         self.client.force_authenticate(user)
@@ -71,6 +74,20 @@ class ApiEndpointTests(TestCase):
             utils.build_full_ip(address=f"10.10.10.{i}/24")
 
         resp = self.client.get("/api/plugins/prometheus-sd/ip-addresses/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = json.loads(resp.content)
+
+        self.assertIsNotNone(data[0]["targets"])
+        self.assertIsNotNone(data[0]["labels"])
+        self.assertEqual(len(data), 60)
+
+    def test_endpoint_service(self):
+        """Ensure service endpoint returns a valid response"""
+
+        for i in range(60):
+            utils.build_vm_full(f"api-test-vm-{i}.example.com")
+
+        resp = self.client.get("/api/plugins/prometheus-sd/services/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = json.loads(resp.content)
 

@@ -3,6 +3,7 @@ from django.test import TestCase
 from ..api.serializers import (
     PrometheusDeviceSerializer,
     PrometheusIPAddressSerializer,
+    PrometheusServiceSerializer,
     PrometheusVirtualMachineSerializer,
 )
 from . import utils
@@ -250,3 +251,44 @@ class PrometheusIPAddressSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"]
         )
+
+
+class PrometheusServiceSerializerTests(TestCase):
+    def test_service_full_to_target(self):
+        vm = utils.build_vm_full("vm-full-01.example.com")
+        instance = vm.services.first()
+        data_list = PrometheusServiceSerializer(many=True, instance=[instance]).data
+
+        self.assertEqual(data_list[0]["targets"], ["ssh"])
+        for data in data_list:
+            self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_ports": "22"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_parent": "vm-full-01.example.com"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_tenant": "Acme Corp."}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_tenant_slug": "acme"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_site": "Campus A"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip": "2001:db8:1701::2"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip4": "192.168.0.1"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
+            )
