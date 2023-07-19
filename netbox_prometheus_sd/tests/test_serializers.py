@@ -36,7 +36,7 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
 
         self.assertEqual(data_list[0]["targets"], ["vm-full-01.example.com:4242"])
         self.assertDictContainsSubset(
-            {"__metrics__path__": "/not/metrics"}, data_list[0]["labels"]
+            {"__metrics_path__": "/not/metrics"}, data_list[0]["labels"]
         )
         self.assertDictContainsSubset(
             {"__scheme__": "https"}, data_list[0]["labels"]
