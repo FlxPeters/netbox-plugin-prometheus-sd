@@ -43,6 +43,7 @@ Depending on the Netbox configuration, a token with valid object permissions mus
 ```
 GET        /api/plugins/prometheus-sd/devices/              Get a list of devices in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/virtual-machines/     Get a list of vms in a prometheus compatible format
+GET        /api/plugins/prometheus-sd/services/             Get a list of services in a prometheus compatible format
 GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
 ```
 

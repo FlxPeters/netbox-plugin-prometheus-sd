@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db import models
 from virtualization.models import VirtualMachine
 from dcim.models import Device
-from ipam.models import IPAddress
+from ipam.models import IPAddress, Service
 
 from netaddr import IPNetwork
 
@@ -137,6 +137,33 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer, Prometheus
         utils.extract_prometheus_sd_config(obj, labels)
 
         return labels
+
+
+class PrometheusServiceSerializer(serializers.ModelSerializer):
+    """Serialize a service to Prometheus target representation"""
+
+    class Meta:
+        model = Service
+        fields = ["targets", "labels"]
+
+    targets = serializers.SerializerMethodField()
+    labels = serializers.SerializerMethodField()
+
+    def get_targets(self, obj):
+        return [obj.name]
+
+    def get_labels(self, obj):
+        labels = LabelDict(
+            {"id": str(obj.id), "name": obj.name, "display": str(obj)}
+        )
+
+        utils.extract_service_ips(obj, labels)
+        utils.extract_service_ports(obj, labels)
+        utils.extract_tags(obj, labels)
+        utils.extract_parent(obj, labels)
+        utils.extract_custom_fields(obj, labels)
+
+        return labels.get_labels()
 
 
 class PrometheusIPAddressSerializer(serializers.ModelSerializer):
