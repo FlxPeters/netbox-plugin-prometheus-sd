@@ -18,6 +18,7 @@ jobs:
           - v3.2.2
           - v3.3.2
           - v3.4.4
+          - v3.5.3
           - master
 
     steps:
@@ -46,6 +47,10 @@ jobs:
         run: poetry install
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Build image and run tests
+      - name: Build test images
         run: |
-          poetry run invoke build tests
+          poetry run invoke build
+
+      - name: Run tests
+        run: |
+          poetry run invoke tests
