@@ -82,7 +82,10 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_rack(obj, labels)
         utils.extract_custom_fields(obj, labels)
 
-        if hasattr(obj, "device_role") and obj.device_role is not None:
+        if hasattr(obj, "role") and obj.role is not None:
+            labels["role"] = obj.role.name
+            labels["role_slug"] = obj.role.slug
+        elif hasattr(obj, "device_role") and obj.device_role is not None:  # netbox <3.6.0
             labels["role"] = obj.device_role.name
             labels["role_slug"] = obj.device_role.slug
 

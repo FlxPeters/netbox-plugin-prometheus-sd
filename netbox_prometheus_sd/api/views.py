@@ -75,7 +75,7 @@ class VirtualMachineViewSet(
 class DeviceViewSet(NetboxPrometheusSDModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = Device.objects.prefetch_related(
         "device_type__manufacturer",
-        "device_role",
+        "role" if hasattr(Device, "role") else "device_role",
         "tenant",
         "platform",
         "site",

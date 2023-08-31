@@ -92,11 +92,9 @@ def build_vm_full(name):
 
 
 def build_minimal_device(name):
+    role_attr = "role" if hasattr(Device, "role") else "device_role"
     return Device.objects.get_or_create(
         name=name,
-        device_role=DeviceRole.objects.get_or_create(name="Firewall", slug="firewall")[
-            0
-        ],
         device_type=DeviceType.objects.get_or_create(
             model="SRX",
             slug="srx",
@@ -105,6 +103,9 @@ def build_minimal_device(name):
             )[0],
         )[0],
         site=Site.objects.get_or_create(name="Site", slug="site")[0],
+        **{
+            role_attr: DeviceRole.objects.get_or_create(name="Firewall", slug="firewall")[0],
+        }
     )[0]
 
 def build_device_config_context_no_array(name):
