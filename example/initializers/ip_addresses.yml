@@ -32,6 +32,10 @@
   device: server02
   interface: to-server01
   status: active
+- address: 10.0.0.1/24
+  device: server02
+  interface: ipmi
+  status: active
 - address: 10.1.1.10/24
   description: reserved IP
   status: reserved

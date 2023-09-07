@@ -176,6 +176,7 @@ def build_device_full(name):
     device.primary_ip6 = IPAddress.objects.get_or_create(address="2001:db8:1701::2/64")[
         0
     ]
+    device.oob_ip = IPAddress.objects.get_or_create(address="10.0.0.1/24")[0]
     device.rack = Rack.objects.get_or_create(
         name="R01B01", site=Site.objects.get_or_create(name="Site", slug="site")[0]
     )[0]

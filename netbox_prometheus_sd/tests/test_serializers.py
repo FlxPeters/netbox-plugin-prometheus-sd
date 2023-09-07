@@ -187,6 +187,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_oob_ip": "10.0.0.1"}, data["labels"]
+        )
         self.assertDictContainsSubset({"__meta_netbox_rack": "R01B01"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_tenant": "Acme Corp."}, data["labels"]
