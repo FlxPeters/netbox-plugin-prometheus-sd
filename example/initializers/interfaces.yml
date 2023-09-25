@@ -16,3 +16,7 @@
   enabled: true
   type: virtual
   name: to-server01
+- device: server02
+  enabled: true
+  type: 1000base-t
+  name: ipmi
