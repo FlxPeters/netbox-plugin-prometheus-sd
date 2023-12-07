@@ -31,6 +31,7 @@ PLUGINS_CONFIG = {
     'netbox_prometheus_sd': {
         'custom_field_name': 'monitored',
         'target_port': 5909,
+        'gnmic_target_port': 32767,
     }
 }
 ```
@@ -42,8 +43,8 @@ action required after installation and configuration.
 
 ### API
 
-The plugin reuses Netbox API view sets with new serializers for Prometheus.
-This means that all filters that can be used on the Netbox api can also be used to filter Prometheus targets.
+The plugin reuses Netbox API view sets with new serializers for Prometheus and gnmic.
+This means that all filters that can be used on the Netbox api can also be used to filter targets.
 Paging is disabled because Prometheus does not support paged results.
 
 The plugin also reuses the Netbox authentication and permission model.
@@ -51,4 +52,5 @@ Depending on the Netbox configuration, a token with valid object permissions mus
 
 ```
 GET        /api/plugins/prometheus-sd/devices/              Get a list of devices in a prometheus compatible format
+GET        /api/plugins/prometheus-sd/gnmic-devices/        Get a list of devices in a gnmic compatible format
 ```

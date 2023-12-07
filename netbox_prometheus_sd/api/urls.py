@@ -1,7 +1,8 @@
 from rest_framework import routers
-from .views import DeviceViewSet
+from .views import PrometheusDeviceViewSet, GnmicDeviceViewSet
 
 router = routers.DefaultRouter()
-router.register("devices", DeviceViewSet)
+router.register("devices", PrometheusDeviceViewSet)
+router.register("gnmic-devices", GnmicDeviceViewSet)
 
 urlpatterns = router.urls

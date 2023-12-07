@@ -7,12 +7,12 @@ class PrometheusSD(PluginConfig):
     description = (
         "Provide Prometheus url_sd compatible API Endpoint with data from netbox"
     )
-    version = "0.4"
+    version = "0.5"
     author = "Andrei Protsenko"
     author_email = "prondy@gmail.com"
     base_url = "prometheus-sd"
     required_settings = ["custom_field_name"]
-    default_settings = {"target_port": 9100}
+    default_settings = {"target_port": 9100, "gnmic_target_port": 32767}
 
 
 config = PrometheusSD
