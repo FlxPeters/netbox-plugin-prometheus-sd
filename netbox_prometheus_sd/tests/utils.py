@@ -1,5 +1,5 @@
 from dcim.models.devices import DeviceType, Manufacturer
-from dcim.models.sites import Site
+from dcim.models.sites import Site, Location
 from dcim.models import Device, DeviceRole, Platform, Rack
 from extras.models import ConfigContext, Tag
 
@@ -20,6 +20,13 @@ def build_cluster():
         group=ClusterGroup.objects.get_or_create(name="VMware")[0],
         type=ClusterType.objects.get_or_create(name="On Prem")[0],
         site=Site.objects.get_or_create(name="Campus A", slug="campus-a")[0],
+    )[0]
+
+
+def build_location():
+    return Location.objects.get_or_create(
+        name="First Floor", slug="first-floor",
+        site=Site.objects.get_or_create(name="Site", slug="site")[0]
     )[0]
 
 
@@ -169,6 +176,7 @@ def build_device_config_context_mix_invalid_valid(name):
 
 def build_device_full(name):
     device = build_minimal_device(name)
+    device.location = build_location()
     device.tenant = build_tenant()
     device.custom_field_data = build_custom_fields()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
