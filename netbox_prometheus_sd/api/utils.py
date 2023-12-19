@@ -21,6 +21,13 @@ class LabelDict(dict):
         }
 
 
+def extract_location(obj, labels: LabelDict):
+    """Extract location"""
+    if hasattr(obj, "location") and obj.location:
+        labels["location"] = obj.location.name
+        labels["location_slug"] = obj.location.slug
+
+
 def extract_tags(obj, labels):
     if hasattr(obj, "tags") and obj.tags is not None and len(obj.tags.all()):
         labels["tags"] = ",".join([t.name for t in obj.tags.all()])
