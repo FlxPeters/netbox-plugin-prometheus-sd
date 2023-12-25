@@ -21,6 +21,12 @@ class LabelDict(dict):
         }
 
 
+def extract_description(obj, labels: LabelDict):
+    """Extract description"""
+    if hasattr(obj, "description") and obj.description:
+        labels["description"] = obj.description
+
+
 def extract_location(obj, labels: LabelDict):
     """Extract location"""
     if hasattr(obj, "location") and obj.location:

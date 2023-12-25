@@ -75,6 +75,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_primary_ip(obj, labels)
         utils.extract_oob_ip(obj, labels)
         utils.extracts_platform(obj, labels)
+        utils.extract_description(obj, labels)
         utils.extract_location(obj, labels)
         utils.extract_tags(obj, labels)
         utils.extract_tenant(obj, labels)

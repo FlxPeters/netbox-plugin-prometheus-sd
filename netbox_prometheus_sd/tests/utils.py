@@ -178,6 +178,7 @@ def build_device_full(name):
     device = build_minimal_device(name)
     device.location = build_location()
     device.tenant = build_tenant()
+    device.description = "Device Description"
     device.custom_field_data = build_custom_fields()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
     device.primary_ip4 = IPAddress.objects.get_or_create(address="192.168.0.1/24")[0]

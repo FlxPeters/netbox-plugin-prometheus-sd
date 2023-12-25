@@ -192,6 +192,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
         self.assertDictContainsSubset({"__meta_netbox_rack": "R01B01"}, data["labels"])
         self.assertDictContainsSubset(
+            {"__meta_netbox_description": "Device Description"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
             {"__meta_netbox_location": "First Floor"}, data["labels"]
         )
         self.assertDictContainsSubset(
