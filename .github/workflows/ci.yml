@@ -20,6 +20,7 @@ jobs:
           - v3.4.4
           - v3.5.3
           - v3.6.7
+          - v3.7.0
           - master
 
     steps:
