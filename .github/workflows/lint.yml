@@ -1,4 +1,4 @@
-name: Lint
+name: Lint Conventional Commits
 on:
   push:
 jobs:
