@@ -25,6 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: wagoid/commitlint-github-action@v5
 
       - name: Set up Python
         uses: actions/setup-python@v2
