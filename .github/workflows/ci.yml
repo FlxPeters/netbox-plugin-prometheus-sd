@@ -1,9 +1,13 @@
 name: CI
 on:
+  # Only run on PR or main branch.
+  # Prevent duplicate actions to safe compute time.
   push:
+    branches:
+    - main
   pull_request:
     branches:
-      - main
+    - main
 
 env:
   DOCKER_BUILDKIT: 1
