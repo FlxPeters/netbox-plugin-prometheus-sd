@@ -3,24 +3,24 @@ updates:
   - package-ecosystem: pip
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
     commit-message:
-      prefix: "fix"
-      prefix-development: "build"
+      prefix: "chore"
+      prefix-development: "deps"
       include: "scope"
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
     commit-message:
-      prefix: "fix"
-      prefix-development: "build"
+      prefix: "chore"
+      prefix-development: "deps"
       include: "scope"
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
     commit-message:
-      prefix: "fix"
-      prefix-development: "build"
+      prefix: "chore"
+      prefix-development: "deps"
       include: "scope"
