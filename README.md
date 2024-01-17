@@ -121,3 +121,11 @@ Visit http://localhost:8000 and log in with the new user.
 You can now define Netbox entities and test around.
 
 API endpoints for testing can be found at http://localhost:8000/api/plugins/prometheus-sd/
+
+## Conventional Commits
+
+This repository follows the Conventional Commits specification for versioning and changelog generation.
+Conventional Commits provide a standardized way of writing commit messages to convey semantic meaning
+about the changes made. Each commit message follows a defined format that includes a type,
+an optional scope, and a message. The types typically include features, fixes, documentation, and more.
+By adhering to this convention, we ensure clear and automated versioning, release notes, and changelog generation.
