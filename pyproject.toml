@@ -14,7 +14,7 @@ packages = [
 python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-black = "^24.1"
+black = "^24.2"
 invoke = "^2.2.0"
 pylint = "^3.0.3"
 pylint-django = "^2.5.5"
