@@ -96,10 +96,6 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
             labels["device_type"] = obj.device_type.model
             labels["device_type_slug"] = obj.device_type.slug
 
-        if hasattr(obj, "site") and obj.site is not None:
-            labels["site"] = obj.site.name
-            labels["site_slug"] = obj.site.slug
-
         labels = labels.get_labels()
 
         # Those shouldn't have the netbox prefix
