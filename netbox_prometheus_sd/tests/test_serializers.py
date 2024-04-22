@@ -192,6 +192,12 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
         self.assertDictContainsSubset({"__meta_netbox_rack": "R01B01"}, data["labels"])
         self.assertDictContainsSubset(
+            {"__meta_netbox_site": "Site"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_site_slug": "site"}, data["labels"]
+        )
+        self.assertDictContainsSubset(
             {"__meta_netbox_description": "Device Description"}, data["labels"]
         )
         self.assertDictContainsSubset(
@@ -266,7 +272,46 @@ class PrometheusIPAddressSerializerTests(TestCase):
 
 
 class PrometheusServiceSerializerTests(TestCase):
-    def test_service_full_to_target(self):
+    def test_device_service_full_to_target(self):
+        device = utils.build_device_full("firewall-full-01")
+        instance = device.services.first()
+        data_list = PrometheusServiceSerializer(many=True, instance=[instance]).data
+
+        self.assertEqual(data_list[0]["targets"], ["ssh"])
+        for data in data_list:
+            self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_ports": "22"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_parent": "firewall-full-01"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_tenant": "Acme Corp."}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_tenant_slug": "acme"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_site": "Site"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_site_slug": "site"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip": "2001:db8:1701::2"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip4": "192.168.0.1"}, data["labels"]
+            )
+            self.assertDictContainsSubset(
+                {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
+            )
+
+    def test_vm_service_full_to_target(self):
         vm = utils.build_vm_full("vm-full-01.example.com")
         instance = vm.services.first()
         data_list = PrometheusServiceSerializer(many=True, instance=[instance]).data

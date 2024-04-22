@@ -93,13 +93,16 @@ Netbox content should then be available in the service discovery tab.
 We use Poetry for dependency management and invoke as task runner.
 As Netbox plugins cannot be tested standalone, we need invoke to start all code embedded in Netbox Docker containers.
 
-All code to run in docker is located under `development`.
+All code to run in docker is located under `develop`.
 To start a virtual env managed by poetry run `poetry shell`.
 All following commands are started inside this environment.
 
 In order to run tests invoke the test steps
 
 ``` bash
+# Build Docker images
+invoke build
+
 # Execute all tests
 invoke tests
 

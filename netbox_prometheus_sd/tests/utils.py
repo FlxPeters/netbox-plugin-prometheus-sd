@@ -189,8 +189,11 @@ def build_device_full(name):
     device.rack = Rack.objects.get_or_create(
         name="R01B01", site=Site.objects.get_or_create(name="Site", slug="site")[0]
     )[0]
+    device.site = Site.objects.get_or_create(name="Site", slug="site")[0]
     device.tags.add("Tag1")
     device.tags.add("Tag 2")
+
+    Service.objects.create(device=device, name="ssh", protocol='tcp', ports=[22])
     return device
 
 

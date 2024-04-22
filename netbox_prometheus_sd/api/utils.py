@@ -62,6 +62,11 @@ def extract_cluster(obj, labels: LabelDict):
             labels["site"] = obj.cluster.site.name
             labels["site_slug"] = obj.cluster.site.slug
 
+    # Has precedence over cluster site
+    if hasattr(obj, "site") and obj.site is not None:
+        labels["site"] = obj.site.name
+        labels["site_slug"] = obj.site.slug
+
 
 def extract_primary_ip(obj, labels: LabelDict):
     if getattr(obj, "primary_ip", None) is not None:
