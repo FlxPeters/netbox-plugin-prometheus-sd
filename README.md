@@ -47,6 +47,11 @@ GET        /api/plugins/prometheus-sd/services/             Get a list of servic
 GET        /api/plugins/prometheus-sd/ip-addresses/         Get a list of ip in a prometheus compatible format
 ```
 
+#### Extended services filters
+
+Apart from standard Netbox filters, services endpoint also supports `tenant=<slug>` or `tenant_id=<id>` parameters.
+The lookup is only executed against the `tenant` attribute of the object associated with the service.
+
 ### Config context
 
 The plugin can also discover extra config to inject in the HTTP SD JSON from the config context of the devices/virtual machines.

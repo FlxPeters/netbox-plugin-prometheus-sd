@@ -22,16 +22,17 @@ except ImportError:
 # Filtersets have been renamed, we support both
 # https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
 try:
-    from ipam.filtersets import IPAddressFilterSet, ServiceFilterSet
+    from ipam.filtersets import IPAddressFilterSet
     from dcim.filtersets import DeviceFilterSet
     from virtualization.filtersets import VirtualMachineFilterSet
 except ImportError:
-    from ipam.filters import IPAddressFilterSet, ServiceFilterSet
+    from ipam.filters import IPAddressFilterSet
     from dcim.filters import DeviceFilterSet
     from virtualization.filters import VirtualMachineFilterSet
 # pylint: enable=ungrouped-imports
 
 
+from ..filtersets import ServiceFilterSet
 from .serializers import (
     PrometheusIPAddressSerializer,
     PrometheusDeviceSerializer,
