@@ -1,13 +1,14 @@
 import os
 from invoke import task
 
-NETBOX_VER = os.getenv("NETBOX_VER", "master")
+NETBOX_VER = os.getenv("NETBOX_VER", "latest")
 
 # Name of the docker image/container
 NAME = os.getenv("IMAGE_NAME", "netbox-plugin-prometheus")
 PWD = os.getcwd()
 
 COMPOSE_FILE = "develop/docker-compose.yml"
+DOCKER_FILE = "develop/Dockerfile"
 BUILD_NAME = "netbox_prometheus_sd"
 
 
