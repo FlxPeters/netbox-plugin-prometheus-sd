@@ -4,6 +4,8 @@
 [![CI](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/workflows/CI/badge.svg?event=push)](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/actions?query=workflow%3ACI)
 [![PyPI](https://img.shields.io/pypi/v/netbox-plugin-prometheus-sd)](https://pypi.org/project/netbox-plugin-prometheus-sd/)
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/flxpeters)
+
 Provide Prometheus http_sd compatible API Endpoint with data from Netbox.
 
 HTTP SD is a new feature in Prometheus 2.28.0 that allows hosts to be found via a URL instead of just files.
