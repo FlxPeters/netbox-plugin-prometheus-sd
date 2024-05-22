@@ -1,13 +1,19 @@
 import json
 
+try:
+    from users.models import ObjectPermission
+    from users.models import User
+    from core.models import ObjectType
+
+except ImportError:
+    # Fallback for old NetBox versions < 4.0
+    from django.contrib.contenttypes.models import ContentType as ObjectType
+    from django.contrib.auth.models import User
+
 from django.test import TestCase
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 
 from rest_framework.test import APIClient
 from rest_framework import status
-
-from users.models import ObjectPermission
 
 from . import utils
 
@@ -25,16 +31,16 @@ class ApiEndpointTests(TestCase):
         obj_perm.save()
         obj_perm.users.add(user)  # pylint: disable=no-member
         obj_perm.object_types.add(  # pylint: disable=no-member
-            ContentType.objects.get(app_label="dcim", model="device")
+            ObjectType.objects.get(app_label="dcim", model="device")
         )
         obj_perm.object_types.add(  # pylint: disable=no-member
-            ContentType.objects.get(app_label="ipam", model="ipaddress")
+            ObjectType.objects.get(app_label="ipam", model="ipaddress")
         )
         obj_perm.object_types.add(  # pylint: disable=no-member
-            ContentType.objects.get(app_label="ipam", model="service")
+            ObjectType.objects.get(app_label="ipam", model="service")
         )
         obj_perm.object_types.add(  # pylint: disable=no-member
-            ContentType.objects.get(app_label="virtualization", model="virtualmachine")
+            ObjectType.objects.get(app_label="virtualization", model="virtualmachine")
         )
         self.client.force_authenticate(user)
 

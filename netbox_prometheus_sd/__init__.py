@@ -1,5 +1,8 @@
-from extras.plugins import PluginConfig
-
+try:
+    from netbox.plugins import PluginConfig
+except ImportError:
+    # Fallback for old NetBox versions < 4.0
+    from extras.plugins import PluginConfig
 
 class PrometheusSD(PluginConfig):
     name = "netbox_prometheus_sd"
