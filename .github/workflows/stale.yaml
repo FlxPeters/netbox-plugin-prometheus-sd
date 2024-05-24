@@ -15,7 +15,6 @@ jobs:
       - name: Close stale pull requests
         uses: actions/stale@v9
         with:
-          debug-only: true
           stale-issue-message: |
             This issue has been automatically closed because it has been inactive for more than 60 days.
             Please reopen if you still intend to submit this pull request.
