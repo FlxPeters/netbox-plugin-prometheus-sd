@@ -169,3 +169,8 @@ def extract_service_ports(obj, labels: LabelDict):
         and len(obj.ports)
     ):
         labels["ports"] = ",".join([str(port) for port in obj.ports])
+
+def extract_rack_u_poistion(obj, labels: LabelDict):
+    """Extract rack U poistion"""
+    if hasattr(obj, "position") and obj.position:
+        labels["rack_u_position"] = obj.position

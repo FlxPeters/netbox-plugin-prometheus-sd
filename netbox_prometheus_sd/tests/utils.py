@@ -191,7 +191,7 @@ def build_device_full(name, ip_octet=1):
     device.tags.add("Tag1")
     device.tags.add("Tag 2")
     device.save()
-
+    device.position = "1.0"
     Service.objects.create(device=device, name="ssh", protocol='tcp', ports=[22])
     return device
 

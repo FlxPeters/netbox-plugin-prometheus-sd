@@ -215,6 +215,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_custom_field_simple": "Foobar 123"}, data["labels"]
         )
+        self.assertDictContainsSubset(
+            {"__meta_netbox_rack_u_position": "1.0"}, data["labels"]
+        )
 
 
 class PrometheusIPAddressSerializerTests(TestCase):
