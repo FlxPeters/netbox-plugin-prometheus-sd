@@ -120,6 +120,16 @@ def extract_rack(obj, labels: LabelDict):
     if hasattr(obj, "rack") and obj.rack:
         labels["rack"] = obj.rack.name
 
+def extract_full_location(obj,labels: LabelDict):
+        string = ""
+        string += obj.site.name + "/"
+        ancestors = obj.location.get_ancestors()
+        for ancestor in ancestors:
+            string += str(ancestor) + "/"
+        string += obj.location.name + "/"
+        string += obj.rack.name
+        labels["full_location"] = string
+
 
 def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:

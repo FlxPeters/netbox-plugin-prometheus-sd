@@ -71,7 +71,6 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         labels = LabelDict(
             {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name, "id": str(obj.id)}
         )
-
         utils.extract_primary_ip(obj, labels)
         utils.extract_oob_ip(obj, labels)
         utils.extracts_platform(obj, labels)
@@ -83,6 +82,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
         utils.extract_rack(obj, labels)
+        utils.extract_full_location(obj, labels)
         utils.extract_custom_fields(obj, labels)
         utils.extract_rack_u_poistion(obj, labels)
 
