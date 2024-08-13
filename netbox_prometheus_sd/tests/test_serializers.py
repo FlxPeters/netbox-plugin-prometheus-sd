@@ -218,9 +218,11 @@ class PrometheusDeviceSerializerTests(TestCase):
         self.assertDictContainsSubset(
             {"__meta_netbox_rack_u_position": "1.0"}, data["labels"]
         )
+
         self.assertDictContainsSubset(
             {"__meta_netbox_full_location": "Site/First Floor/R01B01"}, data["labels"]
         )
+
 
 
 class PrometheusIPAddressSerializerTests(TestCase):
