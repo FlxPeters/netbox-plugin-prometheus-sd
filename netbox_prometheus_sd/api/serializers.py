@@ -82,9 +82,12 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
         utils.extract_rack(obj, labels)
-        utils.extract_full_location(obj, labels)
+        
         utils.extract_custom_fields(obj, labels)
         utils.extract_rack_u_poistion(obj, labels)
+
+        if hasattr(obj, "location") and obj.location is not None:
+            utils.extract_full_location(obj, labels)
 
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
