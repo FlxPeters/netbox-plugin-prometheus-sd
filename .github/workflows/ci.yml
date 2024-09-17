@@ -36,6 +36,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Install docker-compose
+        run: curl -SL https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
