@@ -10,6 +10,11 @@ from . import utils
 
 
 class PrometheusVirtualMachineSerializerTests(TestCase):
+
+    def assertDictContainsSubset(self, dict1, dict2){
+        assert dict2 | dict1 == dict2
+    }
+
     def test_vm_minimal_to_target(self):
 
         instance = utils.build_minimal_vm("vm-01.example.com")
