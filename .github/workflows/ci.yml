@@ -27,38 +27,32 @@ jobs:
     #       - latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "$PATH"
-      - name: debug
+      
+      - run: echo "Wunning with Docker Version: $(docker --version)"
+      - run: echo "Wunning with Docker Compose Version: $(docker compose --version)"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
         run: |
-          which docker
-          docker compose --version
+          python -m pip install --upgrade pip
+          pip install poetry
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: 3.8
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: ~/.virtualenvs
+          key: poetry-$
+          restore-keys: |
+            poetry-$
 
-      # - name: Install dependencies
-      #   run: |
-      #     curl -SL https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-      #     chmod +x /usr/local/bin/docker-compose
-      #     sudo apt-get install build-essential python-dev
-      #     python -m pip install --upgrade pip
-      #     pip install poetry
-
-      # - name: Cache Poetry virtualenv
-      #   uses: actions/cache@v4
-      #   id: cache
-      #   with:
-      #     path: ~/.virtualenvs
-      #     key: poetry-$
-      #     restore-keys: |
-      #       poetry-$
-
-      # - name: Install Dependencies using Poetry
-      #   run: poetry install
-      #   if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Dependencies using Poetry
+        run: poetry install
+        if: steps.cache.outputs.cache-hit != 'true'
 
       # - name: Build test images
       #   run: |
