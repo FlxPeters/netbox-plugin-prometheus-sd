@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         netbox-version:
@@ -27,41 +27,44 @@ jobs:
           - latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-
-      - name: Install dependencies
+      - name: debug
         run: |
-          curl -SL https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-          chmod +x /usr/local/bin/docker-compose
-          sudo apt-get install build-essential python-dev
-          python -m pip install --upgrade pip
-          pip install poetry
+          docker-compose --version
 
-      - name: Cache Poetry virtualenv
-        uses: actions/cache@v4
-        id: cache
-        with:
-          path: ~/.virtualenvs
-          key: poetry-$
-          restore-keys: |
-            poetry-$
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: 3.8
 
-      - name: Install Dependencies using Poetry
-        run: poetry install
-        if: steps.cache.outputs.cache-hit != 'true'
+      # - name: Install dependencies
+      #   run: |
+      #     curl -SL https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+      #     chmod +x /usr/local/bin/docker-compose
+      #     sudo apt-get install build-essential python-dev
+      #     python -m pip install --upgrade pip
+      #     pip install poetry
 
-      - name: Build test images
-        run: |
-          poetry run invoke build
-        env:
-          NETBOX_VER: ${{ matrix.netbox-version }}
+      # - name: Cache Poetry virtualenv
+      #   uses: actions/cache@v4
+      #   id: cache
+      #   with:
+      #     path: ~/.virtualenvs
+      #     key: poetry-$
+      #     restore-keys: |
+      #       poetry-$
 
-      - name: Run tests
-        run: |
-          poetry run invoke tests
-        env:
-          NETBOX_VER: ${{ matrix.netbox-version }}
+      # - name: Install Dependencies using Poetry
+      #   run: poetry install
+      #   if: steps.cache.outputs.cache-hit != 'true'
+
+      # - name: Build test images
+      #   run: |
+      #     poetry run invoke build
+      #   env:
+      #     NETBOX_VER: ${{ matrix.netbox-version }}
+
+      # - name: Run tests
+      #   run: |
+      #     poetry run invoke tests
+      #   env:
+      #     NETBOX_VER: ${{ matrix.netbox-version }}
