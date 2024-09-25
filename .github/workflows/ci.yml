@@ -15,21 +15,24 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        netbox-version:
-          - v3.3.2
-          - v3.4.4
-          - v3.5.3
-          - v3.6.7
-          - v3.7.8
-          - v4.0.2
-          - latest
+    # strategy:
+    #   matrix:
+    #     netbox-version:
+    #       - v3.3.2
+    #       - v3.4.4
+    #       - v3.5.3
+    #       - v3.6.7
+    #       - v3.7.8
+    #       - v4.0.2
+    #       - latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "$PATH"
       - name: debug
         run: |
-          docker-compose --version
+          which docker
+          docker compose --version
 
       # - name: Set up Python
       #   uses: actions/setup-python@v5
