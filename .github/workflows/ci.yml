@@ -33,9 +33,6 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Install dependencies
         run: |
           curl -SL https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
