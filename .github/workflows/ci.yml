@@ -27,9 +27,11 @@ jobs:
     #       - latest
     steps:
       - uses: actions/checkout@v4
-      
-      - run: echo "Wunning with Docker Version: $(docker --version)"
-      - run: echo "Wunning with Docker Compose Version: $(docker compose --version)"
+
+      - name: Versions
+        run: |
+          echo "Running with Docker Version: $(docker --version)"
+          echo "Running with Docker Compose Version: $(docker compose --version)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
