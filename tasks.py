@@ -7,7 +7,7 @@ NETBOX_VER = os.getenv("NETBOX_VER", "latest")
 NAME = os.getenv("IMAGE_NAME", "netbox-plugin-prometheus")
 PWD = os.getcwd()
 
-COMPOSE_BIN = "docker compose"
+COMPOSE_BIN = os.getenv("COMPOSE_BIN", "docker compose")
 COMPOSE_FILE = "develop/docker-compose.yml"
 DOCKER_FILE = "develop/Dockerfile"
 BUILD_NAME = "netbox_prometheus_sd"
