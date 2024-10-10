@@ -41,6 +41,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Versions
+        run: |
+          echo "Running with Docker Version: $(docker --version)"
+          echo "Running with Docker Compose Version: $(docker compose --version)"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
