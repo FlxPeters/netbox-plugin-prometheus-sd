@@ -3,7 +3,11 @@
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
-from utilities.filters import MultiValueCharFilter, MultiValueNumberFilter, NumericArrayFilter
+from utilities.filters import (
+    MultiValueCharFilter,
+    MultiValueNumberFilter,
+    NumericArrayFilter,
+)
 
 try:
     from ipam.filtersets import ServiceFilterSet as NetboxServiceFilterSet
@@ -20,37 +24,39 @@ class ServiceFilterSet(NetboxServiceFilterSet):
     """
 
     tenant_id = MultiValueNumberFilter(
-        method='filter_by_tenant_id',
-        label=_('Tenant (ID)'),
+        method="filter_by_tenant_id",
+        label=_("Tenant (ID)"),
     )
 
     tenant = MultiValueCharFilter(
-        method='filter_by_tenant_slug',
-        label=_('Tenant (slug)'),
+        method="filter_by_tenant_slug",
+        label=_("Tenant (slug)"),
     )
 
     # fix to make the test_missing_filters pass
     # see: https://github.com/netbox-community/netbox/blob/master/netbox/utilities/testing/filtersets.py#L98
-    ports = NumericArrayFilter(
-        field_name='ports',
-        lookup_expr='contains'
-    )
+    ports = NumericArrayFilter(field_name="ports", lookup_expr="contains")
 
     # pylint: disable=unused-argument
     def filter_by_cluster_tenant_id(self, queryset, name, value):
         return queryset.filter(
-            Q(device__cluster__tenant_id__in=value) |
-            Q(virtual_machine__cluster__tenant_id__in=value)
+            Q(device__cluster__tenant_id__in=value)
+            | Q(virtual_machine__cluster__tenant_id__in=value)
         )
 
     def filter_by_cluster_tenant_slug(self, queryset, name, value):
         return queryset.filter(
-            Q(device__cluster__tenant__slug__in=value) |
-            Q(virtual_machine__cluster__tenant__slug__in=value)
+            Q(device__cluster__tenant__slug__in=value)
+            | Q(virtual_machine__cluster__tenant__slug__in=value)
         )
 
     def filter_by_tenant_id(self, queryset, name, value):
-        return queryset.filter(Q(device__tenant_id__in=value) | Q(virtual_machine__tenant_id__in=value))
+        return queryset.filter(
+            Q(device__tenant_id__in=value) | Q(virtual_machine__tenant_id__in=value)
+        )
 
     def filter_by_tenant_slug(self, queryset, name, value):
-        return queryset.filter(Q(device__tenant__slug__in=value) | Q(virtual_machine__tenant__slug__in=value))
+        return queryset.filter(
+            Q(device__tenant__slug__in=value)
+            | Q(virtual_machine__tenant__slug__in=value)
+        )

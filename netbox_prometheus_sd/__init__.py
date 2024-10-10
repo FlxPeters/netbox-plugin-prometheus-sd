@@ -4,6 +4,7 @@ except ImportError:
     # Fallback for old NetBox versions < 4.0
     from extras.plugins import PluginConfig
 
+
 class PrometheusSD(PluginConfig):
     name = "netbox_prometheus_sd"
     verbose_name = "Netbox Prometheus SD"

@@ -25,8 +25,9 @@ def build_cluster():
 
 def build_location():
     return Location.objects.get_or_create(
-        name="First Floor", slug="first-floor",
-        site=Site.objects.get_or_create(name="Site", slug="site")[0]
+        name="First Floor",
+        slug="first-floor",
+        site=Site.objects.get_or_create(name="Site", slug="site")[0],
     )[0]
 
 
@@ -42,24 +43,17 @@ def build_custom_fields():
                 "id": 1,
                 "url": "http://localhost:8000/api/tenancy/contacts/1/",
                 "display": "Foo",
-                "name": "Foo"
+                "name": "Foo",
             }
         ],
-        "json": {
-            "foo": [
-                "bar",
-                "baz"
-            ]
-        },
-        "multi_selection": [
-            "foo",
-            "baz"
-        ],
+        "json": {"foo": ["bar", "baz"]},
+        "multi_selection": ["foo", "baz"],
         "simple": "Foobar 123",
         "int": "42",
         "text_long": "This is\r\na  pretty\r\nlog\r\nText",
-        "bool": "True"
+        "bool": "True",
     }
+
 
 def build_minimal_vm(name):
     return VirtualMachine.objects.get_or_create(name=name, cluster=build_cluster())[0]
@@ -67,12 +61,16 @@ def build_minimal_vm(name):
 
 def build_vm_full(name, ip_octet=1):
     # Create the confix context beforehand
-    config_context, created = ConfigContext.objects.get_or_create(name="context 1",
-        weight=100, data={"prometheus-plugin-prometheus-sd": [
-            {"metrics_path": "/not/metrics", "port": 4242, "scheme": "https"},
-            {"port": 4243},
-        ]
-    })
+    config_context, created = ConfigContext.objects.get_or_create(
+        name="context 1",
+        weight=100,
+        data={
+            "prometheus-plugin-prometheus-sd": [
+                {"metrics_path": "/not/metrics", "port": 4242, "scheme": "https"},
+                {"port": 4243},
+            ]
+        },
+    )
     if created:
         platform = Platform.objects.get_or_create(
             name="Ubuntu 20.04", slug="ubuntu-20.04"
@@ -87,14 +85,18 @@ def build_vm_full(name, ip_octet=1):
     vm.tenant = build_tenant()
     vm.custom_field_data = build_custom_fields()
     vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
-    vm.primary_ip4 = IPAddress.objects.get_or_create(address=f"192.168.0.{ip_octet}/24")[0]
-    vm.primary_ip6 = IPAddress.objects.get_or_create(address=f"2001:db8:1701::{ip_octet+1}/64")[0]
+    vm.primary_ip4 = IPAddress.objects.get_or_create(
+        address=f"192.168.0.{ip_octet}/24"
+    )[0]
+    vm.primary_ip6 = IPAddress.objects.get_or_create(
+        address=f"2001:db8:1701::{ip_octet+1}/64"
+    )[0]
 
     vm.tags.add("Tag1")
     vm.tags.add("Tag 2")
     vm.save()
 
-    Service.objects.create(virtual_machine=vm, name="ssh", protocol='tcp', ports=[22])
+    Service.objects.create(virtual_machine=vm, name="ssh", protocol="tcp", ports=[22])
     return vm
 
 
@@ -111,68 +113,81 @@ def build_minimal_device(name):
         )[0],
         site=Site.objects.get_or_create(name="Site", slug="site")[0],
         **{
-            role_attr: DeviceRole.objects.get_or_create(name="Firewall", slug="firewall")[0],
-        }
+            role_attr: DeviceRole.objects.get_or_create(
+                name="Firewall", slug="firewall"
+            )[0],
+        },
     )[0]
+
 
 def build_device_config_context_no_array(name):
     device = build_minimal_device(name)
     config_context, created = ConfigContext.objects.get_or_create(
-        name="context no array", weight=100,
+        name="context no array",
+        weight=100,
         data={"prometheus-plugin-prometheus-sd": {"port": 4242}},
     )
     if not created:
-        tag = Tag.objects.create(name='no array config context', slug='no-array-cc')
+        tag = Tag.objects.create(name="no array config context", slug="no-array-cc")
         config_context.platforms.add(tag)
         device.tags.add(tag)
     device.save()
 
     return device
+
 
 def build_device_config_context_invalid_1(name):
     device = build_minimal_device(name)
     config_context, created = ConfigContext.objects.get_or_create(
-        name="invalid 1", weight=100,
+        name="invalid 1",
+        weight=100,
         data={"prometheus-plugin-prometheus-sd": "foo"},
     )
     if not created:
-        tag = Tag.objects.create(name='invalid 1', slug='invalid-1')
+        tag = Tag.objects.create(name="invalid 1", slug="invalid-1")
         config_context.platforms.add(tag)
         device.tags.add(tag)
     device.save()
 
     return device
+
 
 def build_device_config_context_invalid_2(name):
     device = build_minimal_device(name)
     config_context, created = ConfigContext.objects.get_or_create(
-        name="invalid 2", weight=100,
+        name="invalid 2",
+        weight=100,
         data={"prometheus-plugin-prometheus-sd": [{"not": "", "standard": ""}]},
     )
     if not created:
-        tag = Tag.objects.create(name='invalid 2', slug='invalid-2')
+        tag = Tag.objects.create(name="invalid 2", slug="invalid-2")
         config_context.platforms.add(tag)
         device.tags.add(tag)
     device.save()
 
     return device
+
 
 def build_device_config_context_mix_invalid_valid(name):
     device = build_minimal_device(name)
     config_context, created = ConfigContext.objects.get_or_create(
-        name="mix valid invalid", weight=100,
-        data={"prometheus-plugin-prometheus-sd": [
-            {"not": "", "standard": ""},
-            {"port": 4242, "ignored": ""},
-        ]},
+        name="mix valid invalid",
+        weight=100,
+        data={
+            "prometheus-plugin-prometheus-sd": [
+                {"not": "", "standard": ""},
+                {"port": 4242, "ignored": ""},
+            ]
+        },
     )
     if not created:
-        tag = Tag.objects.create(name='mix valid invalid', slug='mix-valid-invalid')
+        tag = Tag.objects.create(name="mix valid invalid", slug="mix-valid-invalid")
         config_context.platforms.add(tag)
         device.tags.add(tag)
     device.save()
 
     return device
+
 
 def build_device_full(name, ip_octet=1):
     device = build_minimal_device(name)
@@ -181,8 +196,12 @@ def build_device_full(name, ip_octet=1):
     device.description = "Device Description"
     device.custom_field_data = build_custom_fields()
     device.platform = Platform.objects.get_or_create(name="Junos", slug="junos")[0]
-    device.primary_ip4 = IPAddress.objects.get_or_create(address=f"192.168.0.{ip_octet}/24")[0]
-    device.primary_ip6 = IPAddress.objects.get_or_create(address=f"2001:db8:1701::{ip_octet+1}/64")[0]
+    device.primary_ip4 = IPAddress.objects.get_or_create(
+        address=f"192.168.0.{ip_octet}/24"
+    )[0]
+    device.primary_ip6 = IPAddress.objects.get_or_create(
+        address=f"2001:db8:1701::{ip_octet+1}/64"
+    )[0]
     device.oob_ip = IPAddress.objects.get_or_create(address=f"10.0.0.{ip_octet}/24")[0]
     device.rack = Rack.objects.get_or_create(
         name="R01B01", site=Site.objects.get_or_create(name="Site", slug="site")[0]
@@ -192,7 +211,7 @@ def build_device_full(name, ip_octet=1):
     device.tags.add("Tag 2")
     device.save()
     device.position = 1.0
-    Service.objects.create(device=device, name="ssh", protocol='tcp', ports=[22])
+    Service.objects.create(device=device, name="ssh", protocol="tcp", ports=[22])
     return device
 
 

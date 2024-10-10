@@ -1,4 +1,5 @@
 """NetBox configuration."""
+
 import os
 from django.core.exceptions import ImproperlyConfigured
 
@@ -24,9 +25,9 @@ def strtobool(val):
     'val' is anything else.
     """
     val = val.lower()
-    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+    if val in ("y", "yes", "t", "true", "on", "1"):
         return 1
-    if val in ('n', 'no', 'f', 'false', 'off', '0'):
+    if val in ("n", "no", "f", "false", "off", "0"):
         return 0
 
     raise ValueError(f"invalid truth value {val}")
@@ -79,9 +80,9 @@ DATABASE = {
     "PASSWORD": os.environ["POSTGRES_PASSWORD"],
     # PostgreSQL password
     "HOST": os.environ["POSTGRES_HOST"],  # Database server
-    "PORT": 5432
-    if "POSTGRES_PORT" not in os.environ
-    else int(os.environ["POSTGRES_PORT"]),  # Database port
+    "PORT": (
+        5432 if "POSTGRES_PORT" not in os.environ else int(os.environ["POSTGRES_PORT"])
+    ),  # Database port
 }
 
 # This key is used for secure generation of random numbers and strings. It must never be exposed outside of this file.
