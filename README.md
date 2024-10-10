@@ -119,9 +119,6 @@ invoke build
 
 # Execute all tests
 invoke tests
-
-# Execute unit tests only
-invoke unittest
 ```
 
 Features should be covered by a unit test, but some times it's easier to develop on an running system.
