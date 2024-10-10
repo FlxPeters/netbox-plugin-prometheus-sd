@@ -13,7 +13,8 @@ This plugin implements API endpoints in Netbox to make devices, services, IPs an
 
 ## Compatibility
 
-We aim to support the latest major versions of Netbox. For now we support Netbox `>= 3.3` including bugfix versions.
+We aim to support the latest major versions of Netbox.
+For now we support Netbox `>= 4.0` including bugfix versions. Older versions may work, but without any guarantee.
 
 Check the `.github/workflows/ci.yml` pipeline for the current tested builds.
 Other versions may work, but we do not test them explicitly. All relevant target versions are tested in CI.
