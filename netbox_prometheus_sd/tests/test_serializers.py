@@ -13,10 +13,14 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
     def test_vm_minimal_to_target(self):
 
         instance = utils.build_minimal_vm("vm-01.example.com")
-        data = PrometheusVirtualMachineSerializer(many=True, instance=[instance]).data[0]
+        data = PrometheusVirtualMachineSerializer(many=True, instance=[instance]).data[
+            0
+        ]
 
         self.assertEqual(data["targets"], ["vm-01.example.com"])
-        self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+        self.assertDictContainsSubset(
+            {"__meta_netbox_id": str(instance.id)}, data["labels"]
+        )
         self.assertDictContainsSubset(
             {"__meta_netbox_model": "VirtualMachine"}, data["labels"]
         )
@@ -33,20 +37,22 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
 
     def test_vm_full_to_target(self):
         instance = utils.build_vm_full("vm-full-01.example.com")
-        data_list = PrometheusVirtualMachineSerializer(many=True, instance=[instance]).data
+        data_list = PrometheusVirtualMachineSerializer(
+            many=True, instance=[instance]
+        ).data
 
         self.assertEqual(data_list[0]["targets"], ["vm-full-01.example.com:4242"])
         self.assertDictContainsSubset(
             {"__metrics_path__": "/not/metrics"}, data_list[0]["labels"]
         )
-        self.assertDictContainsSubset(
-            {"__scheme__": "https"}, data_list[0]["labels"]
-        )
+        self.assertDictContainsSubset({"__scheme__": "https"}, data_list[0]["labels"])
         self.assertEqual(data_list[0]["targets"], ["vm-full-01.example.com:4242"])
 
         self.assertEqual(data_list[1]["targets"], ["vm-full-01.example.com:4243"])
         for data in data_list:
-            self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_id": str(instance.id)}, data["labels"]
+            )
             self.assertDictContainsSubset(
                 {"__meta_netbox_model": "VirtualMachine"}, data["labels"]
             )
@@ -66,7 +72,9 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
                 {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
             )
             self.assertDictContainsSubset({"__meta_netbox_role": "VM"}, data["labels"])
-            self.assertDictContainsSubset({"__meta_netbox_role_slug": "vm"}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_role_slug": "vm"}, data["labels"]
+            )
             self.assertDictContainsSubset(
                 {"__meta_netbox_platform": "Ubuntu 20.04"}, data["labels"]
             )
@@ -101,16 +109,14 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
             )
             self.assertDictContainsSubset(
                 {
-                    "__meta_netbox_custom_field_contact":
-                    "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/',"
-                        + " 'display': 'Foo', 'name': 'Foo'}]"
+                    "__meta_netbox_custom_field_contact": "[{'id': 1, 'url': 'http://localhost:8000/api/tenancy/contacts/1/',"
+                    + " 'display': 'Foo', 'name': 'Foo'}]"
                 },
                 data["labels"],
             )
             self.assertDictContainsSubset(
                 {
-                    "__meta_netbox_custom_field_text_long":
-                    "This is\r\na  pretty\r\nlog\r\nText"
+                    "__meta_netbox_custom_field_text_long": "This is\r\na  pretty\r\nlog\r\nText"
                 },
                 data["labels"],
             )
@@ -122,7 +128,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         data = PrometheusDeviceSerializer(many=True, instance=[instance]).data[0]
 
         self.assertEqual(data["targets"], ["firewall-01"])
-        self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+        self.assertDictContainsSubset(
+            {"__meta_netbox_id": str(instance.id)}, data["labels"]
+        )
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_role": "Firewall"}, data["labels"]
@@ -160,7 +168,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         self.assertEqual(data["targets"], ["firewall-invalid-02"])
 
     def test_device_config_context_mix_valid_invalid(self):
-        instance = utils.build_device_config_context_mix_invalid_valid("firewall-valid-invalid-01")
+        instance = utils.build_device_config_context_mix_invalid_valid(
+            "firewall-valid-invalid-01"
+        )
         data = PrometheusDeviceSerializer(many=True, instance=[instance]).data[0]
 
         self.assertEqual(data["targets"], ["firewall-valid-invalid-01:4242"])
@@ -170,7 +180,9 @@ class PrometheusDeviceSerializerTests(TestCase):
         data = PrometheusDeviceSerializer(many=True, instance=[instance]).data[0]
 
         self.assertEqual(data["targets"], ["firewall-full-01"])
-        self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+        self.assertDictContainsSubset(
+            {"__meta_netbox_id": str(instance.id)}, data["labels"]
+        )
         self.assertDictContainsSubset({"__meta_netbox_model": "Device"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_platform": "Junos"}, data["labels"]
@@ -191,9 +203,7 @@ class PrometheusDeviceSerializerTests(TestCase):
             {"__meta_netbox_oob_ip": "10.0.0.1"}, data["labels"]
         )
         self.assertDictContainsSubset({"__meta_netbox_rack": "R01B01"}, data["labels"])
-        self.assertDictContainsSubset(
-            {"__meta_netbox_site": "Site"}, data["labels"]
-        )
+        self.assertDictContainsSubset({"__meta_netbox_site": "Site"}, data["labels"])
         self.assertDictContainsSubset(
             {"__meta_netbox_site_slug": "site"}, data["labels"]
         )
@@ -226,7 +236,9 @@ class PrometheusIPAddressSerializerTests(TestCase):
         data = PrometheusIPAddressSerializer(many=True, instance=[instance]).data[0]
 
         self.assertEqual(data["targets"], ["10.10.10.10"])
-        self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+        self.assertDictContainsSubset(
+            {"__meta_netbox_id": str(instance.id)}, data["labels"]
+        )
         self.assertDictContainsSubset(
             {"__meta_netbox_status": "active"}, data["labels"]
         )
@@ -245,7 +257,9 @@ class PrometheusIPAddressSerializerTests(TestCase):
             ["foo.example.com"],
             "IP with DNS name should use DNS name as target",
         )
-        self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+        self.assertDictContainsSubset(
+            {"__meta_netbox_id": str(instance.id)}, data["labels"]
+        )
         self.assertDictContainsSubset(
             {"__meta_netbox_status": "active"}, data["labels"]
         )
@@ -282,13 +296,13 @@ class PrometheusServiceSerializerTests(TestCase):
 
         self.assertEqual(data_list[0]["targets"], ["ssh"])
         for data in data_list:
-            self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_id": str(instance.id)}, data["labels"]
+            )
             self.assertDictContainsSubset(
                 {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
             )
-            self.assertDictContainsSubset(
-                {"__meta_netbox_ports": "22"}, data["labels"]
-            )
+            self.assertDictContainsSubset({"__meta_netbox_ports": "22"}, data["labels"])
             self.assertDictContainsSubset(
                 {"__meta_netbox_parent": "firewall-full-01"}, data["labels"]
             )
@@ -321,13 +335,13 @@ class PrometheusServiceSerializerTests(TestCase):
 
         self.assertEqual(data_list[0]["targets"], ["ssh"])
         for data in data_list:
-            self.assertDictContainsSubset({"__meta_netbox_id": str(instance.id)}, data["labels"])
+            self.assertDictContainsSubset(
+                {"__meta_netbox_id": str(instance.id)}, data["labels"]
+            )
             self.assertDictContainsSubset(
                 {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
             )
-            self.assertDictContainsSubset(
-                {"__meta_netbox_ports": "22"}, data["labels"]
-            )
+            self.assertDictContainsSubset({"__meta_netbox_ports": "22"}, data["labels"])
             self.assertDictContainsSubset(
                 {"__meta_netbox_parent": "vm-full-01.example.com"}, data["labels"]
             )

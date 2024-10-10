@@ -9,6 +9,7 @@ from netaddr import IPNetwork
 from .utils import LabelDict
 from . import utils
 
+
 class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
 
     def update(self, instance, validated_data):
@@ -24,25 +25,30 @@ class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
         ret = []
         for item in iterable:
             appended = False
-            prometheus_sd_configs = item.get_config_context().get("prometheus-plugin-prometheus-sd", [])
+            prometheus_sd_configs = item.get_config_context().get(
+                "prometheus-plugin-prometheus-sd", []
+            )
             if not isinstance(prometheus_sd_configs, list):
                 prometheus_sd_configs = [prometheus_sd_configs]
 
             for prometheus_sd_config in prometheus_sd_configs:
                 if not isinstance(prometheus_sd_config, dict) or (
-                    "port" not in prometheus_sd_config and
-                    "metrics_path" not in prometheus_sd_config and
-                    "scheme" not in prometheus_sd_config
+                    "port" not in prometheus_sd_config
+                    and "metrics_path" not in prometheus_sd_config
+                    and "scheme" not in prometheus_sd_config
                 ):
                     continue
 
-                item._injected_prometheus_sd_config = prometheus_sd_config # pylint: disable=protected-access
+                item._injected_prometheus_sd_config = (
+                    prometheus_sd_config  # pylint: disable=protected-access
+                )
                 appended = True
                 ret.append(self.child.to_representation(item))
 
             if not appended:
                 ret.append(self.child.to_representation(item))
         return ret
+
 
 class PrometheusTargetsMixin:
     def get_targets(self, obj):
@@ -55,6 +61,7 @@ class PrometheusTargetsMixin:
 
         return [target]
 
+
 class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsMixin):
     """Serialize a device to Prometheus target representation"""
 
@@ -66,10 +73,14 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
     targets = serializers.SerializerMethodField()
     labels = serializers.SerializerMethodField()
 
-
     def get_labels(self, obj):
         labels = LabelDict(
-            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name, "id": str(obj.id)}
+            {
+                "status": obj.status,
+                "model": obj.__class__.__name__,
+                "name": obj.name,
+                "id": str(obj.id),
+            }
         )
 
         utils.extract_primary_ip(obj, labels)
@@ -89,7 +100,9 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
             labels["role_slug"] = obj.role.slug
-        elif hasattr(obj, "device_role") and obj.device_role is not None:  # netbox <3.6.0
+        elif (
+            hasattr(obj, "device_role") and obj.device_role is not None
+        ):  # netbox <3.6.0
             labels["role"] = obj.device_role.name
             labels["role_slug"] = obj.device_role.slug
 
@@ -105,7 +118,9 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         return labels
 
 
-class PrometheusVirtualMachineSerializer(serializers.ModelSerializer, PrometheusTargetsMixin):
+class PrometheusVirtualMachineSerializer(
+    serializers.ModelSerializer, PrometheusTargetsMixin
+):
     """Serialize a virtual machine to Prometheus target representation"""
 
     class Meta:
@@ -118,7 +133,12 @@ class PrometheusVirtualMachineSerializer(serializers.ModelSerializer, Prometheus
 
     def get_labels(self, obj):
         labels = LabelDict(
-            {"status": obj.status, "model": obj.__class__.__name__, "name": obj.name, "id": str(obj.id)}
+            {
+                "status": obj.status,
+                "model": obj.__class__.__name__,
+                "name": obj.name,
+                "id": str(obj.id),
+            }
         )
 
         utils.extract_primary_ip(obj, labels)
@@ -156,9 +176,7 @@ class PrometheusServiceSerializer(serializers.ModelSerializer):
         return [obj.name]
 
     def get_labels(self, obj):
-        labels = LabelDict(
-            {"id": str(obj.id), "name": obj.name, "display": str(obj)}
-        )
+        labels = LabelDict({"id": str(obj.id), "name": obj.name, "display": str(obj)})
 
         utils.extract_service_ips(obj, labels)
         utils.extract_service_ports(obj, labels)
@@ -195,7 +213,7 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
                 "status": obj.status,
                 "model": obj.__class__.__name__,
                 "ip": self.extract_ip(obj),
-                "id": str(obj.id)
+                "id": str(obj.id),
             }
         )
         if obj.role:

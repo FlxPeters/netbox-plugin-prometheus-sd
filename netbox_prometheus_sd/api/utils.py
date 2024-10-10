@@ -10,7 +10,7 @@ class LabelDict(dict):
         # add any special chars here that may appear in custom label names
         special_chars = " -/\\!"
         for special_char in special_chars:
-            labelval = labelval.replace(special_char, '_')
+            labelval = labelval.replace(special_char, "_")
         return labelval
 
     def get_labels(self):
@@ -100,17 +100,16 @@ def extract_services(obj, labels: LabelDict):
 
 
 def extract_contacts(obj, labels: LabelDict):
-    if (
-        hasattr(obj, "contacts")
-        and obj.contacts is not None
-    ):
+    if hasattr(obj, "contacts") and obj.contacts is not None:
         for contact in obj.contacts.all():
             if hasattr(contact, "contact") and contact.contact is not None:
                 labels[f"contact_{contact.priority}_name"] = contact.contact.name
             if contact.contact.email:
                 labels[f"contact_{contact.priority}_email"] = contact.contact.email
             if contact.contact.comments:
-                labels[f"contact_{contact.priority}_comments"] = contact.contact.comments
+                labels[f"contact_{contact.priority}_comments"] = (
+                    contact.contact.comments
+                )
             if hasattr(contact, "role") and contact.role is not None:
                 labels[f"contact_{contact.priority}_role"] = contact.role.name
 
@@ -125,7 +124,7 @@ def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
         for key, value in obj.custom_field_data.items():
             # Render primitive value as string representation
-            if not hasattr(value, '__dict__'):
+            if not hasattr(value, "__dict__"):
                 labels["custom_field_" + key.lower()] = str(value)
             # Complex types are rendered as json
             else:
@@ -145,7 +144,7 @@ def extract_prometheus_sd_config(obj, labels):
 
 
 def extract_parent(obj, labels: LabelDict):
-    labels['parent'] = obj.parent.name
+    labels["parent"] = obj.parent.name
     extract_primary_ip(obj.parent, labels)
     extract_oob_ip(obj.parent, labels)
     extract_tenant(obj.parent, labels)
@@ -159,16 +158,15 @@ def extract_service_ips(obj, labels: LabelDict):
         and obj.ipaddresses is not None
         and len(obj.ipaddresses.all())
     ):
-        labels["ipaddresses"] = ",".join([str(ipaddr.address.ip) for ipaddr in obj.ipaddresses.all()])
+        labels["ipaddresses"] = ",".join(
+            [str(ipaddr.address.ip) for ipaddr in obj.ipaddresses.all()]
+        )
 
 
 def extract_service_ports(obj, labels: LabelDict):
-    if (
-        hasattr(obj, "ports")
-        and obj.ports is not None
-        and len(obj.ports)
-    ):
+    if hasattr(obj, "ports") and obj.ports is not None and len(obj.ports):
         labels["ports"] = ",".join([str(port) for port in obj.ports])
+
 
 def extract_rack_u_poistion(obj, labels: LabelDict):
     """Extract rack U poistion"""
