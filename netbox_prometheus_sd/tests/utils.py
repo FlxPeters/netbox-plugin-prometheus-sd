@@ -14,6 +14,11 @@ from virtualization.models import (
 )
 
 
+# replacement for assertDictContainsSubset
+def dictContainsSubset(subset, fullset):
+    return set(subset.items()).issubset(set(fullset.items()))
+
+
 def build_cluster():
     return Cluster.objects.get_or_create(
         name="DC1",
