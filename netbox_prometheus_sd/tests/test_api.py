@@ -29,17 +29,17 @@ class ApiEndpointTests(TestCase):
         user = User.objects.create_user("username", "Pas$w0rd")
         obj_perm = ObjectPermission(name="test", actions=["view"])
         obj_perm.save()
-        obj_perm.users.add(user)  # pylint: disable=no-member
-        obj_perm.object_types.add(  # pylint: disable=no-member
+        obj_perm.users.add(user)
+        obj_perm.object_types.add(
             ObjectType.objects.get(app_label="dcim", model="device")
         )
-        obj_perm.object_types.add(  # pylint: disable=no-member
+        obj_perm.object_types.add(
             ObjectType.objects.get(app_label="ipam", model="ipaddress")
         )
-        obj_perm.object_types.add(  # pylint: disable=no-member
+        obj_perm.object_types.add(
             ObjectType.objects.get(app_label="ipam", model="service")
         )
-        obj_perm.object_types.add(  # pylint: disable=no-member
+        obj_perm.object_types.add(
             ObjectType.objects.get(app_label="virtualization", model="virtualmachine")
         )
         self.client.force_authenticate(user)

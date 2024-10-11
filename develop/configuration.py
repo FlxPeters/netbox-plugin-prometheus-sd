@@ -49,9 +49,7 @@ def is_truthy(arg):
     try:
         bool_val = strtobool(arg)
     except ValueError:
-        raise ImproperlyConfigured(  # pylint: disable=raise-missing-from
-            f"Unexpected variable value: {arg}"
-        )
+        raise ImproperlyConfigured(f"Unexpected variable value: {arg}")
 
     return bool(bool_val)
 

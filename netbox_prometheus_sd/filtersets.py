@@ -37,7 +37,6 @@ class ServiceFilterSet(NetboxServiceFilterSet):
     # see: https://github.com/netbox-community/netbox/blob/master/netbox/utilities/testing/filtersets.py#L98
     ports = NumericArrayFilter(field_name="ports", lookup_expr="contains")
 
-    # pylint: disable=unused-argument
     def filter_by_cluster_tenant_id(self, queryset, name, value):
         return queryset.filter(
             Q(device__cluster__tenant_id__in=value)

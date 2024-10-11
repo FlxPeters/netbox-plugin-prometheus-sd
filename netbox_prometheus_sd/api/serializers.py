@@ -39,9 +39,7 @@ class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
                 ):
                     continue
 
-                item._injected_prometheus_sd_config = (
-                    prometheus_sd_config  # pylint: disable=protected-access
-                )
+                item._injected_prometheus_sd_config = prometheus_sd_config
                 appended = True
                 ret.append(self.child.to_representation(item))
 
