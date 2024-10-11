@@ -2,14 +2,14 @@ from ipam.models import IPAddress, Service
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device
 
-# pylint: disable=ungrouped-imports
+
 try:  # Netbox >= 3.5
     from netbox.api.viewsets import BaseViewSet
     from netbox.api.viewsets.mixins import CustomFieldsMixin
     from rest_framework.mixins import ListModelMixin
 
     # Netbox MosdelViewSet with list only
-    class NetboxPrometheusSDModelViewSet(  # pylint: disable=too-many-ancestors
+    class NetboxPrometheusSDModelViewSet(
         CustomFieldsMixin, ListModelMixin, BaseViewSet
     ):
         pass
@@ -34,7 +34,6 @@ except ImportError:
     from ipam.filters import IPAddressFilterSet
     from dcim.filters import DeviceFilterSet
     from virtualization.filters import VirtualMachineFilterSet
-# pylint: enable=ungrouped-imports
 
 
 from ..filtersets import ServiceFilterSet
@@ -46,9 +45,7 @@ from .serializers import (
 )
 
 
-class ServiceViewSet(
-    NetboxPrometheusSDModelViewSet
-):  # pylint: disable=too-many-ancestors
+class ServiceViewSet(NetboxPrometheusSDModelViewSet):
     queryset = Service.objects.prefetch_related(
         "device",
         "virtual_machine",
@@ -60,9 +57,7 @@ class ServiceViewSet(
     pagination_class = None
 
 
-class VirtualMachineViewSet(
-    NetboxPrometheusSDModelViewSet
-):  # pylint: disable=too-many-ancestors
+class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
     queryset = VirtualMachine.objects.prefetch_related(
         "cluster__site",
         "role",
@@ -79,9 +74,7 @@ class VirtualMachineViewSet(
     pagination_class = None
 
 
-class DeviceViewSet(
-    NetboxPrometheusSDModelViewSet
-):  # pylint: disable=too-many-ancestors
+class DeviceViewSet(NetboxPrometheusSDModelViewSet):
     queryset = Device.objects.prefetch_related(
         "device_type__manufacturer",
         "role" if hasattr(Device, "role") else "device_role",
@@ -101,9 +94,7 @@ class DeviceViewSet(
     pagination_class = None
 
 
-class IPAddressViewSet(
-    NetboxPrometheusSDModelViewSet
-):  # pylint: disable=too-many-ancestors
+class IPAddressViewSet(NetboxPrometheusSDModelViewSet):
     queryset = IPAddress.objects.prefetch_related("tenant", "tags")
     serializer_class = PrometheusIPAddressSerializer
     filterset_class = IPAddressFilterSet
