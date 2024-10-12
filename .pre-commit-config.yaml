@@ -11,9 +11,6 @@ repos:
       hooks:
           - id: poetry-check
           - id: poetry-lock
-          - id: poetry-export
-            args: ["-f", "requirements.txt"]
-            verbose: true
 
     - repo: https://github.com/PyCQA/flake8.git
       rev: "7.1.1"
