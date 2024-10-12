@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "release-dry-run": "semantic-release --dry-run",
+    "release-dry-run": "semantic-release --no-ci --dry-run",
     "release": "semantic-release"
   },
   "devDependencies": {
@@ -8,9 +8,7 @@
     "semantic-release-replace-plugin": "^1.2.7"
   },
   "release": {
-    "branches": [
-      "main"
-    ],
+    "branches": ["main"],
     "plugins": [
       "@semantic-release/commit-analyzer",
       [
