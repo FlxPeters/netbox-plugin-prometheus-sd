@@ -3,12 +3,16 @@
     "release-dry-run": "semantic-release --no-ci --dry-run",
     "release": "semantic-release"
   },
+  "type": "module",
   "devDependencies": {
+    "commitlint": "^19.5.0",
     "semantic-release": "^24.1.2",
     "semantic-release-replace-plugin": "^1.2.7"
   },
   "release": {
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "plugins": [
       "@semantic-release/commit-analyzer",
       [
