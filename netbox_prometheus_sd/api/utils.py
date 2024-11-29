@@ -20,6 +20,12 @@ class LabelDict(dict):
             for key, val in self.items()
         }
 
+    def get_parent_labels(self):
+        """Prefix and replace invalid key chars for prometheus labels"""
+        return {
+            "__meta_netbox_parent_" + str(self.promsafestr(key)): val
+            for key, val in self.items()
+        }
 
 def extract_description(obj, labels: LabelDict):
     """Extract description"""
