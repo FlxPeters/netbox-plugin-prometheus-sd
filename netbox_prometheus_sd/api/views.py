@@ -1,6 +1,6 @@
 from ipam.models import IPAddress, Service
 from virtualization.models import VirtualMachine
-from dcim.models.devices import Device
+from dcim.models.devices import Device, Interface
 
 
 try:  # Netbox >= 3.5
@@ -28,11 +28,11 @@ except ImportError:
 # https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
 try:
     from ipam.filtersets import IPAddressFilterSet
-    from dcim.filtersets import DeviceFilterSet
+    from dcim.filtersets import DeviceFilterSet, InterfaceFilterSet
     from virtualization.filtersets import VirtualMachineFilterSet
 except ImportError:
     from ipam.filters import IPAddressFilterSet
-    from dcim.filters import DeviceFilterSet
+    from dcim.filters import DeviceFilterSet, InterfaceFilterSet
     from virtualization.filters import VirtualMachineFilterSet
 
 
@@ -42,6 +42,7 @@ from .serializers import (
     PrometheusDeviceSerializer,
     PrometheusVirtualMachineSerializer,
     PrometheusServiceSerializer,
+    PrometheusInterfaceSerializer
 )
 
 
@@ -98,4 +99,17 @@ class IPAddressViewSet(NetboxPrometheusSDModelViewSet):
     queryset = IPAddress.objects.prefetch_related("tenant", "tags")
     serializer_class = PrometheusIPAddressSerializer
     filterset_class = IPAddressFilterSet
+    pagination_class = None
+
+class InterfaceViewSet(NetboxPrometheusSDModelViewSet):  # pylint: disable=too-many-ancestors
+    queryset = Interface.objects.prefetch_related(
+        '_path', 'cable__terminations',
+        'l2vpn_terminations',  # Referenced by InterfaceSerializer.l2vpn_termination
+        'ip_addresses',  # Referenced by Interface.count_ipaddresses()
+        'fhrp_group_assignments',  # Referenced by Interface.count_fhrp_groups()
+        'device',
+        'tags',
+    )
+    filterset_class = InterfaceFilterSet
+    serializer_class = PrometheusInterfaceSerializer
     pagination_class = None
