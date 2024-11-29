@@ -4,6 +4,7 @@ from .views import (
     DeviceViewSet,
     IPAddressViewSet,
     ServiceViewSet,
+    InterfaceViewSet
 )
 
 router = routers.DefaultRouter()
@@ -11,5 +12,6 @@ router.register("services", ServiceViewSet)
 router.register("virtual-machines", VirtualMachineViewSet)
 router.register("devices", DeviceViewSet)
 router.register("ip-addresses", IPAddressViewSet)
+router.register("interfaces", InterfaceViewSet)
 
 urlpatterns = router.urls
