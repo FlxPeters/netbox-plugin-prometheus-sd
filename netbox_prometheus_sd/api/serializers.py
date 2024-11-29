@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from django.db import models
 from virtualization.models import VirtualMachine
-from dcim.models import Device
+from dcim.models import Device, Interface
 from ipam.models import IPAddress, Service
+from tenancy.models import Tenant
 
 from netaddr import IPNetwork
 
@@ -222,3 +223,76 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
         utils.extract_custom_fields(obj, labels)
 
         return labels.get_labels()
+
+class PrometheusInterfaceSerializer(serializers.ModelSerializer, PrometheusTargetsMixin):
+    """Serialize an interface to Prometheus target representation"""
+
+    class Meta:
+        model = Interface
+        fields = ["targets", "labels", "parent_labels"]
+
+    targets = serializers.SerializerMethodField()
+    labels = serializers.SerializerMethodField()
+    parent_labels = serializers.SerializerMethodField()
+
+    def get_parent_labels(self, obj):
+        parent_labels = LabelDict ({})
+        device = Device.objects.get(name= str(obj.device.name))
+        if hasattr(device, "custom_field_data") and device.custom_field_data is not None:
+            utils.extract_custom_fields(device, parent_labels)
+        parent_labels = parent_labels.get_parent_labels()
+        return parent_labels
+
+
+    def get_labels(self, obj):
+        firstip = ""
+        firstipmask = ""
+        cid = ""
+        circuit_desc = ""
+        provider = ""
+        tenant = ""
+
+        if obj.count_ipaddresses > 0:
+            ipsplit = str(obj.ip_addresses.first()).split("/", 1)
+            firstip = ipsplit[0]
+            firstipmask = ipsplit[1]
+
+        # should always have link_peers but...
+        if hasattr(obj, "link_peers") and obj.link_peers is not None:
+            # may be device not circuit.
+            if len(obj.link_peers) > 0:
+                if hasattr(obj.link_peers[0], "circuit"):
+                    cid = obj.link_peers[0].circuit.cid
+                    circuit_desc = obj.link_peers[0].circuit.description
+                    provider=Provider.objects.filter(id=obj.link_peers[0].circuit.provider_id).first().name
+                    # get Tenant from circuit?
+                    if obj.link_peers[0].circuit.tenant is not None:
+                        tenant = obj.link_peers[0].circuit.tenant.name
+                if hasattr(obj.link_peers[0], "device"):
+                    # get Tenant from device?
+                    if obj.link_peers[0].device.tenant is not None:
+                        tenant = obj.link_peers[0].device.tenant.name
+
+        labels = LabelDict(
+            {
+                "id": str(obj.id),
+                "devicename": str(obj.device.name),
+                "deviceid": str(obj.device.id),
+                "circuit_desc": circuit_desc,
+                "circuit_cid": cid,
+                "circuit_provider": provider,
+                "tenant": tenant,
+                "ip_address": firstip,
+                "ip_mask": firstipmask
+            }
+        )
+
+        utils.extract_tags(obj, labels)
+        utils.extract_custom_fields(obj, labels)
+
+        labels = labels.get_labels()
+
+        # Those shouldn't have the netbox prefix
+        utils.extract_prometheus_sd_config(obj, labels)
+
+        return labels
