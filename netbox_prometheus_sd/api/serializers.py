@@ -10,7 +10,6 @@ from netaddr import IPNetwork
 from .utils import LabelDict
 from . import utils
 
-
 class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
 
     def update(self, instance, validated_data):
