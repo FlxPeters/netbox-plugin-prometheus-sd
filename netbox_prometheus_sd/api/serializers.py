@@ -229,20 +229,10 @@ class PrometheusInterfaceSerializer(serializers.ModelSerializer, PrometheusTarge
 
     class Meta:
         model = Interface
-        fields = ["targets", "labels", "parent_labels"]
+        fields = ["targets", "labels"]
 
     targets = serializers.SerializerMethodField()
     labels = serializers.SerializerMethodField()
-    parent_labels = serializers.SerializerMethodField()
-
-    def get_parent_labels(self, obj):
-        parent_labels = LabelDict ({})
-        device = Device.objects.get(name= str(obj.device.name))
-        if hasattr(device, "custom_field_data") and device.custom_field_data is not None:
-            utils.extract_custom_fields(device, parent_labels)
-        parent_labels = parent_labels.get_parent_labels()
-        return parent_labels
-
 
     def get_labels(self, obj):
         firstip = ""
@@ -289,6 +279,16 @@ class PrometheusInterfaceSerializer(serializers.ModelSerializer, PrometheusTarge
 
         utils.extract_tags(obj, labels)
         utils.extract_custom_fields(obj, labels)
+
+        device = Device.objects.get(name= str(obj.device.name))
+        if hasattr(device, "custom_field_data") and device.custom_field_data is not None:
+            for key, value in device.custom_field_data.items():
+                # Render primitive value as string representation
+                if not hasattr(value, "__dict__"):
+                    labels["parent_custom_field_" + key.lower()] = str(value)
+                # Complex types are rendered as json
+                else:
+                    labels["parent_custom_field_" + key.lower()] = json.dumps(value)
 
         labels = labels.get_labels()
 
