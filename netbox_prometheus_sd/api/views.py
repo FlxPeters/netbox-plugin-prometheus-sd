@@ -2,7 +2,6 @@ from ipam.models import IPAddress, Service
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device, Interface
 
-
 try:  # Netbox >= 3.5
     from netbox.api.viewsets import BaseViewSet
     from netbox.api.viewsets.mixins import CustomFieldsMixin
