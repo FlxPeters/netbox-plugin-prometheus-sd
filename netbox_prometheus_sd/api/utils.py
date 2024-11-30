@@ -1,7 +1,6 @@
 import json
 from netaddr import IPNetwork
 
-
 class LabelDict(dict):
     """Wrapper around dict to render labels"""
 
