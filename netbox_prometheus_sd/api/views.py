@@ -59,7 +59,7 @@ class ServiceViewSet(NetboxPrometheusSDModelViewSet):
 
 class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
     queryset = VirtualMachine.objects.prefetch_related(
-        "cluster__site",
+        "cluster__scope",
         "role",
         "tenant",
         "platform",
