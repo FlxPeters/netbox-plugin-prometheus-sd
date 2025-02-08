@@ -61,6 +61,9 @@ def extract_cluster(obj, labels: LabelDict):
         if obj.cluster.scope:
             labels["scope"] = obj.cluster.scope.name
             labels["scope_slug"] = obj.cluster.scope.slug
+        if obj.cluster.site:
+            labels["site"] = obj.cluster.site.name
+            labels["site_slug"] = obj.cluster.site.slug
 
     # Has precedence over cluster scope
     if hasattr(obj, "scope") and obj.scope is not None:
