@@ -1,2 +1,2 @@
 netbox-plugin-prometheus-sd @ git+https://github.com/flxpeters/netbox-plugin-prometheus-sd.git@main
-netbox-initializers==4.0.*
+netbox-initializers==4.2.*
