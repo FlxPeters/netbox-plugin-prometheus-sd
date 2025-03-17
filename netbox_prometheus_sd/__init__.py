@@ -4,8 +4,8 @@ except ImportError:
     # Fallback for old NetBox versions < 4.0
     from extras.plugins import PluginConfig
 
-
-__VERSION__ = "1.1.1"
+# Placeholder for semantic release
+__VERSION__ = "0.0.0"
 
 
 class PrometheusSD(PluginConfig):
