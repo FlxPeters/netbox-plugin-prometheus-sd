@@ -6,6 +6,6 @@ RUN mkdir -p /source
 COPY .. /source
 
 # Install the plugin in netbox
-RUN /opt/netbox/venv/bin/pip install --editable /source
+RUN /usr/local/bin/uv pip install --editable /source
 
 WORKDIR /opt/netbox/netbox/
