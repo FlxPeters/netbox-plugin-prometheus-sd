@@ -100,6 +100,16 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
                 )
             )
             self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_scope": "Campus A"}, data["labels"]
+                )
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
+                )
+            )
+            self.assertTrue(
                 utils.dictContainsSubset({"__meta_netbox_role": "VM"}, data["labels"])
             )
             self.assertTrue(
@@ -515,6 +525,16 @@ class PrometheusServiceSerializerTests(TestCase):
             self.assertTrue(
                 utils.dictContainsSubset(
                     {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
+                )
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_scope": "Campus A"}, data["labels"]
+                )
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
                 )
             )
             self.assertTrue(

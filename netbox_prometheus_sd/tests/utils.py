@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+
 from dcim.models.devices import DeviceType, Manufacturer
 from dcim.models.sites import Site, Location
 from dcim.models import Device, DeviceRole, Platform, Rack
@@ -20,11 +22,13 @@ def dictContainsSubset(subset, fullset):
 
 
 def build_cluster():
+    scope_type = ContentType.objects.get_for_model(Site)
     return Cluster.objects.get_or_create(
         name="DC1",
         group=ClusterGroup.objects.get_or_create(name="VMware")[0],
         type=ClusterType.objects.get_or_create(name="On Prem")[0],
-        site=Site.objects.get_or_create(name="Campus A", slug="campus-a")[0],
+        scope_type=scope_type,
+        scope_id=Site.objects.get_or_create(name="Campus A", slug="campus-a")[0].id,
     )[0]
 
 
