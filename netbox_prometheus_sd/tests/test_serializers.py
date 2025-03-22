@@ -1,5 +1,4 @@
 from django.test import TestCase
-
 from ..api.serializers import (
     PrometheusDeviceSerializer,
     PrometheusIPAddressSerializer,
@@ -8,6 +7,7 @@ from ..api.serializers import (
 )
 from . import utils
 
+from ..api.utils import NETBOX_RELEASE_CURRENT, NETBOX_RELEASE_41
 
 class PrometheusVirtualMachineSerializerTests(TestCase):
     def test_vm_minimal_to_target(self):
@@ -99,16 +99,28 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
                     {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
                 )
             )
-            self.assertTrue(
-                utils.dictContainsSubset(
-                    {"__meta_netbox_scope": "Campus A"}, data["labels"]
+            if NETBOX_RELEASE_CURRENT > NETBOX_RELEASE_41:
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_scope": "Campus A"}, data["labels"]
+                    )
                 )
-            )
-            self.assertTrue(
-                utils.dictContainsSubset(
-                    {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
+                    )
                 )
-            )
+            else:
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_site": "Campus A"}, data["labels"]
+                    )
+                )
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
+                    )
+                )
             self.assertTrue(
                 utils.dictContainsSubset({"__meta_netbox_role": "VM"}, data["labels"])
             )
@@ -527,16 +539,28 @@ class PrometheusServiceSerializerTests(TestCase):
                     {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
                 )
             )
-            self.assertTrue(
-                utils.dictContainsSubset(
-                    {"__meta_netbox_scope": "Campus A"}, data["labels"]
+            if NETBOX_RELEASE_CURRENT > NETBOX_RELEASE_41:
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_scope": "Campus A"}, data["labels"]
+                    )
                 )
-            )
-            self.assertTrue(
-                utils.dictContainsSubset(
-                    {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_scope_slug": "campus-a"}, data["labels"]
+                    )
                 )
-            )
+            else:
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_site": "Campus A"}, data["labels"]
+                    )
+                )
+                self.assertTrue(
+                    utils.dictContainsSubset(
+                        {"__meta_netbox_site_slug": "campus-a"}, data["labels"]
+                    )
+                )
             self.assertTrue(
                 utils.dictContainsSubset(
                     {"__meta_netbox_primary_ip": "2001:db8:1701::2"}, data["labels"]
