@@ -24,6 +24,8 @@ except ImportError:
             CustomFieldModelViewSet as NetboxPrometheusSDModelViewSet,
         )
 
+from .utils import NETBOX_RELEASE_CURRENT, NETBOX_RELEASE_41
+
 # Filtersets have been renamed, we support both
 # https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
 try:
@@ -58,8 +60,12 @@ class ServiceViewSet(NetboxPrometheusSDModelViewSet):
 
 
 class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
+    if NETBOX_RELEASE_CURRENT > NETBOX_RELEASE_41:
+        cluster_scope = "cluster__scope"
+    else:
+        cluster_scope = "cluster__site"
     queryset = VirtualMachine.objects.prefetch_related(
-        "cluster__site",
+        cluster_scope,
         "role",
         "tenant",
         "platform",

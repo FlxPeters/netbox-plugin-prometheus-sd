@@ -1,5 +1,13 @@
 import json
 from netaddr import IPNetwork
+from packaging import version
+from netbox.settings import VERSION
+
+VERSION = VERSION.split("-")[0]
+
+NETBOX_RELEASE_CURRENT = version.parse(VERSION)
+NETBOX_RELEASE_40 = version.parse("4.0.11")
+NETBOX_RELEASE_41 = version.parse("4.1.11")
 
 
 class LabelDict(dict):
@@ -58,11 +66,21 @@ def extract_cluster(obj, labels: LabelDict):
             labels["cluster_group"] = obj.cluster.group.name
         if obj.cluster.type:
             labels["cluster_type"] = obj.cluster.type.name
-        if obj.cluster.site:
-            labels["site"] = obj.cluster.site.name
-            labels["site_slug"] = obj.cluster.site.slug
+        try: # Netbox >4.2
+            if obj.cluster.scope:
+                labels["scope"] = obj.cluster.scope.name
+                labels["scope_slug"] = obj.cluster.scope.slug
+        except AttributeError: # Netbox <4.2
+            if obj.cluster.site:
+                labels["site"] = obj.cluster.site.name
+                labels["site_slug"] = obj.cluster.site.slug
 
-    # Has precedence over cluster site
+    # Has precedence over cluster scope
+    if hasattr(obj, "scope") and obj.scope is not None:
+        labels["scope"] = obj.scope.name
+        labels["scope_slug"] = obj.scope.slug
+
+    # Still Return site labels for Devices
     if hasattr(obj, "site") and obj.site is not None:
         labels["site"] = obj.site.name
         labels["site_slug"] = obj.site.slug
