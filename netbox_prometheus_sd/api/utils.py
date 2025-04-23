@@ -134,8 +134,11 @@ def extract_contacts(obj, labels: LabelDict):
 
 def extract_rack(obj, labels: LabelDict):
     """Extract rack"""
-    if hasattr(obj, "rack") and obj.rack:
+    if hasattr(obj, "rack") and obj.rack is not None:
         labels["rack"] = obj.rack.name
+        if hasattr(obj.rack, "role") and obj.rack.role is not None:
+            labels["rack_role"] = obj.rack.role.name
+            labels["rack_role_slug"] = obj.rack.role.slug
 
 
 def extract_custom_fields(obj, labels: LabelDict):
