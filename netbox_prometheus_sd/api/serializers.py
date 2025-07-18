@@ -144,6 +144,7 @@ class PrometheusVirtualMachineSerializer(
         utils.extract_tags(obj, labels)
         utils.extract_tenant(obj, labels)
         utils.extract_cluster(obj, labels)
+        utils.extract_device(obj, labels)
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
         utils.extract_custom_fields(obj, labels)

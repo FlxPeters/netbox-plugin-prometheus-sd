@@ -41,6 +41,10 @@ def extract_location(obj, labels: LabelDict):
         labels["location"] = obj.location.name
         labels["location_slug"] = obj.location.slug
 
+│def extract_device(obj, labels: LabelDict):
+    """Extract device"""
+    if hasattr(obj, "device") and obj.device:
+        labels["device"] = obj.device.name
 
 def extract_tags(obj, labels):
     if hasattr(obj, "tags") and obj.tags is not None and len(obj.tags.all()):

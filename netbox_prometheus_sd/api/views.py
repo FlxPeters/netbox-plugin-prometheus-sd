@@ -68,6 +68,7 @@ class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
         cluster_scope,
         "role",
         "tenant",
+        "device"
         "platform",
         "primary_ip4",
         "primary_ip6",
