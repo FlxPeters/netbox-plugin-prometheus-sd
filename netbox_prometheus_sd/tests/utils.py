@@ -114,7 +114,10 @@ def build_vm_full(name, ip_octet=1):
     vm.tags.add("Tag 2")
     vm.save()
 
-    Service.objects.create(parent=vm, name="ssh", protocol="tcp", ports=[22])
+    try: # NetBox 4.2+
+        Service.objects.create(parent=vm, name="ssh", protocol="tcp", ports=[22])
+    except AttributeError: # NetBox <4.2
+        Service.objects.create(virtual_machine=vm, name="ssh", protocol="tcp", ports=[22])
     return vm
 
 
@@ -229,7 +232,10 @@ def build_device_full(name, ip_octet=1):
     device.tags.add("Tag 2")
     device.save()
     device.position = 1.0
-    Service.objects.create(parent=device, name="ssh", protocol="tcp", ports=[22])
+    try: # NetBox 4.2+
+        Service.objects.create(parent=device, name="ssh", protocol="tcp", ports=[22])
+    except AttributeError: # NetBox <4.2
+        Service.objects.create(device=device, name="ssh", protocol="tcp", ports=[22])
     return device
 
 
