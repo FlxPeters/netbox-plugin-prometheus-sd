@@ -46,7 +46,7 @@ jobs:
           echo "Running with Docker Compose Version: $(docker compose --version)"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.8
 
