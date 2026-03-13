@@ -43,10 +43,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Versions
         run: |
-          echo "Running with Docker Version: $(docker --version)"
-          echo "Running with Docker Compose Version: $(docker compose --version)"
+          echo "Running with Docker Version: $(docker version)"
+          echo "Running with Docker Compose Version: $(docker compose version)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -76,9 +79,11 @@ jobs:
           poetry run invoke build
         env:
           NETBOX_VER: ${{ matrix.netbox-version }}
+          DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
 
       - name: Run tests
         run: |
           poetry run invoke tests
         env:
           NETBOX_VER: ${{ matrix.netbox-version }}
+          DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
