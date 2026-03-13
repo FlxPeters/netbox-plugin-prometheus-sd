@@ -35,7 +35,10 @@ jobs:
         netbox-version:
           - v4.0.11
           - v4.1.11
-          - v4.2.5
+          - v4.2.9
+          - v4.3.7
+          - v4.4.10
+          - v4.5.2
           - latest
     steps:
       - uses: actions/checkout@v4
