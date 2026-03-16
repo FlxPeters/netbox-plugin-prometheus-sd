@@ -28,20 +28,6 @@ class NetBoxRuntime:
     postgres: PostgresContainer
     netbox: DockerContainer
 
-
-def build_netbox_image() -> str:
-    """
-    Build the NetBox development image and return its name/tag.
-    """
-    image_ctx = DockerImage(
-        path=".",
-        dockerfile_path="develop/Dockerfile",
-        buildargs={"netbox_ver": NETBOX_VER},
-    )
-    image_ctx.__enter__()
-    return image_ctx
-
-
 def create_netbox_container(
     image: str,
     network: Network,
@@ -84,7 +70,6 @@ def netbox_runtime(
     """
     image_ctx = DockerImage(
         path=".",
-        dockerfile_path="develop/Dockerfile",
         buildargs={"netbox_ver": NETBOX_VER},
     )
 
