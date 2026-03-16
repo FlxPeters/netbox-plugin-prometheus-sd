@@ -11,11 +11,12 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
+python = ">=3.10,<4.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 invoke = "^2.2.0"
-typed-ast = "^1.5.5"
+docker = "^7.1.0"
+testcontainers = {extras = ["postgres", "redis", "generic"], version = "^4.14.1"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -2,6 +2,8 @@ ARG netbox_ver=latest
 
 FROM netboxcommunity/netbox:${netbox_ver}
 
+COPY develop/plugin-config.py /etc/netbox/config/plugins.py
+
 RUN mkdir -p /source
 COPY .. /source
 
