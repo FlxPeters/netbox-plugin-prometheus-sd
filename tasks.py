@@ -73,6 +73,8 @@ def netbox_runtime(
         buildargs={"netbox_ver": NETBOX_VER},
     )
 
+    logger.info("Building Docker image for NetBox %s...", NETBOX_VER)
+
     with image_ctx as image:
         with Network() as network:
             redis_container = RedisContainer(image="redis:7")
