@@ -49,7 +49,6 @@ jobs:
       - name: Versions
         run: |
           echo "Running with Docker Version: $(docker version)"
-          echo "Running with Docker Compose Version: $(docker compose version)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -74,16 +73,9 @@ jobs:
         run: poetry install
         if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Build test images
-        run: |
-          poetry run invoke build
-        env:
-          NETBOX_VER: ${{ matrix.netbox-version }}
-          DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
-
       - name: Run tests
         run: |
-          poetry run invoke tests
+          poetry run invoke test
         env:
           NETBOX_VER: ${{ matrix.netbox-version }}
           DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
