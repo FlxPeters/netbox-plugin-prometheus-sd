@@ -127,7 +127,7 @@ Features should be covered by a unit test, but some times it's easier to develop
 invoke build_dev
 ```
 
-Visit http://localhost:8000 and log in with the new user.
+Visit http://localhost:8000 and log in with the default admin credentials.
 You can now define Netbox entities and test around.
 
 API endpoints for testing can be found at http://localhost:8000/api/plugins/prometheus-sd/
