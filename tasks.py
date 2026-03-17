@@ -1,158 +1,133 @@
 import os
+import time
+import logging
+from dataclasses import dataclass
+from contextlib import contextmanager
+
 from invoke import task
+from testcontainers.core.image import DockerImage
+from testcontainers.core.network import Network
+from testcontainers.core.container import DockerContainer
+from testcontainers.redis import RedisContainer
+from testcontainers.postgres import PostgresContainer
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 NETBOX_VER = os.getenv("NETBOX_VER", "latest")
+SECRET_KEY = os.getenv(
+    "NETBOX_SECRET_KEY",
+    "at-least-50-characters-long-for-dev-use-only-please-change-me-in-production",
+)
 
-# Name of the docker image/container
-NAME = os.getenv("IMAGE_NAME", "netbox-plugin-prometheus")
-PWD = os.getcwd()
+@dataclass
+class NetBoxRuntime:
+    image: str
+    network: Network
+    redis: RedisContainer
+    postgres: PostgresContainer
+    netbox: DockerContainer
 
-COMPOSE_BIN = os.getenv("COMPOSE_BIN", "docker compose")
-COMPOSE_FILE = "develop/docker-compose.yml"
-DOCKER_FILE = "develop/Dockerfile"
-BUILD_NAME = "netbox_prometheus_sd"
-
-
-# ------------------------------------------------------------------------------
-# BUILD
-# ------------------------------------------------------------------------------
-@task
-def build(context, netbox_ver=NETBOX_VER):
-    """Build all docker images.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
+def create_netbox_container(
+    image: str,
+    network: Network,
+    command=None,
+    bind_port: bool = False,
+    host_port: int = 8000,
+    container_port: int = 8000,
+) -> DockerContainer:
     """
-    print(f"Build Netbox image for version {netbox_ver} ...")
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} build --build-arg netbox_ver={netbox_ver}",
-        env={"NETBOX_VER": netbox_ver},
-    )
-
-
-# ------------------------------------------------------------------------------
-# START / STOP / DEBUG
-# ------------------------------------------------------------------------------
-@task
-def debug(context, netbox_ver=NETBOX_VER):
-    """Start NetBox and its dependencies in debug mode.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
+    Return a configured NetBox container, but do not start it yet.
     """
-    print("Starting Netbox .. ")
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} up",
-        env={"NETBOX_VER": netbox_ver},
-    )
+    container = DockerContainer(str(image))
+    container.with_network(network)
+    container.with_env("REDIS_HOST", "redis")
+    container.with_env("DB_HOST", "postgres")
+    container.with_env("DB_NAME", "netbox")
+    container.with_env("DB_USER", "netbox")
+    container.with_env("DB_PASSWORD", "netbox")
+    container.with_env("SECRET_KEY", SECRET_KEY)
+
+    if bind_port:
+        container.with_bind_ports(container_port, host_port)
+
+    if command is None:
+        command = ["sleep", "infinity"]
+
+    container.with_command(command)
+    return container
 
 
-@task
-def start(context, netbox_ver=NETBOX_VER):
-    """Start NetBox and its dependencies in detached mode.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
+@contextmanager
+def netbox_runtime(
+    command=None,
+    bind_port: bool = False,
+    host_port: int = 8000,
+    container_port: int = 8000,
+):
     """
-    print("Starting Netbox in detached mode.. ")
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} up -d",
-        env={"NETBOX_VER": netbox_ver},
-    )
-
-
-@task
-def stop(context, netbox_ver=NETBOX_VER):
-    """Stop NetBox and its dependencies.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
+    Build image, start network + dependencies, and yield a configured runtime.
     """
-    print("Stopping Netbox .. ")
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} down",
-        env={"NETBOX_VER": netbox_ver},
+    image_ctx = DockerImage(
+        path=".",
+        buildargs={"netbox_ver": NETBOX_VER},
     )
 
+    logger.info("Building Docker image for NetBox %s...", NETBOX_VER)
 
-@task
-def destroy(context, netbox_ver=NETBOX_VER):
-    """Destroy all containers and volumes.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
-    """
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} down",
-        env={"NETBOX_VER": netbox_ver},
-    )
-    context.run(
-        f"docker volume rm -f {BUILD_NAME}_pgdata_netbox_prometheus_sd",
-        env={"NETBOX_VER": netbox_ver},
-    )
+    with image_ctx as image:
+        with Network() as network:
+            redis_container = RedisContainer(image="redis:7")
+            redis_container.with_network(network)
+            redis_container.with_network_aliases("redis")
 
+            postgres_container = PostgresContainer(
+                image="postgres:15",
+                username="netbox",
+                password="netbox",
+                dbname="netbox",
+            )
+            postgres_container.with_network(network)
+            postgres_container.with_network_aliases("postgres")
 
-# ------------------------------------------------------------------------------
-# ACTIONS
-# ------------------------------------------------------------------------------
-@task
-def nbshell(context, netbox_ver=NETBOX_VER):
-    """Launch a nbshell session.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
-        python_ver (str): Will use the Python version docker image to build from
-    """
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} exec netbox python manage.py nbshell",
-        env={"NETBOX_VER": netbox_ver},
-        pty=True,
-    )
+            with redis_container as redis, postgres_container as postgres:
+                netbox_container = create_netbox_container(
+                    image=str(image),
+                    network=network,
+                    command=command,
+                    bind_port=bind_port,
+                    host_port=host_port,
+                    container_port=container_port
+                )
+
+                with netbox_container as netbox:
+                    yield NetBoxRuntime(
+                        image=str(image),
+                        network=network,
+                        redis=redis,
+                        postgres=postgres,
+                        netbox=netbox,
+                    )
 
 
 @task
-def cli(context, netbox_ver=NETBOX_VER):
-    """Launch a bash shell inside the running NetBox container.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
-    """
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} exec netbox bash",
-        env={"NETBOX_VER": netbox_ver},
-        pty=True,
-    )
+def build_dev(c):
+    with netbox_runtime(bind_port=True) as runtime:
+        logger.info("Container ID for NetBox: %s", runtime.netbox._container.short_id)
+        logger.info("Press Ctrl+C to stop.")
+
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("Stopping containers...")
 
 
 @task
-def create_user(context, user="admin", netbox_ver=NETBOX_VER):
-    """Create a new user in django (default: admin), will prompt for password.
-    Args:
-        context (obj): Used to run specific commands
-        user (str): name of the superuser to create
-        netbox_ver (str): NetBox version to use to build the container
-    """
-    context.run(
-        f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} "
-        f"exec netbox python manage.py createsuperuser --username {user}",
-        env={"NETBOX_VER": netbox_ver},
-        pty=True,
-    )
-
-
-# ------------------------------------------------------------------------------
-# TESTS
-# ------------------------------------------------------------------------------
-@task
-def tests(context, netbox_ver=NETBOX_VER):
-    """Run Django unit tests for the plugin.
-    Args:
-        context (obj): Used to run specific commands
-        netbox_ver (str): NetBox version to use to build the container
-    """
-    docker = f"{COMPOSE_BIN} -f {COMPOSE_FILE} -p {BUILD_NAME} run netbox"
-    context.run(
-        f'{docker} sh -c "python manage.py test netbox_prometheus_sd --keepdb"',
-        env={"NETBOX_VER": netbox_ver},
-        pty=True,
-    )
+def test(c):
+    with netbox_runtime() as runtime:
+        logger.info("Running tests inside NetBox container...")
+        exit_code, output = runtime.netbox.exec(["python3", "manage.py", "test", "netbox_prometheus_sd"])
+        logger.info(output.decode())
+        if exit_code != 0:
+            raise Exception(f"Tests failed with exit code {exit_code}")
