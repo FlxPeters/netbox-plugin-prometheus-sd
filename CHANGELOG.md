@@ -2,6 +2,49 @@
 
 <!-- version list -->
 
+## v1.3.0 (2026-03-17)
+
+### Bug Fixes
+
+- Remove further netbox 3.x feature flag
+  ([`4094290`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/40942902206a94d70b0145c4c47b9ae44ef63239))
+
+### Chores
+
+- Update netbox version in example to 4.4.10
+  ([`86397eb`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/86397eb7a68f46776ad91f1f05331bcb9a62f3b9))
+
+- **config**: Configure Python Semantic Release
+  ([`62046d8`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/62046d813a7100222563b67fe71bc3e2e192542a))
+
+- **deps**: Bump tar and npm
+  ([`1140fa0`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/1140fa0c8fc7cd2cd79e4f56bdcd070d9bbc88e2))
+
+- **deps-dev**: Bump lodash-es from 4.17.21 to 4.17.23
+  ([`d804fae`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/d804faec3b3104ed5895f494ea6a0774db5692ab))
+
+### Continuous Integration
+
+- Adjust python version
+  ([`82f9826`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/82f98263b0f537ee9ecee4384e080f112a0982e8))
+
+- Adjust release branch for semantic release
+  ([`3e14771`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/3e14771071151ac0ff08959a56f548fcb72f9197))
+
+- Update release pipeline
+  ([`70c6764`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/70c67647e17f7e90f7bfe123dd0875e8dd0dfe98))
+
+### Features
+
+- Remove netbox 3.x version checks
+  ([`0773802`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/0773802b522ae30d6b4bbf2ac9d5589d0a03ca3e))
+
+### Refactoring
+
+- **ci**: Remove nodejs dependecies and use semantic version in python
+  ([`8169eb6`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/8169eb66efedf2670a2598f0f32ab686c0d92663))
+
+
 ## v1.3.0-pre.1 (2026-03-17)
 
 ### Bug Fixes
