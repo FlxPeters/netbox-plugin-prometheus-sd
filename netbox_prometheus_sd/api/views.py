@@ -2,27 +2,9 @@ from ipam.models import IPAddress, Service
 from virtualization.models import VirtualMachine
 from dcim.models.devices import Device
 
-
-try:  # Netbox >= 3.5
-    from netbox.api.viewsets import BaseViewSet
-    from netbox.api.viewsets.mixins import CustomFieldsMixin
-    from rest_framework.mixins import ListModelMixin
-
-    # Netbox MosdelViewSet with list only
-    class NetboxPrometheusSDModelViewSet(
-        CustomFieldsMixin, ListModelMixin, BaseViewSet
-    ):
-        pass
-
-except ImportError:
-    try:  # 3.2 >= Netbox < 3.5
-        from netbox.api.viewsets import (
-            NetBoxModelViewSet as NetboxPrometheusSDModelViewSet,
-        )
-    except ImportError:  # Netbox < 3.2
-        from extras.api.views import (
-            CustomFieldModelViewSet as NetboxPrometheusSDModelViewSet,
-        )
+from netbox.api.viewsets import BaseViewSet
+from netbox.api.viewsets.mixins import CustomFieldsMixin
+from rest_framework.mixins import ListModelMixin
 
 from .utils import NETBOX_RELEASE_CURRENT, NETBOX_RELEASE_41
 
@@ -37,7 +19,6 @@ except ImportError:
     from dcim.filters import DeviceFilterSet
     from virtualization.filters import VirtualMachineFilterSet
 
-
 from ..filtersets import ServiceFilterSet
 from .serializers import (
     PrometheusIPAddressSerializer,
@@ -45,6 +26,11 @@ from .serializers import (
     PrometheusVirtualMachineSerializer,
     PrometheusServiceSerializer,
 )
+
+
+# Netbox MosdelViewSet with list only
+class NetboxPrometheusSDModelViewSet(CustomFieldsMixin, ListModelMixin, BaseViewSet):
+    pass
 
 
 class ServiceViewSet(NetboxPrometheusSDModelViewSet):

@@ -27,7 +27,7 @@ build-backend = "poetry.core.masonry.api"
 commit_parser = "conventional"
 version_toml = ["pyproject.toml:tool.poetry.version"]
 version_variables = ["netbox_prometheus_sd/__init__.py:__VERSION__"]
-build_command = "poetry build"
+build_command = "pip install poetry && poetry build"
 
 [tool.semantic_release.branches.prerelease]
 # Matches branches with the prefixes 'pre/'.
