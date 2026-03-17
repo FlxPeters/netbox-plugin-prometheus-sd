@@ -1,5 +1,4 @@
 # Based on netbox-community/netbox-docker
-version: "3.4"
 services:
   netbox:
     build:
@@ -16,18 +15,18 @@ services:
       - 8000:8080
     volumes:
       - ./configuration/plugins.py:/etc/netbox/config/plugins.py:z,ro
-      - ./initializers:/opt/netbox/initializers:z,ro
+      - ./initializers:/etc/netbox/initializer-data:z,ro
 
   # postgres
   postgres:
-    image: postgres:13-alpine
+    image: postgres:18-alpine
     env_file: envs/postgres.env
     volumes:
-      - netbox-postgres-data:/var/lib/postgresql/data
+      - netbox-postgres-data:/var/lib/postgresql
 
   # redis
   redis:
-    image: redis:6-alpine
+    image: redis:8.6-alpine
     command:
       - sh
       - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -36,7 +35,7 @@ services:
     volumes:
       - netbox-redis-data:/data
   redis-cache:
-    image: redis:6-alpine
+    image: redis:8.6-alpine
     command:
       - sh
       - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -44,7 +43,7 @@ services:
     env_file: envs/redis-cache.env
 
   prometheus:
-    image: prom/prometheus:v2.30.3
+    image: prom/prometheus:v3.9.0
     volumes:
       - ./configuration/prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
     command:
@@ -53,6 +52,7 @@ services:
       - 9090:9090
     depends_on:
       - netbox
+
 volumes:
   netbox-media-files:
     driver: local
