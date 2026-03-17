@@ -4,4 +4,3 @@
   tenant: tenant1
 - name: cluster2
   type: Hyper-V
-  site: SING 1

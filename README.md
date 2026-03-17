@@ -93,7 +93,7 @@ Netbox content is created by using Netbox docker initializers.
 The demo data doesn't make sense, but they are good enough for demonstrating how to configure Prometheus
 and get demo data to Prometheus service discovery.
 
-Go to the `example` folder and run `docker-compose up`. Prometheus should get available on `http://localhost:9090`.
+Go to the `example` folder and run `docker-compose up --build`. Prometheus should get available on `http://localhost:9090`.
 
 Push some example devices and objects to Netbox using the initializers:
 
@@ -107,7 +107,7 @@ Netbox content should then be available in the service discovery tab.
 
 We use [Poetry](https://python-poetry.org/) for dependency management and [invoke](https://www.pyinvoke.org/) as task runner.
 To test the plugin in an isolated environment, we use [testcontainers](https://testcontainers.com/?language=python)
-which creates throwaway "throwaway, lightweight" Netbox Docker containers. 
+which creates "throwaway, lightweight" Netbox Docker containers.
 
 All code to run in docker is located under `develop`.
 To start a virtual env managed by poetry run `poetry shell`.
