@@ -1,30 +1,63 @@
-name: Release
+name: SemanticRelease
+
 on:
   push:
     branches:
       - main
-  repository_dispatch:
-    types: [semantic-release]
+      - pre/*
+
+# default: least privileged permissions across all jobs
 permissions:
-  contents: write # to be able to publish a GitHub release
-  issues: write # to be able to comment on released issues
-  pull-requests: write # to be able to comment on released pull requests
+  contents: read
+
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      # Note: We checkout the repository at the branch that triggered the workflow.
+      # Python Semantic Release will automatically convert shallow clones to full clones
+      # if needed to ensure proper history evaluation. However, we forcefully reset the
+      # branch to the workflow sha because it is possible that the branch was updated
+      # while the workflow was running, which prevents accidentally releasing un-evaluated
+      # changes.
+      - name: Setup | Checkout Repository on Release Branch
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+          ref: ${{ github.ref_name }}
+
+      - name: Setup | Force release branch to be at workflow sha
+        run: |
+          git reset --hard ${{ github.sha }}
+
+      - name: Action | Semantic Version Release
+        id: release
+        # Adjust tag with desired version if applicable.
+        uses: python-semantic-release/python-semantic-release@v10.5.3
         with:
-          node-version: "lts/*"
-      - name: Install dependencies
-        run: npm install
-      - name: Release
-        run: npm run release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # git_committer_name: "github-actions"
+          # git_committer_email: "actions@users.noreply.github.com"
+
+      - name: Publish | Upload to GitHub Release Assets
+        uses: python-semantic-release/publish-action@v10.5.3
+        if: steps.release.outputs.released == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
+
+      - name: Upload | Distribution Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution-artifacts
+          path: dist
+          if-no-files-found: error
+
+    outputs:
+      released: ${{ steps.release.outputs.released || 'false' }}
