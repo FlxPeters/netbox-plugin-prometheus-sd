@@ -17,7 +17,19 @@ python = ">=3.10,<4.0"
 invoke = "^2.2.0"
 docker = "^7.1.0"
 testcontainers = {extras = ["postgres", "redis", "generic"], version = "^4.14.1"}
+python-semantic-release = "^10.5.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+commit_parser = "conventional"
+version_toml = ["pyproject.toml:tool.poetry.version"]
+build_command = "peotry build"
+
+[tool.semantic_release.branches.alpha]
+# Matches branches with the prefixes 'pre/'.
+match = "^(pre)/.+"
+prerelease = true
+prerelease_token = "pre"
