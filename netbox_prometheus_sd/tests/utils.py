@@ -114,8 +114,7 @@ def build_vm_full(name, ip_octet=1):
     vm.tags.add("Tag 2")
     vm.save()
 
-    service = Service.objects.create(name="ssh", protocol="tcp", ports=[22])
-    service.virtual_machine.set([vm])
+    Service.objects.create(virtual_machine=vm, name="ssh", protocol="tcp", ports=[22])
     return vm
 
 
