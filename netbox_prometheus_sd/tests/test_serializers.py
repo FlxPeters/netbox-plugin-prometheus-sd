@@ -493,6 +493,11 @@ class PrometheusServiceSerializerTests(TestCase):
                     {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
                 )
             )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_status": "active"}, data["labels"]
+                )
+            )
 
     def test_vm_service_full_to_target(self):
         vm = utils.build_vm_full("vm-full-01.example.com")
