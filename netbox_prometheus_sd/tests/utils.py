@@ -86,6 +86,7 @@ def build_vm_full(name, ip_octet=1):
             "prometheus-plugin-prometheus-sd": [
                 {"metrics_path": "/not/metrics", "port": 4242, "scheme": "https"},
                 {"port": 4243},
+                {"host": f"another.host.xyz", "port": 4244},
             ]
         },
     )
