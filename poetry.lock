@@ -447,14 +447,14 @@ type = ["pytest-mypy"]
 
 [[package]]
 name = "invoke"
-version = "2.2.1"
+version = "3.0.1"
 description = "Pythonic task execution"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "invoke-2.2.1-py3-none-any.whl", hash = "sha256:2413bc441b376e5cd3f55bb5d364f973ad8bdd7bf87e53c79de3c11bf3feecc8"},
-    {file = "invoke-2.2.1.tar.gz", hash = "sha256:515bf49b4a48932b79b024590348da22f39c4942dff991ad1fb8b8baea1be707"},
+    {file = "invoke-3.0.1-py3-none-any.whl", hash = "sha256:a16cb37ff03206255aa63ef410f6344b432504cdd77e0d6e28fa4b7c881573c0"},
+    {file = "invoke-3.0.1.tar.gz", hash = "sha256:7759ab2f4f268668c4e72cac04465e50059a76a92e5005b5f2ad5803e29c61bc"},
 ]
 
 [[package]]
@@ -1206,4 +1206,4 @@ dev = ["pytest", "setuptools"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "213b7af09289778fa6bc60b6e63d15ce27350b2f98ac07f60c0329f0fec69304"
+content-hash = "8331776cd44243044bcfcdb6e9599012d5643a9e606bc2fc0e4b0e97824ac068"
