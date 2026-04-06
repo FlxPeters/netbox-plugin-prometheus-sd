@@ -14,7 +14,7 @@ packages = [
 python = ">=3.10,<4.0"
 
 [tool.poetry.group.dev.dependencies]
-invoke = "^2.2.0"
+invoke = ">=2.2,<4.0"
 docker = "^7.1.0"
 testcontainers = {extras = ["postgres", "redis", "generic"], version = "^4.14.1"}
 python-semantic-release = "^10.5.3"
