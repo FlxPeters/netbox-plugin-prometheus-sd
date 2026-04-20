@@ -168,6 +168,7 @@ def extract_parent(obj, labels: LabelDict):
     extract_tenant(obj.parent, labels)
     extract_cluster(obj.parent, labels)
     extract_contacts(obj.parent, labels)
+    extract_status(obj.parent, labels)
 
 
 def extract_service_ips(obj, labels: LabelDict):
@@ -190,3 +191,8 @@ def extract_rack_u_poistion(obj, labels: LabelDict):
     """Extract rack U poistion"""
     if hasattr(obj, "position") and obj.position:
         labels["rack_u_position"] = str(obj.position)
+
+def extract_status(obj, labels: LabelDict):
+    """Extract status"""
+    if hasattr(obj, "status") and obj.status is not None:
+        labels["status"] = obj.status
