@@ -160,6 +160,14 @@ def extract_prometheus_sd_config(obj, labels):
     if scheme and isinstance(scheme, str):
         labels["__scheme__"] = scheme
 
+    params = prometheus_sd_config.get("params", None)
+    if params and isinstance(params, dict):
+        for key, value in params.items():
+            if isinstance(value, list):
+                labels[f"__param_{key}"] = ",".join(value)
+            else:
+                labels[f"__param_{key}"] = str(value)
+
 
 def extract_parent(obj, labels: LabelDict):
     labels["parent"] = obj.parent.name
