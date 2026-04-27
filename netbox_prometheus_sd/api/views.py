@@ -60,7 +60,7 @@ class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
         "tags",
         "services",
         "contacts",
-    )
+    ).annotate_config_context_data()
     filterset_class = VirtualMachineFilterSet
     serializer_class = PrometheusVirtualMachineSerializer
     pagination_class = None
@@ -80,7 +80,7 @@ class DeviceViewSet(NetboxPrometheusSDModelViewSet):
         "primary_ip4__nat_outside",
         "primary_ip6__nat_outside",
         "tags",
-    )
+    ).annotate_config_context_data()
     filterset_class = DeviceFilterSet
     serializer_class = PrometheusDeviceSerializer
     pagination_class = None
