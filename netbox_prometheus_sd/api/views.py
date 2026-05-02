@@ -34,9 +34,10 @@ class NetboxPrometheusSDModelViewSet(CustomFieldsMixin, ListModelMixin, BaseView
 
 
 class ServiceViewSet(NetboxPrometheusSDModelViewSet):
-    queryset = Service.objects.prefetch_related(
+    queryset = Service.objects.select_related(
         "device",
         "virtual_machine",
+    ).prefetch_related(
         "ipaddresses",
         "tags",
     )
@@ -50,16 +51,24 @@ class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
         cluster_scope = "cluster__scope"
     else:
         cluster_scope = "cluster__site"
-    queryset = VirtualMachine.objects.prefetch_related(
-        cluster_scope,
-        "role",
-        "tenant",
-        "platform",
-        "primary_ip4",
-        "primary_ip6",
-        "tags",
-        "services",
-        "contacts",
+    queryset = (
+        VirtualMachine.objects.select_related(
+            "role",
+            "tenant__group",
+            "platform",
+            "primary_ip4",
+            "primary_ip6",
+        )
+        .prefetch_related(
+            cluster_scope,
+            "cluster__group",
+            "cluster__type",
+            "tags",
+            "services",
+            "contacts__contact",
+            "contacts__role",
+        )
+        .annotate_config_context_data()
     )
     filterset_class = VirtualMachineFilterSet
     serializer_class = PrometheusVirtualMachineSerializer
@@ -67,19 +76,28 @@ class VirtualMachineViewSet(NetboxPrometheusSDModelViewSet):
 
 
 class DeviceViewSet(NetboxPrometheusSDModelViewSet):
-    queryset = Device.objects.prefetch_related(
-        "device_type__manufacturer",
-        "role" if hasattr(Device, "role") else "device_role",
-        "tenant",
-        "platform",
-        "site",
-        "location",
-        "rack",
-        "parent_bay",
-        "virtual_chassis__master",
-        "primary_ip4__nat_outside",
-        "primary_ip6__nat_outside",
-        "tags",
+    queryset = (
+        Device.objects.select_related(
+            "device_type__manufacturer",
+            "role" if hasattr(Device, "role") else "device_role",
+            "tenant__group",
+            "platform",
+            "site",
+            "location",
+            "rack",
+            "parent_bay",
+            "virtual_chassis__master",
+            "oob_ip",
+        )
+        .prefetch_related(
+            "primary_ip4__nat_outside",
+            "primary_ip6__nat_outside",
+            "tags",
+            "services",
+            "contacts__contact",
+            "contacts__role",
+        )
+        .annotate_config_context_data()
     )
     filterset_class = DeviceFilterSet
     serializer_class = PrometheusDeviceSerializer
@@ -87,7 +105,9 @@ class DeviceViewSet(NetboxPrometheusSDModelViewSet):
 
 
 class IPAddressViewSet(NetboxPrometheusSDModelViewSet):
-    queryset = IPAddress.objects.prefetch_related("tenant", "tags")
+    queryset = IPAddress.objects.select_related("tenant__group").prefetch_related(
+        "tags"
+    )
     serializer_class = PrometheusIPAddressSerializer
     filterset_class = IPAddressFilterSet
     pagination_class = None
