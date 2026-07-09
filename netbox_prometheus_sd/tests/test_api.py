@@ -70,8 +70,8 @@ class ApiEndpointTests(TestCase):
 
         self.assertIsNotNone(data[0]["targets"])
         self.assertIsNotNone(data[0]["labels"])
-        # Full vm contains two entry in the config context so we have to double the number of vm
-        self.assertEqual(len(data), 120)
+        # Full vm contains three entry in the config context so we have to triple the number of vm
+        self.assertEqual(len(data), 180)
 
     def test_endpoint_ip_address(self):
         """Ensure ip address endpoint returns a valid response"""
