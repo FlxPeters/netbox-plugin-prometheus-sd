@@ -74,7 +74,6 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
     def get_labels(self, obj):
         labels = LabelDict(
             {
-                "status": obj.status,
                 "model": obj.__class__.__name__,
                 "name": obj.name,
                 "id": str(obj.id),
@@ -94,6 +93,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_rack(obj, labels)
         utils.extract_custom_fields(obj, labels)
         utils.extract_rack_u_poistion(obj, labels)
+        utils.extract_status(obj, labels)
 
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
@@ -127,7 +127,6 @@ class PrometheusVirtualMachineSerializer(
     def get_labels(self, obj):
         labels = LabelDict(
             {
-                "status": obj.status,
                 "model": obj.__class__.__name__,
                 "name": obj.name,
                 "id": str(obj.id),
@@ -142,6 +141,7 @@ class PrometheusVirtualMachineSerializer(
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
         utils.extract_custom_fields(obj, labels)
+        utils.extract_status(obj, labels)
 
         if hasattr(obj, "role") and obj.role is not None:
             labels["role"] = obj.role.name
@@ -203,7 +203,6 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
         """Get IP address labels"""
         labels = LabelDict(
             {
-                "status": obj.status,
                 "model": obj.__class__.__name__,
                 "ip": self.extract_ip(obj),
                 "id": str(obj.id),
@@ -212,6 +211,7 @@ class PrometheusIPAddressSerializer(serializers.ModelSerializer):
         if obj.role:
             labels["role"] = obj.role
 
+        utils.extract_status(obj, labels)
         utils.extract_tags(obj, labels)
         utils.extract_tenant(obj, labels)
         utils.extract_custom_fields(obj, labels)
