@@ -179,6 +179,8 @@ def extract_service_ips(obj, labels: LabelDict):
         labels["ipaddresses"] = ",".join(
             [str(ipaddr.address.ip) for ipaddr in obj.ipaddresses.all()]
         )
+    elif hasattr(obj.parent, "primary_ip") and obj.parent.primary_ip is not None:
+        labels["ipaddresses"] = str(IPNetwork(obj.parent.primary_ip.address).ip)
 
 
 def extract_service_ports(obj, labels: LabelDict):
