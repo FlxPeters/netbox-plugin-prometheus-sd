@@ -1,8 +1,4 @@
-try:
-    from netbox.plugins import PluginConfig
-except ImportError:
-    # Fallback for old NetBox versions < 4.0
-    from extras.plugins import PluginConfig
+from netbox.plugins import PluginConfig
 
 # Placeholder for semantic release
 __VERSION__ = "1.3.0"
@@ -20,6 +16,7 @@ class PrometheusSD(PluginConfig):
     base_url = "prometheus-sd"
     required_settings = []
     default_settings = {}
+    min_version = "4.0.0"
 
 
 config = PrometheusSD
