@@ -57,6 +57,15 @@ class ApiEndpointTests(AuthenticatedApiTestCase):
         self.assertIsNotNone(data[0]["labels"])
         self.assertEqual(len(data), 60)
 
+        # Serializer tests render the in-memory fixture object, so they cannot
+        # catch a fixture that sets an attribute without persisting it. Assert
+        # these here, where the objects come back out of the database.
+        labels = {d["labels"]["__meta_netbox_name"]: d["labels"] for d in data}
+        first = labels["api-test-1.example.com"]
+        self.assertEqual(first.get("__meta_netbox_rack_u_position"), "1.0")
+        self.assertEqual(first.get("__meta_netbox_contact_primary_name"), "Jane Doe")
+        self.assertEqual(first.get("__meta_netbox_contact_primary_role"), "On Call")
+
     def test_endpoint_virtual_machine(self):
         """Ensure virtual machine endpoint returns a valid response"""
 
@@ -71,6 +80,11 @@ class ApiEndpointTests(AuthenticatedApiTestCase):
         self.assertIsNotNone(data[0]["labels"])
         # Full vm contains two entry in the config context so we have to double the number of vm
         self.assertEqual(len(data), 120)
+
+        labels = {d["labels"]["__meta_netbox_name"]: d["labels"] for d in data}
+        first = labels["api-test-vm-1.example.com"]
+        self.assertEqual(first.get("__meta_netbox_contact_primary_name"), "Jane Doe")
+        self.assertEqual(first.get("__meta_netbox_contact_primary_role"), "On Call")
 
     def test_endpoint_ip_address(self):
         """Ensure ip address endpoint returns a valid response"""
