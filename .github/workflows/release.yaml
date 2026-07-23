@@ -28,7 +28,7 @@ jobs:
       # while the workflow was running, which prevents accidentally releasing un-evaluated
       # changes.
       - name: Setup | Checkout Repository on Release Branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref_name }}
 
