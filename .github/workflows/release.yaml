@@ -52,8 +52,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.release.outputs.tag }}
 
+      # Only a released commit produces `dist/`: semantic-release runs
+      # `build_command` when it cuts a version, and skips it otherwise. Without
+      # this guard the step runs on every push, finds no `dist/`, and fails on
+      # `if-no-files-found: error` -- which is why every `chore:`/`ci:` commit
+      # (Dependabot's included) has been failing this workflow.
       - name: Upload | Distribution Artifacts
         uses: actions/upload-artifact@v7
+        if: steps.release.outputs.released == 'true'
         with:
           name: distribution-artifacts
           path: dist
