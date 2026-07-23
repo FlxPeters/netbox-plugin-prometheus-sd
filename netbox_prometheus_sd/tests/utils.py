@@ -122,7 +122,6 @@ def build_vm_full(name, ip_octet=1):
 
 
 def build_minimal_device(name):
-    role_attr = "role" if hasattr(Device, "role") else "device_role"
     return Device.objects.get_or_create(
         name=name,
         device_type=DeviceType.objects.get_or_create(
@@ -133,11 +132,7 @@ def build_minimal_device(name):
             )[0],
         )[0],
         site=Site.objects.get_or_create(name="Site", slug="site")[0],
-        **{
-            role_attr: DeviceRole.objects.get_or_create(
-                name="Firewall", slug="firewall"
-            )[0],
-        },
+        role=DeviceRole.objects.get_or_create(name="Firewall", slug="firewall")[0],
     )[0]
 
 

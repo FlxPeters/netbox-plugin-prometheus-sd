@@ -1,5 +1,3 @@
-# Filtersets have been renamed, we support both
-# https://github.com/netbox-community/netbox/commit/1024782b9e0abb48f6da65f8248741227d53dbed#diff-d9224204dab475bbe888868c02235b8ef10f07c9201c45c90804d395dc161c40
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
@@ -9,10 +7,7 @@ from utilities.filters import (
     NumericArrayFilter,
 )
 
-try:
-    from ipam.filtersets import ServiceFilterSet as NetboxServiceFilterSet
-except ImportError:
-    from ipam.filters import ServiceFilterSet as NetboxServiceFilterSet
+from ipam.filtersets import ServiceFilterSet as NetboxServiceFilterSet
 
 
 class ServiceFilterSet(NetboxServiceFilterSet):
