@@ -1,0 +1,99 @@
+name: Dependabot auto-merge
+
+# `pull_request_target` runs the workflow definition from the base branch with a
+# writable token, which is what lets it act on Dependabot's PRs (Dependabot's own
+# `pull_request` runs only ever get a read-only token).
+#
+# This is only safe because nothing below checks out or executes the PR's code --
+# it just reads metadata and asks GitHub to queue the merge. Do not add a
+# checkout of `github.event.pull_request.head` to this file.
+on: pull_request_target
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Development tooling may auto-merge at any version: a broken dev
+      # dependency surfaces as a red pipeline, not as a broken release. Anything
+      # shipped to users -- currently the Netbox base image -- is held to patch
+      # and minor.
+      #
+      # The ecosystem allowances are opt-in by name rather than derived from
+      # `dependency-type`, so an ecosystem we have not considered falls through
+      # to the patch/minor rule instead of being treated as safe by accident.
+      - name: Apply auto-merge policy
+        id: policy
+        env:
+          ECOSYSTEM: ${{ steps.metadata.outputs.package-ecosystem }}
+          DEP_TYPE: ${{ steps.metadata.outputs.dependency-type }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+        run: |
+          set -euo pipefail
+          merge=false
+          reason="major update to a shipped dependency"
+
+          case "$ECOSYSTEM" in
+            github_actions|github-actions)
+              merge=true
+              reason="CI tooling, not shipped to users"
+              ;;
+            pip)
+              if [ "$DEP_TYPE" = "direct:development" ]; then
+                merge=true
+                reason="development-only dependency"
+              fi
+              ;;
+          esac
+
+          if [ "$merge" = "false" ]; then
+            case "$UPDATE_TYPE" in
+              version-update:semver-patch|version-update:semver-minor)
+                merge=true
+                reason="non-major update"
+                ;;
+            esac
+          fi
+
+          {
+            echo "merge=$merge"
+            echo "reason=$reason"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Dependabot auto-merge"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Dependencies | ${{ steps.metadata.outputs.dependency-names }} |"
+            echo "| Ecosystem | \`$ECOSYSTEM\` |"
+            echo "| Dependency type | \`$DEP_TYPE\` |"
+            echo "| Update type | \`$UPDATE_TYPE\` |"
+            echo "| Auto-merge | **$merge** ($reason) |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Queues the merge only; GitHub still holds the PR until the required
+      # `ci-ok` check passes, so a bump that breaks the matrix never lands.
+      - name: Queue auto-merge
+        if: steps.policy.outputs.merge == 'true'
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Leave a note for the maintainer
+        if: steps.policy.outputs.merge != 'true'
+        run: |
+          gh pr comment "${{ github.event.pull_request.html_url }}" --body \
+            "Not auto-merged: ${{ steps.policy.outputs.reason }}. This one needs a human review before merging."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
