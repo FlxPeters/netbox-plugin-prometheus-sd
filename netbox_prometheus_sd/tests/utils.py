@@ -133,11 +133,25 @@ def build_vm_full(name, ip_octet=1):
     vm.save()
 
     build_contact_for(vm)
-    try: # NetBox 4.2+
-        Service.objects.create(parent=vm, name="ssh", protocol="tcp", ports=[22])
-    except AttributeError: # NetBox <4.2
-        Service.objects.create(virtual_machine=vm, name="ssh", protocol="tcp", ports=[22])
+    build_service_for(vm, name="ssh", protocol="tcp", ports=[22])
     return vm
+
+
+def build_service_for(parent, **kwargs):
+    """Create a service bound to parent, with the parent's primary IPv4 attached.
+
+    Netbox 4.3 replaced Service.device/Service.virtual_machine with a single
+    generic `parent` relation, which is read-only on older releases.
+    """
+    try: # NetBox 4.3+
+        service = Service.objects.create(parent=parent, **kwargs)
+    except AttributeError: # NetBox <4.3
+        field = "device" if isinstance(parent, Device) else "virtual_machine"
+        service = Service.objects.create(**{field: parent}, **kwargs)
+
+    if parent.primary_ip4 is not None:
+        service.ipaddresses.set([parent.primary_ip4])
+    return service
 
 
 def build_minimal_device(name):
@@ -252,10 +266,7 @@ def build_device_full(name, ip_octet=1):
     device.tags.add("Tag 2")
     device.save()
     build_contact_for(device)
-    try: # NetBox 4.2+
-        Service.objects.create(parent=device, name="ssh", protocol="tcp", ports=[22])
-    except AttributeError: # NetBox <4.2
-        Service.objects.create(device=device, name="ssh", protocol="tcp", ports=[22])
+    build_service_for(device, name="ssh", protocol="tcp", ports=[22])
     return device
 
 

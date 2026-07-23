@@ -198,6 +198,32 @@ class PrometheusVirtualMachineSerializerTests(TestCase):
                     data["labels"],
                 )
             )
+            # Tags are compared as sets: the label is a joined list whose order
+            # is not guaranteed.
+            self.assertEqual(
+                set(data["labels"]["__meta_netbox_tags"].split(",")),
+                {"Tag1", "Tag 2"},
+            )
+            self.assertEqual(
+                set(data["labels"]["__meta_netbox_tag_slugs"].split(",")),
+                {"tag1", "tag-2"},
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_services": "ssh"}, data["labels"]
+                )
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {
+                        "__meta_netbox_contact_primary_name": "Jane Doe",
+                        "__meta_netbox_contact_primary_email": "jane@example.com",
+                        "__meta_netbox_contact_primary_comments": "Primary on-call",
+                        "__meta_netbox_contact_primary_role": "On Call",
+                    },
+                    data["labels"],
+                )
+            )
 
 
 class PrometheusDeviceSerializerTests(TestCase):
@@ -356,6 +382,29 @@ class PrometheusDeviceSerializerTests(TestCase):
                 {"__meta_netbox_rack_u_position": "1.0"}, data["labels"]
             )
         )
+        # Tags are compared as sets: the label is a joined list whose order is
+        # not guaranteed.
+        self.assertEqual(
+            set(data["labels"]["__meta_netbox_tags"].split(",")), {"Tag1", "Tag 2"}
+        )
+        self.assertEqual(
+            set(data["labels"]["__meta_netbox_tag_slugs"].split(",")),
+            {"tag1", "tag-2"},
+        )
+        self.assertTrue(
+            utils.dictContainsSubset({"__meta_netbox_services": "ssh"}, data["labels"])
+        )
+        self.assertTrue(
+            utils.dictContainsSubset(
+                {
+                    "__meta_netbox_contact_primary_name": "Jane Doe",
+                    "__meta_netbox_contact_primary_email": "jane@example.com",
+                    "__meta_netbox_contact_primary_comments": "Primary on-call",
+                    "__meta_netbox_contact_primary_role": "On Call",
+                },
+                data["labels"],
+            )
+        )
 
 
 class PrometheusIPAddressSerializerTests(TestCase):
@@ -493,6 +542,11 @@ class PrometheusServiceSerializerTests(TestCase):
                     {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
                 )
             )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_ipaddresses": "192.168.0.1"}, data["labels"]
+                )
+            )
 
     def test_vm_service_full_to_target(self):
         vm = utils.build_vm_full("vm-full-01.example.com")
@@ -574,5 +628,10 @@ class PrometheusServiceSerializerTests(TestCase):
             self.assertTrue(
                 utils.dictContainsSubset(
                     {"__meta_netbox_primary_ip6": "2001:db8:1701::2"}, data["labels"]
+                )
+            )
+            self.assertTrue(
+                utils.dictContainsSubset(
+                    {"__meta_netbox_ipaddresses": "192.168.0.1"}, data["labels"]
                 )
             )
