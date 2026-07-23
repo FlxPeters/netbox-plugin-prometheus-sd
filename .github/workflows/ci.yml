@@ -27,6 +27,16 @@ jobs:
       - uses: actions/checkout@v7
       - uses: wagoid/commitlint-github-action@v6
 
+  # Static analysis of the workflow files themselves, including shellcheck over
+  # `run:` blocks. Worth having because CI never executes release.yaml or
+  # publish.yml -- a mistake in either only shows up when a release is cut.
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Lint workflow files
+        uses: docker://rhysd/actionlint:1.7.12
+
   # Matrix build for Netbox versions
   build:
     runs-on: ubuntu-latest
@@ -90,14 +100,15 @@ jobs:
   # needs fails, the check never reports, and PRs wait on it indefinitely.
   ci-ok:
     if: always()
-    needs: [commitlint, build]
+    needs: [commitlint, actionlint, build]
     runs-on: ubuntu-latest
     steps:
       - name: Verify that all jobs passed
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: |
           echo "commitlint: ${{ needs.commitlint.result }}"
+          echo "actionlint: ${{ needs.actionlint.result }}"
           echo "build:      ${{ needs.build.result }}"
           exit 1
       - name: All checks passed
-        run: echo "commitlint and the full Netbox matrix are green."
+        run: echo "commitlint, actionlint and the full Netbox matrix are green."
