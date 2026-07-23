@@ -52,6 +52,20 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.release.outputs.tag }}
 
+      # Publishing happens here rather than from a tag-triggered workflow.
+      # semantic-release creates the tag using GITHUB_TOKEN, and GitHub does not
+      # start workflow runs from GITHUB_TOKEN events, so a `on: push: tags:`
+      # trigger never fires -- which is why v2.0.0 was tagged and released on
+      # GitHub but never reached PyPI.
+      #
+      # `dist/` is already present: semantic-release runs `build_command` when it
+      # cuts a version, which is the same reason the artifact upload below works.
+      - name: Publish | Upload to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: steps.release.outputs.released == 'true'
+        with:
+          password: ${{ secrets.PYPI_PASSWORD }}
+
       # Only a released commit produces `dist/`: semantic-release runs
       # `build_command` when it cuts a version, and skips it otherwise. Without
       # this guard the step runs on every push, finds no `dist/`, and fails on
