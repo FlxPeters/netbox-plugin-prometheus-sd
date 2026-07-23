@@ -78,3 +78,26 @@ jobs:
         env:
           NETBOX_VER: ${{ matrix.netbox-version }}
           DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
+
+  # Single aggregated status check for branch protection to require.
+  #
+  # Requiring the matrix jobs directly would mean editing branch protection
+  # every time the Netbox version list changes, and a required check that no
+  # longer exists blocks every PR forever. Requiring only this job keeps that
+  # list free to change.
+  #
+  # `always()` is load-bearing: without it this job is skipped when anything it
+  # needs fails, the check never reports, and PRs wait on it indefinitely.
+  ci-ok:
+    if: always()
+    needs: [commitlint, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify that all jobs passed
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "commitlint: ${{ needs.commitlint.result }}"
+          echo "build:      ${{ needs.build.result }}"
+          exit 1
+      - name: All checks passed
+        run: echo "commitlint and the full Netbox matrix are green."
