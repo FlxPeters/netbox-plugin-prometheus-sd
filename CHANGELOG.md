@@ -2,6 +2,75 @@
 
 <!-- version list -->
 
+## v2.0.0 (2026-07-23)
+
+### Bug Fixes
+
+- Eliminate N+1 queries on service discovery endpoints
+  ([#265](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/265),
+  [`d77ccdc`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/d77ccdc2354d9595b19061fda27b8165e584fcfd))
+
+### Chores
+
+- Ignore local Claude Code settings
+  ([`451dd14`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/451dd14a8cca76a214b3b8f56911fb16bd4a1c61))
+
+- **deps**: Bump actions/setup-python from 6 to 7
+  ([`18b129d`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/18b129d39f40774867a0b8e1ae8c8977bc257275))
+
+- **deps**: Bump actions/upload-artifact from 4 to 7
+  ([`a95e4f2`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/a95e4f2fd828696efd7ace8ecdce479d754d7226))
+
+- **deps**: Bump docker/setup-buildx-action from 3 to 4
+  ([`908edbe`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/908edbeec5b0a3f68a36103e21e3f27f1e240a0e))
+
+- **deps**: Bump python-semantic-release/publish-action
+  ([`4b9cac7`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/4b9cac757dd013a2672449a76a50efd937492dbd))
+
+- **deps-dev**: Bump gitpython from 3.1.46 to 3.1.47
+  ([`fad8732`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/fad8732243d66b80ce75fd4e5c1f03656c71d06f))
+
+- **deps-dev**: Bump gitpython from 3.1.47 to 3.1.50
+  ([`a09070b`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/a09070b51b5c296e3f764c5b077ff1c6f231baa9))
+
+- **deps-dev**: Bump invoke from 2.2.1 to 3.0.1
+  ([`f4737df`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/f4737dfaec2fbe52b2309cc9c4da02a28bc3b3d3))
+
+- **deps-dev**: Bump invoke from 3.0.1 to 3.0.3
+  ([`8ff7da7`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/8ff7da77937b947725f73fcafc2a08f8f1eccb03))
+
+- **deps-dev**: Bump pygments from 2.19.2 to 2.20.0
+  ([`1addaf2`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/1addaf24fd40130413ac82dacc33872079eb5fd3))
+
+- **deps-dev**: Bump requests from 2.32.5 to 2.33.0
+  ([`124c1cb`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/124c1cb8b70611f5e5fb6bf3cfeb69191104954f))
+
+- **deps-dev**: Bump testcontainers from 4.14.1 to 4.14.2
+  ([`f2cbd7c`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/f2cbd7cd517756dd1538360f9951cb3e6d926a92))
+
+### Documentation
+
+- Add AGENTS.md
+  ([`0065263`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/0065263f991f071a155067c8b3f7f9d455e238c9))
+
+### Refactoring
+
+- Remove remaining Netbox 3.x compatibility fallbacks
+  ([`24c3a30`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/24c3a304981642d67d5cc7749367521fe87c0383))
+
+### Testing
+
+- Assert tags, services and service IPs
+  ([`6dd7764`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/6dd776481755696ad8569ca75663a2aa5cc463f9))
+
+- Cover contacts, and persist rack position in the device fixture
+  ([`48a5fa9`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/48a5fa919c6005968bd7abff9624453d87f11a54))
+
+### Breaking Changes
+
+- Netbox releases before 4.0 are no longer supported and the plugin now refuses to load on them.
+
+
 ## v1.3.0 (2026-03-17)
 
 ### Bug Fixes
