@@ -1,10 +1,20 @@
 name: Publish on PyPi
 
+# Manual fallback for publishing a tag that is not on PyPI -- a release whose
+# publish step failed, or one tagged before releases published automatically.
+#
+# Normal releases publish from release.yaml. This workflow used to trigger on
+# `push: tags: v*`, but that never fired once: semantic-release creates tags
+# using GITHUB_TOKEN, and GitHub deliberately does not start workflow runs from
+# GITHUB_TOKEN events. The trigger is gone rather than left in place looking
+# functional.
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to publish, e.g. v2.0.0"
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -12,17 +22,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
 
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.8"
+          python-version: "3.12"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-      - name: Build and publish
-        run: |
-          poetry version $(git describe --tags --abbrev=0)
-          poetry build
-          poetry publish --username __token__ --password ${{ secrets.PYPI_PASSWORD }}
+
+      # No `poetry version` step: semantic-release already wrote the released
+      # version into pyproject.toml on the tagged commit. Deriving it instead
+      # from `git describe` set the version to "v2.0.0" -- leading "v" included,
+      # which is not a valid PEP 440 version.
+      - name: Build
+        run: poetry build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_PASSWORD }}
