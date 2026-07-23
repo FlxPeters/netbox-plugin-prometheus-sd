@@ -7,7 +7,13 @@ from dcim.models import Device, DeviceRole, Platform, Rack
 from extras.models import ConfigContext, Tag
 
 from ipam.models import IPAddress, Service
-from tenancy.models import Tenant, TenantGroup
+from tenancy.models import (
+    Contact,
+    ContactAssignment,
+    ContactRole,
+    Tenant,
+    TenantGroup,
+)
 
 from virtualization.models import (
     Cluster,
@@ -51,6 +57,18 @@ def build_location():
 
 def build_tenant():
     return Tenant.objects.get_or_create(name="Acme Corp.", slug="acme")[0]
+
+
+def build_contact_for(obj):
+    """Assign a contact to obj so extract_contacts() has something to render."""
+    contact = Contact.objects.get_or_create(
+        name="Jane Doe",
+        defaults={"email": "jane@example.com", "comments": "Primary on-call"},
+    )[0]
+    role = ContactRole.objects.get_or_create(name="On Call", slug="on-call")[0]
+    return ContactAssignment.objects.create(
+        object=obj, contact=contact, role=role, priority="primary"
+    )
 
 
 def build_custom_fields():
@@ -114,6 +132,7 @@ def build_vm_full(name, ip_octet=1):
     vm.tags.add("Tag 2")
     vm.save()
 
+    build_contact_for(vm)
     try: # NetBox 4.2+
         Service.objects.create(parent=vm, name="ssh", protocol="tcp", ports=[22])
     except AttributeError: # NetBox <4.2
@@ -220,13 +239,19 @@ def build_device_full(name, ip_octet=1):
     )[0]
     device.oob_ip = IPAddress.objects.get_or_create(address=f"10.0.0.{ip_octet}/24")[0]
     device.rack = Rack.objects.get_or_create(
-        name="R01B01", site=Site.objects.get_or_create(name="Site", slug="site")[0]
+        name="R01B01",
+        site=Site.objects.get_or_create(name="Site", slug="site")[0],
+        defaults={"u_height": 100},
     )[0]
     device.site = Site.objects.get_or_create(name="Site", slug="site")[0]
+    # Rack position is unique per (rack, position, face), so it has to follow
+    # ip_octet like the addresses do -- otherwise callers building more than one
+    # device hit an IntegrityError.
+    device.position = float(ip_octet)
     device.tags.add("Tag1")
     device.tags.add("Tag 2")
     device.save()
-    device.position = 1.0
+    build_contact_for(device)
     try: # NetBox 4.2+
         Service.objects.create(parent=device, name="ssh", protocol="tcp", ports=[22])
     except AttributeError: # NetBox <4.2
