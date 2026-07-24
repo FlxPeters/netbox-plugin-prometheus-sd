@@ -1,0 +1,106 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: "netbox-demo"
+
+# The token below is SUPERUSER_API_TOKEN from envs/netbox.env. It is a demo
+# value for this throwaway stack -- do not reuse it anywhere real.
+scrape_configs:
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Devices, with the __meta_netbox_* labels mapped onto real ones.
+  #
+  # Prometheus drops every label starting with __ once service discovery is
+  # done, so without relabel_configs none of the Netbox metadata reaches your
+  # metrics. This is the step most setups miss on the first attempt.
+  - job_name: "netbox_devices"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/devices/?status=active
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
+    relabel_configs:
+      # A device with no primary IP would produce an empty address.
+      - source_labels: [__meta_netbox_primary_ip4]
+        regex: ^$
+        action: drop
+      # Scrape the primary IP -- the Netbox name may not be resolvable.
+      - source_labels: [__meta_netbox_primary_ip4]
+        target_label: __address__
+        replacement: "$1:9100"
+      # ... but keep the readable name as the instance label.
+      - source_labels: [__meta_netbox_name]
+        target_label: instance
+      - source_labels: [__meta_netbox_site_slug]
+        target_label: site
+      - source_labels: [__meta_netbox_role_slug]
+        target_label: role
+      - source_labels: [__meta_netbox_tenant_slug]
+        target_label: tenant
+
+  # Virtual machines emit the same label names as devices, so the same
+  # relabel_configs work unchanged.
+  #
+  # initializers/config_contexts.yml attaches a `prometheus-plugin-prometheus-sd`
+  # config context to the VMs, so their targets arrive with a port already
+  # appended and with __metrics_path__ and __scheme__ set. Prometheus consumes
+  # those two directly -- they need no relabeling.
+  - job_name: "netbox_virtual_machines"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/virtual-machines/?status=active
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
+    relabel_configs:
+      - source_labels: [__meta_netbox_primary_ip4]
+        regex: ^$
+        action: drop
+      - source_labels: [__meta_netbox_primary_ip4]
+        target_label: __address__
+        replacement: "$1:9100"
+      - source_labels: [__meta_netbox_name]
+        target_label: instance
+      - source_labels: [__meta_netbox_site_slug]
+        target_label: site
+      - source_labels: [__meta_netbox_role_slug]
+        target_label: role
+
+  # Services give one target per exposed service rather than one per host. The
+  # parent device/VM comes through as __meta_netbox_parent, along with the
+  # parent's IPs and tenancy, so the address can be built from the parent IP and
+  # the service port.
+  - job_name: "netbox_services"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/services/
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"
+    relabel_configs:
+      - source_labels: [__meta_netbox_primary_ip4]
+        regex: ^$
+        action: drop
+      - source_labels: [__meta_netbox_primary_ip4, __meta_netbox_ports]
+        separator: ":"
+        target_label: __address__
+      - source_labels: [__meta_netbox_parent]
+        target_label: instance
+      - source_labels: [__meta_netbox_name]
+        target_label: service
+
+  # IP addresses, deliberately left unrelabeled to show the raw discovery
+  # output. Open a target in Status -> Target health and expand it to see every
+  # __meta_netbox_* label the plugin produces.
+  - job_name: "netbox_ip_addresses_raw"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/ip-addresses/?status=active
+        refresh_interval: 15s
+        authorization:
+          type: "Token"
+          credentials: "0123456789abcdef0123456789abcdef01234567"

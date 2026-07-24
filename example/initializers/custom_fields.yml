@@ -1,3 +1,0 @@
-text_field:
-  type: string
-  on_objects: ["dcim.models.DeviceType", "dcim.models.Device", "virtualization.models.VirtualMachine"]
