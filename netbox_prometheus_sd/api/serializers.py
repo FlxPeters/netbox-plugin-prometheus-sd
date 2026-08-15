@@ -36,6 +36,7 @@ class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
                     "port" not in prometheus_sd_config
                     and "metrics_path" not in prometheus_sd_config
                     and "scheme" not in prometheus_sd_config
+                    and "host" not in prometheus_sd_config
                 ):
                     continue
 
@@ -50,8 +51,8 @@ class SDConfigContextDuplicateSerializer(serializers.ListSerializer):
 
 class PrometheusTargetsMixin:
     def get_targets(self, obj):
-        target = obj.name
         prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", {})
+        target = prometheus_sd_config.get("host", obj.name)
 
         port = prometheus_sd_config.get("port", None)
         if port and isinstance(port, int):

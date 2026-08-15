@@ -78,8 +78,8 @@ class ApiEndpointTests(AuthenticatedApiTestCase):
 
         self.assertIsNotNone(data[0]["targets"])
         self.assertIsNotNone(data[0]["labels"])
-        # Full vm contains two entry in the config context so we have to double the number of vm
-        self.assertEqual(len(data), 120)
+        # Full vm contains three entry in the config context so we have to triple the number of vm
+        self.assertEqual(len(data), 180)
 
         labels = {d["labels"]["__meta_netbox_name"]: d["labels"] for d in data}
         first = labels["api-test-vm-1.example.com"]
