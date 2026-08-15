@@ -150,7 +150,11 @@ def extract_custom_fields(obj, labels: LabelDict):
 
 
 def extract_prometheus_sd_config(obj, labels):
-    prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", {})
+    prometheus_sd_config = getattr(obj, "_injected_prometheus_sd_config", None)
+    if not prometheus_sd_config:
+        return
+
+    labels["__meta_netbox_custom_config"] = ",".join(prometheus_sd_config.keys())
 
     metrics_path = prometheus_sd_config.get("metrics_path", None)
     if metrics_path and isinstance(metrics_path, str):
