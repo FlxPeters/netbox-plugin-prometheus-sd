@@ -520,26 +520,6 @@ files = [
 all = ["mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
-name = "importlib-resources"
-version = "6.5.2"
-description = "Read resources from Python packages"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "importlib_resources-6.5.2-py3-none-any.whl", hash = "sha256:789cfdc3ed28c78b67a06acb8126751ced69a3d5f79c095a98298cd8a760ccec"},
-    {file = "importlib_resources-6.5.2.tar.gz", hash = "sha256:185f87adef5bcc288449d98fb4fba07cea78bc036455dd44c5fc4a2fe78fed2c"},
-]
-
-[package.extras]
-check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\""]
-cover = ["pytest-cov"]
-doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
-enabler = ["pytest-enabler (>=2.2)"]
-test = ["jaraco.test (>=5.4)", "pytest (>=6,!=8.1.*)", "zipp (>=3.17)"]
-type = ["pytest-mypy"]
-
-[[package]]
 name = "invoke"
 version = "3.0.3"
 description = "Pythonic task execution"
@@ -913,36 +893,35 @@ yaml = ["PyYaml (>=6.0.1)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "10.6.1"
+version = "10.6.2"
 description = "Automatic Semantic Versioning for Python projects"
 optional = false
 python-versions = "~=3.8"
 groups = ["dev"]
 files = [
-    {file = "python_semantic_release-10.6.1-py3-none-any.whl", hash = "sha256:36f7319515f218719d0972bc9535813a930f04cd19556767599e9863242efcdc"},
-    {file = "python_semantic_release-10.6.1.tar.gz", hash = "sha256:ee6369238f72e75a009b3724481232c8b813416191be099bc0266e375fd02b2b"},
+    {file = "python_semantic_release-10.6.2-py3-none-any.whl", hash = "sha256:4f430cf5efe9ac0587c6bd7b8b2bb689baf6cb92da8bb50827a1923163371a12"},
+    {file = "python_semantic_release-10.6.2.tar.gz", hash = "sha256:ae35cde167c407deab88759da942712a32e6abf1759273740581a4d1d6601a7b"},
 ]
 
 [package.dependencies]
-click = ">=8.1.0,<9.0.0"
-click-option-group = ">=0.5,<1.0"
+click = {version = ">=8.1.0,<8.2.0", markers = "python_version >= \"3.10\""}
+click-option-group = ">=0.5.0,<0.6.0"
 Deprecated = ">=1.2,<2.0"
 dotty-dict = ">=1.3,<2.0"
 gitpython = ">=3.0,<4.0"
-importlib-resources = ">=6.0,<7.0"
 jinja2 = ">=3.1,<4.0"
 pydantic = ">=2.0,<3.0"
-python-gitlab = ">=4.0.0,<9.0.0"
+python-gitlab = {version = ">=4.0.0,<9.0.0", markers = "python_version >= \"3.10\""}
 requests = ">=2.25,<3.0"
-rich = ">=14.0,<15.0"
+rich = {version = ">=15.0,<16.0", markers = "python_version >= \"3.9\""}
 shellingham = ">=1.5,<2.0"
-tomlkit = ">=0.13.0,<0.14.0"
+tomlkit = {version = ">=0.15.0,<0.16.0", markers = "python_version >= \"3.9\""}
 
 [package.extras]
-build = ["build (>=1.2,<2.0)", "tomlkit (>=0.13.0,<0.14.0)"]
+build = ["build (>=1.2,<2.0)", "tomlkit (>=0.13.0,<0.14.0) ; python_version == \"3.8\"", "tomlkit (>=0.15.0,<0.16.0) ; python_version >= \"3.9\""]
 dev = ["pre-commit (>=3.5.0,<5.0.0)", "ruff (==0.6.1)", "tox (>=4.11,<5.0)"]
 docs = ["Sphinx (>=7.4,<8.0)", "furo (>=2025.9,<2026.0)", "sphinx-autobuild (==2024.2.4)", "sphinxcontrib-apidoc (==0.6.0)"]
-mypy = ["mypy (>=1.14.1,<2.0.0)", "types-Deprecated (>=1.2,<2.0)", "types-pyyaml (>=6.0,<7.0)", "types-requests (>=2.32.0,<2.33.0)"]
+mypy = ["mypy (>=1.14.1,<2.0.0)", "types-Deprecated (>=1.2,<2.0)", "types-pyyaml (>=6.0,<7.0)", "types-requests (>=2.32.0,<3.0.0)"]
 test = ["coverage[toml] (>=7.0,<8.0)", "filelock (>=3.15,<4.0)", "flatdict (>=4.0,<5.0)", "freezegun (>=1.5,<2.0)", "pytest (>=8.3,<10.0)", "pytest-clarity (>=1.0,<2.0)", "pytest-cov (>=5.0.0,<8.0.0)", "pytest-env (>=1.0,<2.0)", "pytest-lazy-fixtures (>=1.4,<2.0)", "pytest-mock (>=3.0,<4.0)", "pytest-order (>=1.3,<2.0)", "pytest-pretty (>=1.2,<2.0)", "pytest-xdist (>=3.0,<4.0)", "pyyaml (>=6.0,<7.0)", "requests-mock (>=1.10,<2.0)", "responses (>=0.26.2,<0.27.0)"]
 
 [[package]]
@@ -1039,14 +1018,14 @@ requests = ">=2.0.1,<3.0.0"
 
 [[package]]
 name = "rich"
-version = "14.3.3"
+version = "15.0.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 optional = false
-python-versions = ">=3.8.0"
+python-versions = ">=3.9.0"
 groups = ["dev"]
 files = [
-    {file = "rich-14.3.3-py3-none-any.whl", hash = "sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d"},
-    {file = "rich-14.3.3.tar.gz", hash = "sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b"},
+    {file = "rich-15.0.0-py3-none-any.whl", hash = "sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb"},
+    {file = "rich-15.0.0.tar.gz", hash = "sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36"},
 ]
 
 [package.dependencies]
@@ -1238,14 +1217,14 @@ weaviate = ["weaviate-client (>=4)"]
 
 [[package]]
 name = "tomlkit"
-version = "0.13.3"
+version = "0.15.1"
 description = "Style preserving TOML library"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0"},
-    {file = "tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1"},
+    {file = "tomlkit-0.15.1-py3-none-any.whl", hash = "sha256:177a05aece5a8ca5266fd3c448abb47b8d352f09d477d3ca8332db4d89b24304"},
+    {file = "tomlkit-0.15.1.tar.gz", hash = "sha256:e25bbf38843005246210a12982776f27f99cb9be67160e14434d0c0d21ee1e97"},
 ]
 
 [[package]]
