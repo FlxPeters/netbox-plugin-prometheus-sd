@@ -11,11 +11,11 @@ from ipam.filtersets import ServiceFilterSet as NetboxServiceFilterSet
 
 
 class ServiceFilterSet(NetboxServiceFilterSet):
-    """Filter set to support tenancy over the device/VM foreign key.
+    """Filter set to support tenancy and site filtering over the device/VM foreign key.
 
-    Tenancy in Netbox is very incosistent and the relationship on its own is defined across many different models. This
+    Tenancy in Netbox is very inconsistent and the relationship on its own is defined across many different models. This
     means that supporting all layers is nearly impossible without a stronger upstream support. For this reason only the
-    "first level" tenancy is supported by this filter set.
+    "first level" tenancy is supported by the tenant filter set.
     """
 
     tenant_id = MultiValueNumberFilter(
@@ -26,6 +26,16 @@ class ServiceFilterSet(NetboxServiceFilterSet):
     tenant = MultiValueCharFilter(
         method="filter_by_tenant_slug",
         label=_("Tenant (slug)"),
+    )
+
+    site_id = MultiValueNumberFilter(
+        method="filter_by_site_id",
+        label=_("Site (ID)"),
+    )
+
+    site = MultiValueCharFilter(
+        method="filter_by_site_slug",
+        label=_("Site (slug)"),
     )
 
     # fix to make the test_missing_filters pass
@@ -53,4 +63,15 @@ class ServiceFilterSet(NetboxServiceFilterSet):
         return queryset.filter(
             Q(device__tenant__slug__in=value)
             | Q(virtual_machine__tenant__slug__in=value)
+        )
+
+    def filter_by_site_id(self, queryset, name, value):
+        return queryset.filter(
+            Q(device__site_id__in=value) | Q(virtual_machine__site_id__in=value)
+        )
+
+    def filter_by_site_slug(self, queryset, name, value):
+        return queryset.filter(
+            Q(device__site__slug__in=value)
+            | Q(virtual_machine__site__slug__in=value)
         )
