@@ -9,6 +9,7 @@ from . import utils
 
 from ..api.utils import NETBOX_RELEASE_CURRENT, NETBOX_RELEASE_41
 
+
 class PrometheusVirtualMachineSerializerTests(TestCase):
     def test_vm_minimal_to_target(self):
 
@@ -498,7 +499,12 @@ class PrometheusServiceSerializerTests(TestCase):
             )
             self.assertTrue(
                 utils.dictContainsSubset(
-                    {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
+                    {
+                        "__meta_netbox_display": utils.expected_service_display(
+                            "ssh", "TCP", 22
+                        )
+                    },
+                    data["labels"],
                 )
             )
             self.assertTrue(
@@ -562,7 +568,12 @@ class PrometheusServiceSerializerTests(TestCase):
             )
             self.assertTrue(
                 utils.dictContainsSubset(
-                    {"__meta_netbox_display": "ssh (TCP/22)"}, data["labels"]
+                    {
+                        "__meta_netbox_display": utils.expected_service_display(
+                            "ssh", "TCP", 22
+                        )
+                    },
+                    data["labels"],
                 )
             )
             self.assertTrue(
