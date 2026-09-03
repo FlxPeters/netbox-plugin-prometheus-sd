@@ -49,6 +49,8 @@ jobs:
           - v4.3.7
           - v4.4.10
           - v4.5.2
+          - v4.6.10
+          - v4.7.0
     steps:
       - uses: actions/checkout@v7
 

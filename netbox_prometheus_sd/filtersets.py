@@ -8,6 +8,11 @@ from utilities.filters import (
 )
 
 from ipam.filtersets import ServiceFilterSet as NetboxServiceFilterSet
+from ipam.models import Service
+
+# Netbox 4.7 replaced the Service.ports ArrayField with `port_mappings`, and
+# its filterset metaclass rejects a filter on a field that no longer exists.
+SERVICE_HAS_PORTS_FIELD = any(f.name == "ports" for f in Service._meta.get_fields())
 
 
 class ServiceFilterSet(NetboxServiceFilterSet):
@@ -28,9 +33,11 @@ class ServiceFilterSet(NetboxServiceFilterSet):
         label=_("Tenant (slug)"),
     )
 
-    # fix to make the test_missing_filters pass
+    # Netbox < 4.7 only exposes the ports array as `port`, but Netbox's
+    # test_missing_filters wants a filter named after the model field.
     # see: https://github.com/netbox-community/netbox/blob/master/netbox/utilities/testing/filtersets.py#L98
-    ports = NumericArrayFilter(field_name="ports", lookup_expr="contains")
+    if SERVICE_HAS_PORTS_FIELD:
+        ports = NumericArrayFilter(field_name="ports", lookup_expr="contains")
 
     def filter_by_cluster_tenant_id(self, queryset, name, value):
         return queryset.filter(
