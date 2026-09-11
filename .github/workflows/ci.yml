@@ -91,12 +91,11 @@ jobs:
           NETBOX_VER: ${{ matrix.netbox-version }}
           DOCKER_FLAGS: "--cache-from=type=gha --cache-to=type=gha,mode=max"
 
-  # Single aggregated status check for branch protection to require.
+  # Single aggregated pass/fail signal for the whole pipeline.
   #
-  # Requiring the matrix jobs directly would mean editing branch protection
-  # every time the Netbox version list changes, and a required check that no
-  # longer exists blocks every PR forever. Requiring only this job keeps that
-  # list free to change.
+  # `main` is unprotected -- nothing *requires* this check. It exists so a PR
+  # shows one line that says whether everything passed, instead of making you
+  # read a Netbox version matrix that changes over time.
   #
   # `always()` is load-bearing: without it this job is skipped when anything it
   # needs fails, the check never reports, and PRs wait on it indefinitely.

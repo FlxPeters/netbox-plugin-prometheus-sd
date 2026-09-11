@@ -82,12 +82,45 @@ jobs:
             echo "| Auto-merge | **$merge** ($reason) |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # Queues the merge only; GitHub still holds the PR until the required
-      # `ci-ok` check passes, so a bump that breaks the matrix never lands.
-      - name: Queue auto-merge
+      # `main` is no longer protected, so there is no required check for
+      # `gh pr merge --auto` to hold the PR against -- it would merge the bump
+      # the instant this job ran, before the Netbox matrix had reported. The
+      # gate therefore lives here: block until CI finishes and merge only if it
+      # is green, so a bump that breaks the matrix still never lands.
+      #
+      # Poll the `ci-ok` check rather than `gh pr checks --watch`. This job is
+      # itself a check on the PR, so watching every check would mean waiting on
+      # its own completion -- a deadlock that ends at the step timeout. `ci-ok`
+      # aggregates commitlint, actionlint and the whole Netbox matrix, so it is
+      # the single result worth reading anyway.
+      #
+      # Anything unexpected -- no `ci-ok` within the polling window, a failed
+      # run, an API error under `set -e` -- leaves the bump unmerged for a human.
+      - name: Wait for CI, then merge
         if: steps.policy.outputs.merge == 'true'
-        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        timeout-minutes: 75
+        run: |
+          set -euo pipefail
+
+          status=""
+          conclusion=""
+
+          for _ in $(seq 180); do
+            read -r status conclusion <<<"$(gh api \
+              "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/check-runs?check_name=ci-ok" \
+              --jq '.check_runs[0] | "\(.status) \(.conclusion)"')"
+            [ "$status" = "completed" ] && break
+            echo "ci-ok: $status"
+            sleep 20
+          done
+
+          echo "ci-ok finished: status=$status conclusion=$conclusion"
+          [ "$conclusion" = "success" ]
+
+          gh pr merge --squash "$PR_URL"
         env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Leave a note for the maintainer
