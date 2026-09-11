@@ -36,12 +36,17 @@ jobs:
         run: |
           git reset --hard ${{ github.sha }}
 
+      # Pushed with a PAT, not GITHUB_TOKEN. `main` requires the `ci-ok` status
+      # check, and the version bump commit is created here in the runner, so it
+      # can never carry a check result -- GitHub rejects the push with GH006.
+      # RELEASE_TOKEN belongs to a repository admin and branch protection has
+      # "do not allow bypassing" turned off, so an admin token is accepted.
       - name: Action | Semantic Version Release
         id: release
         # Adjust tag with desired version if applicable.
         uses: python-semantic-release/python-semantic-release@v10.6.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.RELEASE_TOKEN }}
           git_committer_name: "github-actions"
           git_committer_email: "actions@users.noreply.github.com"
 
