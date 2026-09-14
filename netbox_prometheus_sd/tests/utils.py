@@ -119,6 +119,10 @@ def build_vm_full(name, ip_octet=1):
     )[0]
 
     vm.tenant = build_tenant()
+    # Direct site assignment, independent of the cluster's own site/scope -- Netbox
+    # supports both, and the plugin's ServiceFilterSet only filters on this direct
+    # relation (see filtersets.py).
+    vm.site = Site.objects.get_or_create(name="Campus A", slug="campus-a")[0]
     vm.custom_field_data = build_custom_fields()
     vm.role = DeviceRole.objects.get_or_create(name="VM", slug="vm", vm_role=True)[0]
     vm.primary_ip4 = IPAddress.objects.get_or_create(

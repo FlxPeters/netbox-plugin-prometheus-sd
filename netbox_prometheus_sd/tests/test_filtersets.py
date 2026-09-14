@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from dcim.models.sites import Site
 from ipam.models import Service
 from tenancy.models import Tenant
 
@@ -40,3 +41,23 @@ class ServiceTestCase(TestCase, ChangeLoggedFilterSetTestMixin):
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 6)
         params = {"tenant": [tenant.slug]}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 6)
+
+    def test_device_site(self):
+        # build_device_full() assigns devices directly to the "site" site.
+        site = Site.objects.get(slug="site")
+
+        params = {"site_id": [site.pk]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
+        params = {"site": [site.slug]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
+
+    def test_vm_site(self):
+        # build_vm_full() assigns VMs directly to the "campus-a" site, distinct
+        # from the devices' site, so this also verifies the filter doesn't match
+        # across device/VM boundaries.
+        site = Site.objects.get(slug="campus-a")
+
+        params = {"site_id": [site.pk]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
+        params = {"site": [site.slug]}
+        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 3)
