@@ -29,7 +29,7 @@ def dictContainsSubset(subset, fullset):
 
 
 def build_cluster():
-    try: # NetBox 4.2+
+    try:  # NetBox 4.2+
         scope_type = ContentType.objects.get_for_model(Site)
         return Cluster.objects.get_or_create(
             name="DC1",
@@ -38,7 +38,7 @@ def build_cluster():
             scope_type=scope_type,
             scope_id=Site.objects.get_or_create(name="Campus A", slug="campus-a")[0].id,
         )[0]
-    except FieldError: # NetBox <4.2
+    except FieldError:  # NetBox <4.2
         return Cluster.objects.get_or_create(
             name="DC1",
             group=ClusterGroup.objects.get_or_create(name="VMware")[0],
@@ -141,15 +141,29 @@ def build_vm_full(name, ip_octet=1):
     return vm
 
 
+def expected_service_display(name, protocol, port):
+    """Netbox 4.7 reduced Service.__str__ to the bare name; older releases
+    append the protocol and port list."""
+    if hasattr(Service, "port_mappings"):
+        return name
+    return f"{name} ({protocol}/{port})"
+
+
 def build_service_for(parent, **kwargs):
     """Create a service bound to parent, with the parent's primary IPv4 attached.
 
     Netbox 4.3 replaced Service.device/Service.virtual_machine with a single
     generic `parent` relation, which is read-only on older releases.
+
+    Netbox 4.7 replaced Service.protocol/Service.ports with `port_mappings`
+    and rejects the legacy pair at the ORM level.
     """
-    try: # NetBox 4.3+
+    if hasattr(Service, "port_mappings") and "ports" in kwargs:
+        protocol = kwargs.pop("protocol", "tcp")
+        kwargs["port_mappings"] = [f"{protocol}/{port}" for port in kwargs.pop("ports")]
+    try:  # NetBox 4.3+
         service = Service.objects.create(parent=parent, **kwargs)
-    except AttributeError: # NetBox <4.3
+    except AttributeError:  # NetBox <4.3
         field = "device" if isinstance(parent, Device) else "virtual_machine"
         service = Service.objects.create(**{field: parent}, **kwargs)
 

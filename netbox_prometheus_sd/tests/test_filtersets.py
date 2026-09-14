@@ -3,13 +3,19 @@ from django.test import TestCase
 from dcim.models.sites import Site
 from ipam.models import Service
 from tenancy.models import Tenant
-from utilities.testing import ChangeLoggedFilterSetTests
+
+try:  # NetBox 4.7+
+    from utilities.testing import ChangeLoggedFilterSetTestMixin
+except ImportError:  # NetBox <4.7
+    from utilities.testing import (
+        ChangeLoggedFilterSetTests as ChangeLoggedFilterSetTestMixin,
+    )
 
 from . import utils
 from ..filtersets import ServiceFilterSet
 
 
-class ServiceTestCase(TestCase, ChangeLoggedFilterSetTests):
+class ServiceTestCase(TestCase, ChangeLoggedFilterSetTestMixin):
     queryset = Service.objects.all()
     filterset = ServiceFilterSet
 

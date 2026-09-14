@@ -2,6 +2,108 @@
 
 <!-- version list -->
 
+## v2.1.0 (2026-09-11)
+
+### Bug Fixes
+
+- Only upload release artifacts when a release was cut
+  ([`a176dc8`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/a176dc88fa8f8d2393da7a156a4535871a7153a6))
+
+- Publish releases to PyPI from the release workflow
+  ([`d26fcb4`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/d26fcb473fde9ae6365b0938b684bbd9e8f8a2b0))
+
+### Chores
+
+- **deps**: Bump actions/cache from 5 to 6
+  ([#267](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/267),
+  [`8372fb6`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/8372fb602c6caba453d97542a6f8e8a2bd5e34bf))
+
+- **deps**: Bump actions/checkout from 2 to 7
+  ([`1809195`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/18091956afc18eb517e3ab36da1c84c0f79e1f00))
+
+- **deps**: Bump dependabot/fetch-metadata from 2 to 3
+  ([#281](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/281),
+  [`3e0abae`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/3e0abae8ba83992412e3ea99916cfe9633ff828f))
+
+- **deps**: Bump python-semantic-release/publish-action from 10.6.1 to 10.6.2
+  ([#290](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/290),
+  [`f6a6949`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/f6a69498f58fab3d561c96a765a701170f2e2493))
+
+- **deps**: Bump python-semantic-release/python-semantic-release from 10.5.3 to 10.6.1
+  ([#269](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/269),
+  [`0089513`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/0089513c91e1c5ba508ad07d0f99ce314eb2cd51))
+
+- **deps**: Bump python-semantic-release/python-semantic-release from 10.6.1 to 10.6.2
+  ([#287](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/287),
+  [`b07c38f`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/b07c38f6a67c342732d6bdb7bcda32eb22d1b228))
+
+- **deps-dev**: Bump docker from 7.1.0 to 7.2.0
+  ([#271](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/271),
+  [`e525468`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/e5254687f13aeb5a99e7a73ce9b75dc37e5bef7b))
+
+- **deps-dev**: Bump gitpython from 3.1.50 to 3.1.52
+  ([#273](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/273),
+  [`4a233f4`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/4a233f47c782833915220d47ee05c998ad30b2ee))
+
+- **deps-dev**: Bump gitpython from 3.1.52 to 3.1.54
+  ([#282](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/282),
+  [`7b4e55e`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/7b4e55e91c5b119610fd1ee2d17b768972d33423))
+
+- **deps-dev**: Bump gitpython from 3.1.54 to 3.1.57
+  ([#283](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/283),
+  [`7a21267`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/7a212674d2488a01984b31ccfb1954692ad73310))
+
+- **deps-dev**: Bump gitpython from 3.1.57 to 3.1.58
+  ([#284](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/284),
+  [`5a0e211`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/5a0e211cd4526275dde71a3e5f6ab4e62be7498a))
+
+- **deps-dev**: Bump gitpython from 3.1.58 to 3.1.59
+  ([#291](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/291),
+  [`c932e7b`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/c932e7b44a7856d50ee2ff148d5da1a8452c726e))
+
+- **deps-dev**: Bump idna from 3.11 to 3.15
+  ([#264](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/264),
+  [`075b2d9`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/075b2d9b311a0b9e7591a0e5900078c2fcb3dee8))
+
+- **deps-dev**: Bump python-semantic-release from 10.5.3 to 10.6.1
+  ([#268](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/268),
+  [`3094153`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/3094153526db3e4b346147193b40ab6dd6aeb6a2))
+
+- **deps-dev**: Bump python-semantic-release from 10.6.1 to 10.6.2
+  ([#286](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/286),
+  [`cd09807`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/cd09807058a31c31e70420bd730fd015ebf757ec))
+
+- **deps-dev**: Bump testcontainers from 4.14.2 to 4.15.0
+  ([#280](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/280),
+  [`92c5542`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/92c55424d8256f693e2ed24dbeba406324570024))
+
+- **deps-dev**: Bump urllib3 from 2.6.3 to 2.7.0
+  ([#263](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/263),
+  [`02e7e1c`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/02e7e1c2300d7b670140fb4f4179fdb244dd0f3c))
+
+### Continuous Integration
+
+- Auto-merge non-critical Dependabot updates once CI is green
+  ([`8c24601`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/8c24601a0fa36ba36bd8403aed15ea3bcf1c1a9b))
+
+- Gate Dependabot auto-merge on CI in the workflow
+  ([#293](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/293),
+  [`3b016ab`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/3b016ab7dddd25be07a387a4ccccdef87060dfba))
+
+- Lint workflow files with actionlint
+  ([`c97e48c`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/c97e48c8a0654e2dac90e51fd4c52edc7af5b8c4))
+
+### Features
+
+- Support Netbox 4.7 port mappings
+  ([`c89178a`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/c89178a5910cb2dc9372931b5fada864957580d4))
+
+### Testing
+
+- Verify Prometheus can consume the plugin, and document the labels
+  ([`14244eb`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/14244eb70383a12beb80ef549ad3ff8e6d29c785))
+
+
 ## v2.0.0 (2026-07-23)
 
 ### Bug Fixes
