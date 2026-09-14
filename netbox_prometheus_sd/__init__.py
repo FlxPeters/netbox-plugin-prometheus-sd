@@ -1,7 +1,7 @@
 from netbox.plugins import PluginConfig
 
 # Placeholder for semantic release
-__VERSION__ = "2.1.0"
+__VERSION__ = "2.2.0"
 
 
 class PrometheusSD(PluginConfig):

@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v2.2.0 (2026-09-14)
+
+### Features
+
+- Add site filtering to services endpoint
+  ([#285](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/pull/285),
+  [`d1589ce`](https://github.com/FlxPeters/netbox-plugin-prometheus-sd/commit/d1589ceff5e6b69833cf556efa404dcc6fbc25b5))
+
+
 ## v2.1.0 (2026-09-11)
 
 ### Bug Fixes
