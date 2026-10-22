@@ -128,6 +128,7 @@ class DeviceViewSet(NetboxPrometheusSDModelViewSet):
             "site",
             "location",
             "rack",
+            "virtual_chassis",
             "primary_ip4",
             "primary_ip6",
             "oob_ip",

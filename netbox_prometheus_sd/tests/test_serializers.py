@@ -267,6 +267,7 @@ class PrometheusDeviceSerializerTests(TestCase):
                 {"__meta_netbox_site_slug": "site"}, data["labels"]
             )
         )
+        self.assertNotIn("__meta_netbox_virtual_chassis", data["labels"])
 
     def test_device_config_context_no_array(self):
         instance = utils.build_device_config_context_no_array("firewall-no-array-01")
@@ -339,6 +340,11 @@ class PrometheusDeviceSerializerTests(TestCase):
         )
         self.assertTrue(
             utils.dictContainsSubset({"__meta_netbox_rack": "R01B01"}, data["labels"])
+        )
+        self.assertTrue(
+            utils.dictContainsSubset(
+                {"__meta_netbox_virtual_chassis": "VC01"}, data["labels"]
+            )
         )
         self.assertTrue(
             utils.dictContainsSubset({"__meta_netbox_site": "Site"}, data["labels"])

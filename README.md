@@ -104,6 +104,7 @@ tenant has no `__meta_netbox_tenant`.
 | `scope`, `scope_slug` | | ✓ ¹ | | |
 | `location`, `location_slug` | ✓ | | | |
 | `rack`, `rack_u_position` | ✓ | | | |
+| `virtual_chassis` | ✓ ³ | | | |
 | `cluster`, `cluster_group`, `cluster_type` | ✓ ² | ✓ | | |
 | `tenant`, `tenant_slug` | ✓ | ✓ | from parent | ✓ |
 | `tenant_group`, `tenant_group_slug` | ✓ | ✓ | from parent | ✓ |
@@ -118,6 +119,7 @@ tenant has no `__meta_netbox_tenant`.
 emits `scope`/`scope_slug` for the cluster, and `site`/`site_slug` for its own
 site; below 4.2 the cluster's site is reported as `site`.
 ² Only when the device is assigned to a cluster.
+³ Only when the device is a member of a virtual chassis.
 
 Config context can additionally set `__metrics_path__` and `__scheme__`, which
 Prometheus consumes directly (see [Config context](#config-context)).
