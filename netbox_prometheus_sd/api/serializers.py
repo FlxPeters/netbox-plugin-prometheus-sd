@@ -92,6 +92,7 @@ class PrometheusDeviceSerializer(serializers.ModelSerializer, PrometheusTargetsM
         utils.extract_services(obj, labels)
         utils.extract_contacts(obj, labels)
         utils.extract_rack(obj, labels)
+        utils.extract_virtual_chassis(obj, labels)
         utils.extract_custom_fields(obj, labels)
         utils.extract_rack_u_poistion(obj, labels)
 

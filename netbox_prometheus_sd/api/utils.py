@@ -138,6 +138,12 @@ def extract_rack(obj, labels: LabelDict):
         labels["rack"] = obj.rack.name
 
 
+def extract_virtual_chassis(obj, labels: LabelDict):
+    """Extract virtual chassis"""
+    if hasattr(obj, "virtual_chassis") and obj.virtual_chassis:
+        labels["virtual_chassis"] = obj.virtual_chassis.name
+
+
 def extract_custom_fields(obj, labels: LabelDict):
     if hasattr(obj, "custom_field_data") and obj.custom_field_data is not None:
         for key, value in obj.custom_field_data.items():

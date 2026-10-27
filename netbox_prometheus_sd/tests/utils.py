@@ -3,7 +3,7 @@ from django.core.exceptions import FieldError
 
 from dcim.models.devices import DeviceType, Manufacturer
 from dcim.models.sites import Site, Location
-from dcim.models import Device, DeviceRole, Platform, Rack
+from dcim.models import Device, DeviceRole, Platform, Rack, VirtualChassis
 from extras.models import ConfigContext, Tag
 
 from ipam.models import IPAddress, Service
@@ -280,6 +280,9 @@ def build_device_full(name, ip_octet=1):
     # ip_octet like the addresses do -- otherwise callers building more than one
     # device hit an IntegrityError.
     device.position = float(ip_octet)
+    device.virtual_chassis = VirtualChassis.objects.get_or_create(name="VC01")[0]
+    # vc_position is unique per virtual chassis, same reasoning as above.
+    device.vc_position = ip_octet
     device.tags.add("Tag1")
     device.tags.add("Tag 2")
     device.save()
